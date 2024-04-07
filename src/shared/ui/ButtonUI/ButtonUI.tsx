@@ -11,7 +11,7 @@ import ButtonUIStyles from "./ButtonUI.styles";
 import { EButtonUITheme } from "./types";
 
 type TButtonUIProps = ButtonProps & {
-  children: ReactNode;
+  children?: ReactNode;
   img?: FC<SvgProps>;
   themeUI?: EButtonUITheme;
   outerTitleStyle?: ViewStyle;

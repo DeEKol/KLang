@@ -5,6 +5,7 @@ import Svg, { Circle } from "react-native-svg";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { TRootStackParamList } from "app/providers/NavigationProvider";
 import CloseIcon from "assets/icons/CloseIcon.svg";
+import { ButtonUI } from "shared/ui";
 import { LangSwitcher } from "widgets/LangSwitcher";
 import { ThemeSwitcher } from "widgets/ThemeSwitcher";
 
@@ -15,6 +16,10 @@ export const HomeScreen = ({ navigation }: THomeScreenProps) => {
 
   return (
     <View>
+      <ButtonUI
+        title={t("Go to UIScreen")}
+        onPress={() => navigation.navigate("UIScreen")}
+      />
       <Button
         title={t("Go to FirstScreen")}
         onPress={() =>

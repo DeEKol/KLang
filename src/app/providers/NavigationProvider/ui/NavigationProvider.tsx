@@ -8,6 +8,7 @@ import { FourthScreen } from "screens/FourthScreen";
 import { HomeScreen } from "screens/HomeScreen";
 import { SecondScreen } from "screens/SecondScreen";
 import { ThirdScreen } from "screens/ThirdScreen";
+import { UIScreen } from "screens/UIScreen";
 import { getThemeColor } from "shared/lib/theme/model/selectors/getThemeColor/getThemeColor";
 
 import type { TRootStackParamList } from "../types";
@@ -28,6 +29,13 @@ export const NavigationProvider = () => {
           component={HomeScreen}
           options={{
             title: t("Home"),
+          }}
+        />
+        <Stack.Screen
+          name="UIScreen"
+          component={UIScreen}
+          options={{
+            title: t("UI Screen"),
           }}
         />
         <Stack.Screen
