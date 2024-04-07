@@ -1,0 +1,7 @@
+/.git
+/.idea
+/.vscode
+./android
+./ios
+node_modules
+./src/lib/db/rusWorlds.ts

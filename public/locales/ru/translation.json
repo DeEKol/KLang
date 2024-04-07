@@ -1,0 +1,16 @@
+{
+  "Change lang": "Изменить язык",
+
+  "Theme": "Тема",
+  "Change theme dark": "Изменить тему на темную",
+  "Change theme light": "Изменить тему на светлую",
+  "light": "светлая",
+  "dark": "темная",
+  "normal": "обычная",
+  "default": "по умолчанию",
+
+  "Increment": "Увеличение",
+  "Decrement": "Уменьшение",
+  "loading": "загрузка",
+  "Error": "Ошибка"
+}

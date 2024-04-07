@@ -1,0 +1,16 @@
+{
+  "Change lang": "Change lang",
+
+  "Theme": "Theme",
+  "Change theme dark": "Change theme dark",
+  "Change theme light": "Change theme light",
+  "light": "light",
+  "dark": "dark",
+  "normal": "normal",
+  "default": "default",
+
+  "Increment": "Increment",
+  "Decrement": "Decrement",
+  "loading": "loading",
+  "Error": "Error"
+}
