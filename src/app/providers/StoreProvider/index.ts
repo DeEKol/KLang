@@ -1,1 +1,3 @@
-export { StoreProvider } from "app/providers/StoreProvider/ui/StoreProvider";
+export { type IStateSchema } from "./types/stateSchema";
+export { useAppDispatch } from "./ui/StoreProvider";
+export { StoreProvider } from "./ui/StoreProvider";

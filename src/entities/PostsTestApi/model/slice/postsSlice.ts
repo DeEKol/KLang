@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { IPostsSchema } from "entities/PostsTestApi/types/postsSchema";
+
+import type { IPostsSchema } from "../../types/postsSchema";
 
 export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",

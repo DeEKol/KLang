@@ -4,8 +4,8 @@ import type { ButtonProps, ViewStyle } from "react-native";
 import { Pressable, Text, View } from "react-native";
 import type { SvgProps } from "react-native-svg";
 import { useSelector } from "react-redux";
-import { getThemeColor } from "shared/lib/theme/model/selectors/getThemeColor/getThemeColor";
-import type { TThemeColors } from "shared/lib/theme/types/themeSchema";
+import type { TThemeColors } from "shared/lib/theme";
+import { getThemeColor } from "shared/lib/theme";
 
 import ButtonUIStyles from "./ButtonUI.styles";
 import { EButtonUITheme } from "./types";
@@ -16,6 +16,7 @@ type TButtonUIProps = ButtonProps & {
   themeUI?: EButtonUITheme;
   outerTitleStyle?: ViewStyle;
   outerViewStyle?: ViewStyle;
+  btnOuterChildrenStyle?: ViewStyle;
 };
 
 export const ButtonUI = (props: TButtonUIProps) => {
@@ -34,12 +35,12 @@ export const ButtonUI = (props: TButtonUIProps) => {
   const styles = ButtonUIStyles(themeUI, themeGlobal);
 
   return (
-    <View style={outerViewStyle}>
+    <View style={[styles.viewStyle, outerViewStyle]}>
       <Pressable
-        style={styles.globalBtnStyle}
+        style={[styles.globalBtnStyle, styles.uiStyle]}
         {...anyProps}>
         {children}
-        <Text style={[styles.globalTitleStyle, styles.uiStyle, outerTitleStyle]}>{title}</Text>
+        <Text style={[styles.globalTitleStyle, outerTitleStyle]}>{title}</Text>
       </Pressable>
     </View>
   );

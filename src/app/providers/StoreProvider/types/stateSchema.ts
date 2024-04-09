@@ -1,7 +1,7 @@
-import type { ICounterSchema } from "entities/Counter/types/counterSchema";
-import type { IPostsSchema } from "entities/PostsTestApi/types/postsSchema";
+import type { ICounterSchema } from "entities/Counter";
+import type { IPostsSchema } from "entities/PostsTestApi";
 import type { PersistPartial } from "redux-persist/lib/persistReducer";
-import type { IThemeSchema } from "shared/lib/theme/types/themeSchema";
+import type { IThemeSchema } from "shared/lib/theme";
 
 export interface IStateSchema {
   counter: ICounterSchema;

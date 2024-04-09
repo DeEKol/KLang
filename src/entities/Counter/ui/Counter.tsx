@@ -2,9 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "app/providers/StoreProvider/ui/StoreProvider";
-import { getCounterValue } from "entities/Counter/model/selectors/getCounterValue/getCounterValue";
+import { useAppDispatch } from "app/providers/StoreProvider";
 
+import { getCounterValue } from "../model/selectors/getCounterValue/getCounterValue";
 import { counterActions } from "../model/slice/counterSlice";
 
 export const Counter = () => {

@@ -1,27 +1,38 @@
 import type { TextStyle, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import { exhaustiveCheck } from "shared/helpers";
-import { Colors } from "shared/lib/theme";
-import { EPalette } from "shared/lib/theme/colors/Palette";
-import type { TThemeColors } from "shared/lib/theme/types/themeSchema";
+import type { TThemeColors } from "shared/lib/theme";
+import { Colors, EPalette } from "shared/lib/theme";
 
 import { EButtonUITheme } from "./types";
 
 type TButtonUIStyle = {
-  uiStyle: TextStyle;
+  viewStyle: ViewStyle;
+  uiStyle: ViewStyle;
   globalBtnStyle: ViewStyle;
   globalTitleStyle: TextStyle;
 };
 
-const uiTheme = (themeUI: EButtonUITheme) => {
-  return (function (themeParam: EButtonUITheme) {
+const uiTheme = (themeUI: EButtonUITheme): ViewStyle | undefined => {
+  return (function (themeParam: EButtonUITheme): ViewStyle | undefined {
     switch (themeParam) {
       case EButtonUITheme.BACKGROUND:
-        return { color: EPalette.YELLOW };
+        return {
+          borderWidth: 2,
+          borderStyle: "solid",
+          borderColor: EPalette.RED,
+          borderRadius: 8,
+        };
       case EButtonUITheme.CLEAR:
-        return { color: EPalette.RED };
+        return {
+          backgroundColor: "transparent",
+          borderRadius: 8,
+        };
       case EButtonUITheme.DEFAULT:
-        return { color: EPalette.BLUE };
+        return {
+          backgroundColor: EPalette.BLUE_OPACITY,
+          borderRadius: 8,
+        };
       default:
         exhaustiveCheck(themeParam);
     }
@@ -30,32 +41,32 @@ const uiTheme = (themeUI: EButtonUITheme) => {
 
 export default (themeUI: EButtonUITheme, themeGlobal: TThemeColors) => {
   return StyleSheet.create<TButtonUIStyle>({
+    viewStyle: {
+      margin: "auto",
+      marginLeft: "auto",
+      marginRight: "auto",
+
+      position: "relative",
+
+      borderRadius: 8,
+    },
     uiStyle: {
       ...uiTheme(themeUI),
     },
     globalBtnStyle: {
-      // display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      // justifyContent: "center",
-      // backgroundColor: "grey",
       alignSelf: "center",
-      // flexBasis: "50%",
-      // minWidth: "50%",
 
-      padding: 5,
-
-      borderWidth: 1,
-      borderStyle: "solid",
-      borderColor: EPalette.RED,
-      borderRadius: 8,
+      paddingTop: 12,
+      paddingBottom: 12,
+      paddingRight: 20,
+      paddingLeft: 20,
     },
     globalTitleStyle: {
       color: Colors[themeGlobal ?? "light"]?.text,
-      // color: "blue",
-      fontSize: 30,
-      lineHeight: 30,
-      paddingLeft: 5,
+      fontSize: 24,
+      lineHeight: 24,
     },
   });
 };

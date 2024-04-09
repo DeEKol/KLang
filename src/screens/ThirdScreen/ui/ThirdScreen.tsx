@@ -40,18 +40,18 @@ export const ThirdScreen = ({ navigation }: ISecondScreenProps) => {
           width={20}
         />
       </ButtonUI>
-      <ButtonUI
-        title={"sas"}
-        img={CloseIcon}
-        themeUI={EButtonUITheme.CLEAR}
-        onPress={onNotice}
-        outerTitleStyle={styles.btnOuterTitleStyle}
-        outerViewStyle={styles.btnOuterViewStyle}>
-        <CloseIcon
-          height={20}
-          width={20}
-        />
-      </ButtonUI>
+      {/*<ButtonUI*/}
+      {/*  title={"sas"}*/}
+      {/*  img={CloseIcon}*/}
+      {/*  themeUI={EButtonUITheme.CLEAR}*/}
+      {/*  onPress={onNotice}*/}
+      {/*  outerTitleStyle={styles.btnOuterTitleStyle}*/}
+      {/*  outerViewStyle={styles.btnOuterViewStyle}>*/}
+      {/*  <CloseIcon*/}
+      {/*    height={20}*/}
+      {/*    width={20}*/}
+      {/*  />*/}
+      {/*</ButtonUI>*/}
       {notice && <Text>{t("Notice")}</Text>}
     </View>
   );

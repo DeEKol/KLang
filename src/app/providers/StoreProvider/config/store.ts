@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { counterReducer } from "entities/Counter/model/slice/counterSlice";
-import { postsReducer } from "entities/PostsTestApi/model/slice/postsSlice";
+import { counterReducer } from "entities/Counter";
+import { postsReducer } from "entities/PostsTestApi";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist";
 import { themeReducer } from "shared/lib/theme/model/slice/themeSlice";
 

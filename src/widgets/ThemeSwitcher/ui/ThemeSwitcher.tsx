@@ -3,10 +3,8 @@ import { useTranslation } from "react-i18next";
 import type { TextStyle } from "react-native";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors } from "shared/lib/theme";
-import { getThemeColor } from "shared/lib/theme/model/selectors/getThemeColor/getThemeColor";
-import { themeActions } from "shared/lib/theme/model/slice/themeSlice";
-import type { TThemeColors } from "shared/lib/theme/types/themeSchema";
+import type { TThemeColors } from "shared/lib/theme";
+import { Colors, getThemeColor, themeActions } from "shared/lib/theme";
 
 export const ThemeSwitcher = () => {
   const { t } = useTranslation();

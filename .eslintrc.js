@@ -12,7 +12,14 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:i18next/recommended",
   ],
-  overrides: [],
+  overrides: [
+    {
+      files: ["*index.ts"],
+      rules: {
+        "no-restricted-imports": "off",
+      },
+    },
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
@@ -38,7 +45,29 @@ module.exports = {
     "no-restricted-imports": [
       "error",
       {
-        patterns: ["*.tsx"],
+        patterns: [
+          "*.tsx",
+          "app/**/ui/*",
+          "entities/**/ui/*",
+          "features/ui/*",
+          "screens/ui/*",
+          "shared/ui/*",
+          "app/**/colors/*",
+          "entities/**/colors/*",
+          "features/colors/*",
+          "screens/colors/*",
+          "shared/colors/*",
+          "app/**/model/*",
+          "entities/**/model/*",
+          "features/model/*",
+          "screens/model/*",
+          "shared/model/*",
+          "app/**/types/*",
+          "entities/**/types/*",
+          "features/**/types/*",
+          "screens/**/types/*",
+          "shared/**/types/*",
+        ],
       },
     ],
     //! END - RULES DEFAULT

@@ -3,12 +3,12 @@ import { useTranslation } from "react-i18next";
 import type { TextStyle } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "app/providers/StoreProvider/ui/StoreProvider";
-import { getCounter } from "entities/PostsTestApi/model/selectors/getPosts";
-import { fetchPosts } from "entities/PostsTestApi/model/slice/postsSlice";
-import { Colors } from "shared/lib/theme";
-import { getThemeColor } from "shared/lib/theme/model/selectors/getThemeColor/getThemeColor";
-import type { TThemeColors } from "shared/lib/theme/types/themeSchema";
+import { useAppDispatch } from "app/providers/StoreProvider";
+import type { TThemeColors } from "shared/lib/theme";
+import { Colors, getThemeColor } from "shared/lib/theme";
+
+import { getCounter } from "../model/selectors/getPosts";
+import { fetchPosts } from "../model/slice/postsSlice";
 
 export const Posts = () => {
   const theme: TThemeColors = useSelector(getThemeColor);
