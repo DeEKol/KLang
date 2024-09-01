@@ -6,7 +6,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FirstScreen } from "screens/FirstScreen";
 import { FourthScreen } from "screens/FourthScreen";
 import { HomeScreen } from "screens/HomeScreen";
+import { LevelScreen } from "screens/LevelScreen";
 import { SecondScreen } from "screens/SecondScreen";
+import { StudyScreen } from "screens/StudyScreen";
 import { ThirdScreen } from "screens/ThirdScreen";
 import { UIScreen } from "screens/UIScreen";
 import { getThemeColor } from "shared/lib/theme/model/selectors/getThemeColor/getThemeColor";
@@ -36,6 +38,20 @@ export const NavigationProvider = () => {
           component={UIScreen}
           options={{
             title: t("UI Screen"),
+          }}
+        />
+        <Stack.Screen
+          name="StudyScreen"
+          component={StudyScreen}
+          options={{
+            title: t("Study Screen"),
+          }}
+        />
+        <Stack.Screen
+          name="LevelScreen"
+          component={LevelScreen}
+          options={{
+            title: t("Level Screen"),
           }}
         />
         <Stack.Screen
