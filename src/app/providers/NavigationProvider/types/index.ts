@@ -8,3 +8,5 @@ export type TRootStackParamList = {
   ThirdScreen: { test: string } | undefined;
   FourthScreen: undefined;
 };
+
+export type TScreenNameAlias = keyof TRootStackParamList;
