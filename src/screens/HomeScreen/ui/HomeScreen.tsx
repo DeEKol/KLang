@@ -20,6 +20,10 @@ export const HomeScreen = ({ navigation }: THomeScreenProps) => {
         title={t("Go to UIScreen")}
         onPress={() => navigation.navigate("UIScreen")}
       />
+      <ButtonUI
+        title={t("Go to StudyScreen")}
+        onPress={() => navigation.navigate("StudyScreen")}
+      />
       <Button
         title={t("Go to FirstScreen")}
         onPress={() =>
