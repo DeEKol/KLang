@@ -25,6 +25,9 @@ void i18n
         thirdScreen: require("../../../../public/locales/en/thirdScreen.json"),
         fourthScreen: require("../../../../public/locales/en/fourthScreen.json"),
         studyScreen: require("../../../../public/locales/en/studyScreen.json"),
+        practiceScreen: require("../../../../public/locales/en/practiceScreen.json"),
+        settingsScreen: require("../../../../public/locales/en/settingsScreen.json"),
+        testScreen: require("../../../../public/locales/en/testScreen.json"),
       },
       ru: {
         translation: require("../../../../public/locales/ru/translation.json"),
@@ -36,6 +39,9 @@ void i18n
         thirdScreen: require("../../../../public/locales/ru/thirdScreen.json"),
         fourthScreen: require("../../../../public/locales/ru/fourthScreen.json"),
         studyScreen: require("../../../../public/locales/ru/studyScreen.json"),
+        practiceScreen: require("../../../../public/locales/ru/practiceScreen.json"),
+        settingsScreen: require("../../../../public/locales/ru/settingsScreen.json"),
+        testScreen: require("../../../../public/locales/ru/testScreen.json"),
       },
     },
 

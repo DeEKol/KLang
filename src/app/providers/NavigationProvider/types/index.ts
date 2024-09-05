@@ -1,12 +1,11 @@
-export type TRootStackParamList = {
-  Home: undefined;
-  UIScreen: undefined;
-  StudyScreen: undefined;
-  LevelScreen: undefined;
-  FirstScreen: { check: boolean };
-  SecondScreen: undefined;
-  ThirdScreen: { test: string } | undefined;
-  FourthScreen: undefined;
+export type RootStackParamList = {
+  Main: undefined; // * Главный экран с табами
 };
 
-export type TScreenNameAlias = keyof TRootStackParamList;
+export type TMainTabParamList = {
+  HomeScreen: undefined;
+  StudyScreen: undefined;
+  PracticeScreen: undefined;
+  SettingsScreen: undefined;
+  TestScreen: undefined;
+};

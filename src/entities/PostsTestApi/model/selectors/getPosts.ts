@@ -1,3 +1,3 @@
-import type { IStateSchema } from "entities";
+import type { IStateSchema } from "app/providers/StoreProvider";
 
 export const getCounter = (state: IStateSchema) => state.posts;
