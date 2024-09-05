@@ -1,11 +1,11 @@
 // ? Layer Imports
-import type { TScreenNameAlias } from "app/providers/NavigationProvider/types";
+import type { TStudyStackParamListKey } from "screens/StudyScreen/ui/StudyScreen";
 
 // ? Types
 export type TLevelsModel = {
   key: string;
   title: string;
-  navigate: Extract<TScreenNameAlias, "LevelScreen">;
+  navigate: Extract<TStudyStackParamListKey, "LevelScreen">;
 };
 
 // ? Models

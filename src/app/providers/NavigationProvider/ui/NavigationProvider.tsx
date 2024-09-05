@@ -1,90 +1,123 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { FirstScreen } from "screens/FirstScreen";
-import { FourthScreen } from "screens/FourthScreen";
 import { HomeScreen } from "screens/HomeScreen";
 import { LevelScreen } from "screens/LevelScreen";
-import { SecondScreen } from "screens/SecondScreen";
+import { PracticeScreen } from "screens/PracticeScreen";
+import { SettingsScreen } from "screens/SettingsScreen";
 import { StudyScreen } from "screens/StudyScreen";
-import { ThirdScreen } from "screens/ThirdScreen";
+import type { TStudyStackParamList } from "screens/StudyScreen/ui/StudyScreen";
+import { TestScreen } from "screens/TestScreen";
 import { UIScreen } from "screens/UIScreen";
 import { getThemeColor } from "shared/lib/theme/model/selectors/getThemeColor/getThemeColor";
 
-import type { TRootStackParamList } from "../types";
+import type { RootStackParamList, TMainTabParamList } from "../types";
 
-export const NavigationProvider = () => {
-  const Stack = createNativeStackNavigator<TRootStackParamList>();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TMainTabParamList>();
 
+export type THomeStackParamList = {
+  Home: undefined;
+  UIScreen: undefined;
+};
+
+const HomeStackNavigator = () => {
+  const Stack = createNativeStackNavigator<THomeStackParamList>();
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+      />
+      <Stack.Screen
+        name="UIScreen"
+        component={UIScreen}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const StudyStackNavigator = () => {
+  const Stack = createNativeStackNavigator<TStudyStackParamList>();
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Study"
+        component={StudyScreen}
+      />
+      <Stack.Screen
+        name="LevelScreen"
+        component={LevelScreen}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const MainTabNavigator = () => {
   const { t } = useTranslation("navigation");
 
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false, // Скрыть заголовок, если не нужен
+        tabBarActiveTintColor: "tomato", // Цвет активной вкладки
+        tabBarInactiveTintColor: "gray", // Цвет неактивной вкладки
+      }}>
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeStackNavigator}
+        options={{
+          title: t("Home"),
+        }}
+      />
+      <Tab.Screen
+        name="StudyScreen"
+        component={StudyStackNavigator}
+        options={{
+          title: t("Study Screen"),
+        }}
+      />
+      <Tab.Screen
+        name="PracticeScreen"
+        component={PracticeScreen}
+        options={{
+          title: t("Practice Screen"),
+        }}
+      />
+      <Tab.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+        options={{
+          title: t("Settings Screen"),
+        }}
+      />
+      <Tab.Screen
+        name="TestScreen"
+        component={TestScreen}
+        options={{
+          title: t("Test Screen"),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+export const NavigationProvider = () => {
   //TODO: донастроить темы
   const theme = useSelector(getThemeColor) === "dark" ? DarkTheme : DefaultTheme;
 
   return (
     <NavigationContainer theme={theme}>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            title: t("Home"),
-          }}
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        <RootStack.Screen
+          name="Main"
+          component={MainTabNavigator}
         />
-        <Stack.Screen
-          name="UIScreen"
-          component={UIScreen}
-          options={{
-            title: t("UI Screen"),
-          }}
-        />
-        <Stack.Screen
-          name="StudyScreen"
-          component={StudyScreen}
-          options={{
-            title: t("Study Screen"),
-          }}
-        />
-        <Stack.Screen
-          name="LevelScreen"
-          component={LevelScreen}
-          options={{
-            title: t("Level Screen"),
-          }}
-        />
-        <Stack.Screen
-          name="FirstScreen"
-          component={FirstScreen}
-          initialParams={{ check: true }}
-          options={{
-            title: t("First Screen"),
-          }}
-        />
-        <Stack.Screen
-          name="SecondScreen"
-          component={SecondScreen}
-          options={{
-            title: t("Second Screen"),
-          }}
-        />
-        <Stack.Screen
-          name="ThirdScreen"
-          component={ThirdScreen}
-          initialParams={{ test: "test" }}
-          options={{
-            title: t("Third Screen"),
-          }}
-        />
-        <Stack.Screen
-          name="FourthScreen"
-          component={FourthScreen}
-          options={{
-            title: t("Fourth Screen"),
-          }}
-        />
-      </Stack.Navigator>
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 };

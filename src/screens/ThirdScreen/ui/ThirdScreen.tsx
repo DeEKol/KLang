@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { ViewStyle } from "react-native";
-import { Button, StyleSheet, Text, View } from "react-native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { TRootStackParamList } from "app/providers/NavigationProvider/types";
+import { StyleSheet, Text, View } from "react-native";
 import CloseIcon from "assets/icons/CloseIcon.svg";
 import { ButtonUI, EButtonUITheme } from "shared/ui";
 
-type ISecondScreenProps = NativeStackScreenProps<TRootStackParamList, "ThirdScreen">;
-
-export const ThirdScreen = ({ navigation }: ISecondScreenProps) => {
+export const ThirdScreen = () => {
   const { t } = useTranslation("thirdScreen");
 
   const [notice, setNotice] = useState(false);
@@ -24,10 +20,6 @@ export const ThirdScreen = ({ navigation }: ISecondScreenProps) => {
   return (
     <View>
       <Text>{t("This is third screen")}</Text>
-      <Button
-        title={t("Go to FourthScreen")}
-        onPress={() => navigation.navigate("FourthScreen")}
-      />
       <ButtonUI
         title={"sas"}
         img={CloseIcon}

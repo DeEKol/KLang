@@ -2,14 +2,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import type { ViewStyle } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { TRootStackParamList } from "app/providers/NavigationProvider/types";
 import CloseIcon from "assets/icons/CloseIcon.svg";
 import { ButtonUI, EButtonUITheme } from "shared/ui";
 
-type TUIScreenProps = NativeStackScreenProps<TRootStackParamList, "UIScreen">;
-
-export const UIScreen = ({ route }: TUIScreenProps) => {
+export const UIScreen = () => {
   const { t } = useTranslation("uiScreen");
 
   return (
