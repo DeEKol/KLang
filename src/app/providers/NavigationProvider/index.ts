@@ -1,1 +1,2 @@
-export { NavigationProvider, type THomeStackParamList } from "./ui/NavigationProvider";
+export { type TStudyStackScreenProps } from "./MainTabNavigator/StudyStackNavigator/ui/StudyStackNavigator";
+export { NavigationProvider } from "./ui/NavigationProvider";
