@@ -20,6 +20,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+ios/KLang.xcodeproj
 ios/.xcode.env.local
 
 # Android/IntelliJ
@@ -37,6 +38,7 @@ local.properties
 # node.js
 #
 node_modules/
+package-lock.json
 npm-debug.log
 yarn-error.log
 
@@ -57,6 +59,7 @@ yarn-error.log
 
 # Ruby / CocoaPods
 /ios/Pods/
+/ios/Podfile.lock
 /vendor/bundle/
 
 # Temporary files created by Metro to check the health of the file watcher
