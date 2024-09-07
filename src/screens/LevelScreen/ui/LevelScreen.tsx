@@ -8,7 +8,7 @@ import type { TLevelStackParamList } from "app/providers/NavigationProvider";
 import { ButtonUI } from "shared/ui";
 
 // ? Types
-export type TLevelScreenProps = NativeStackScreenProps<TLevelStackParamList, "Level">;
+export type TLevelScreenProps = NativeStackScreenProps<TLevelStackParamList, "LevelScreen">;
 
 /*
  * Экран уровня

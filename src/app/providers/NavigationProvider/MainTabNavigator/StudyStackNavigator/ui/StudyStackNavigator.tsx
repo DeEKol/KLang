@@ -2,6 +2,8 @@
 import React from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { LessonScreen } from "screens/LessonScreen";
+import { LevelScreen } from "screens/LevelScreen";
 // ? Layer Imports
 import { StudyScreen } from "screens/StudyScreen/ui/StudyScreen";
 
@@ -10,11 +12,12 @@ import { LevelStackNavigator } from "../LevelStackNavigator/ui/LevelStackNavigat
 
 // ? Types
 export type TStudyStackParamList = {
-  Study: undefined;
+  StudyScreen: undefined;
   LevelScreen: undefined;
+  LessonScreen: undefined;
 };
 
-export type TStudyStackScreenProps = NativeStackScreenProps<TStudyStackParamList>;
+export type TStudyStackScreenProps = NativeStackScreenProps<TStudyStackParamList, "StudyScreen">;
 
 // ? Components
 const Stack = createNativeStackNavigator<TStudyStackParamList>();
@@ -25,14 +28,22 @@ const Stack = createNativeStackNavigator<TStudyStackParamList>();
 export const StudyStackNavigator = () => {
   // ? Render
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      initialRouteName="StudyScreen"
+      screenOptions={{
+        headerShown: true,
+      }}>
       <Stack.Screen
-        name="Study"
+        name="StudyScreen"
         component={StudyScreen}
       />
       <Stack.Screen
         name="LevelScreen"
-        component={LevelStackNavigator}
+        component={LevelScreen}
+      />
+      <Stack.Screen
+        name="LessonScreen"
+        component={LessonScreen}
       />
     </Stack.Navigator>
   );

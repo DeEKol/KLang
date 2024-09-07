@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator<TMainTabParamList>();
 // ? Types
 export type TMainTabParamList = {
   HomeScreen: undefined;
-  StudyScreen: undefined;
+  Study: undefined;
   PracticeScreen: undefined;
   SettingsScreen: undefined;
   TestScreen: undefined;
@@ -34,7 +34,7 @@ export const MainTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false, // Скрыть заголовок, если не нужен
+        headerShown: false,
       }}>
       <Tab.Screen
         name="HomeScreen"
@@ -44,7 +44,7 @@ export const MainTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="StudyScreen"
+        name="Study"
         component={StudyStackNavigator}
         options={{
           title: t("Study Screen"),
