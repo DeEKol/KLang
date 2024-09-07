@@ -28,6 +28,7 @@ void i18n
         practiceScreen: require("../../../../public/locales/en/practiceScreen.json"),
         settingsScreen: require("../../../../public/locales/en/settingsScreen.json"),
         testScreen: require("../../../../public/locales/en/testScreen.json"),
+        levelScreen: require("../../../../public/locales/en/levelScreen.json"),
       },
       ru: {
         translation: require("../../../../public/locales/ru/translation.json"),
@@ -42,6 +43,7 @@ void i18n
         practiceScreen: require("../../../../public/locales/ru/practiceScreen.json"),
         settingsScreen: require("../../../../public/locales/ru/settingsScreen.json"),
         testScreen: require("../../../../public/locales/ru/testScreen.json"),
+        levelScreen: require("../../../../public/locales/ru/levelScreen.json"),
       },
     },
 

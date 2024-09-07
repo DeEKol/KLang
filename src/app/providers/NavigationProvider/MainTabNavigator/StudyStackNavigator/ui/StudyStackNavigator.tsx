@@ -3,8 +3,10 @@ import React from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // ? Layer Imports
-import { LevelScreen } from "screens/LevelScreen";
 import { StudyScreen } from "screens/StudyScreen/ui/StudyScreen";
+
+// ? Slice Imports
+import { LevelStackNavigator } from "../LevelStackNavigator/ui/LevelStackNavigator";
 
 // ? Types
 export type TStudyStackParamList = {
@@ -30,7 +32,7 @@ export const StudyStackNavigator = () => {
       />
       <Stack.Screen
         name="LevelScreen"
-        component={LevelScreen}
+        component={LevelStackNavigator}
       />
     </Stack.Navigator>
   );
