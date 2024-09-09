@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 // ? Component Imports
-import type { TLevelStackParamList } from "app/providers/NavigationProvider";
+import type { TStudyStackParamList } from "app/providers/NavigationProvider";
 import { ButtonUI } from "shared/ui";
 
 // ? Types
-export type TLevelScreenProps = NativeStackScreenProps<TLevelStackParamList, "LevelScreen">;
+export type TLevelScreenProps = NativeStackScreenProps<TStudyStackParamList, "LevelScreen">;
 
 /*
  * Экран уровня

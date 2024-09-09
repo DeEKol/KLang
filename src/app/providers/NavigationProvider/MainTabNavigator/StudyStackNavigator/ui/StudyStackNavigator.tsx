@@ -7,9 +7,6 @@ import { LevelScreen } from "screens/LevelScreen";
 // ? Layer Imports
 import { StudyScreen } from "screens/StudyScreen/ui/StudyScreen";
 
-// ? Slice Imports
-import { LevelStackNavigator } from "../LevelStackNavigator/ui/LevelStackNavigator";
-
 // ? Types
 export type TStudyStackParamList = {
   StudyScreen: undefined;
