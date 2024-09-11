@@ -1,6 +1,6 @@
 import React from "react";
-import { View } from "react-native";
+import { WordMatcher } from "features/WordMatcher";
 
 export const LevelScreen = () => {
-  return <View />;
+  return <WordMatcher />;
 };
