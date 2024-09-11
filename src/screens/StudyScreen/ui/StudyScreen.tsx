@@ -3,21 +3,14 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import type { ListRenderItem } from "react-native";
 import { FlatList, Text, View } from "react-native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 // ? Layer Imports
+import type { TStudyStackScreenProps } from "app/providers/NavigationProvider";
 import type { TLevelsModel } from "screens/StudyScreen/models/levelsModel";
 import { levelsModel } from "screens/StudyScreen/models/levelsModel";
 import { ButtonUI } from "shared/ui";
 
 // ? Types
-export type TStudyStackParamList = {
-  Study: undefined;
-  LevelScreen: undefined;
-};
-
-export type TStudyStackParamListKey = keyof TStudyStackParamList;
-
-type TStudyScreenProps = NativeStackScreenProps<TStudyStackParamList, "Study">;
+type TStudyScreenProps = TStudyStackScreenProps;
 
 export const StudyScreen = ({ navigation }: TStudyScreenProps) => {
   // ? Hooks
