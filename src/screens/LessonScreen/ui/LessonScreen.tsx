@@ -1,11 +1,12 @@
 // ? Library Imports
 import React from "react";
-import type { TextStyle } from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 // ? Component Imports
 import type { TThemeColors } from "shared/lib/theme";
 import { Colors, getThemeColor } from "shared/lib/theme";
+import { Lesson } from "widgets/Lesson";
 
 /*
  * Экран урока
@@ -19,8 +20,9 @@ export const LessonScreen = () => {
 
   // ? Render
   return (
-    <View>
+    <View style={styles.wrapper}>
       <Text style={styles.textStyle}>123</Text>
+      <Lesson />
     </View>
   );
 };
@@ -28,6 +30,7 @@ export const LessonScreen = () => {
 // ? Styles
 type TLessonStyle = {
   textStyle: TextStyle;
+  wrapper: ViewStyle;
 };
 
 const createStyles = (theme: TThemeColors) => {
@@ -35,6 +38,7 @@ const createStyles = (theme: TThemeColors) => {
     textStyle: {
       color: Colors[theme ?? "light"]?.text,
     },
+    wrapper: {},
   });
   return styles;
 };
