@@ -4,6 +4,7 @@ import type { ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 // ? Layer Imports
 import { Markdown } from "features/Markdown";
+import { StepsSwiper } from "features/StepsSwiper";
 
 // ? Mocks
 const markdownText = `
@@ -22,7 +23,22 @@ export const Lesson = () => {
   // ? Render
   return (
     <View style={styles.wrapper}>
-      <Markdown text={markdownText} />
+      <StepsSwiper
+        data={[
+          <Markdown
+            key={0}
+            text={markdownText}
+          />,
+          <Markdown
+            key={1}
+            text={markdownText}
+          />,
+          <Markdown
+            key={2}
+            text={markdownText}
+          />,
+        ]}
+      />
     </View>
   );
 };
