@@ -31,6 +31,30 @@ export const parseMarkdown = (text: string, styles: TMarkdownStyle): ReactNode[]
   // * Разбиваем текст на строки
   const lines = text.split("\n");
 
+  const renderLineWithHighlight = (line: string, index: number): React.ReactNode => {
+    const parts = line.split(/(==.+?==)/); // Разделение строки на части с выделением
+    const elements: React.ReactNode[] = [];
+
+    parts.forEach((part, partIndex) => {
+      if (/^==(.+)==$/.test(part)) {
+        // * Если текст выделен == ==, применяем стиль с фоном
+        const highlightedText = part.replace(/==(.+)==/, "$1");
+        elements.push(
+          <Text
+            key={generateUniqueKey(highlightedText, partIndex)}
+            style={styles.highlightStyle}>
+            {highlightedText}
+          </Text>,
+        );
+      } else {
+        // * Если текст обычный, рендерим как есть
+        elements.push(<Text key={generateUniqueKey(part, partIndex)}>{part}</Text>);
+      }
+    });
+
+    return <Text key={generateUniqueKey(line, index)}>{elements}</Text>;
+  };
+
   lines.forEach((line, index) => {
     // * Заголовки
     if (/^######\s*(.*)/.test(line)) {
@@ -106,22 +130,7 @@ export const parseMarkdown = (text: string, styles: TMarkdownStyle): ReactNode[]
     }
     // * Выделение цветом через == ==
     else if (/==(.+?)==/.test(line)) {
-      // * Регулярное выражение для поиска и разделения текста с выделением цветом
-      const parts = line.split(/(==.+?==)/).map((part, idx) => {
-        if (/^==(.+)==$/.test(part)) {
-          // * Выделяем цветом
-          const highlightedText = part.replace(/==(.+)==/, "$1");
-          return (
-            <Text
-              key={generateUniqueKey(highlightedText, idx)}
-              style={styles.highlightStyle}>
-              {highlightedText}
-            </Text>
-          );
-        }
-        return part;
-      });
-      elements.push(<Text key={generateUniqueKey(line, index)}>{parts}</Text>);
+      elements.push(renderLineWithHighlight(line, index));
     }
     // * Списки
     else if (/^\*\s+(.*)/.test(line)) {

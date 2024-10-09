@@ -42,10 +42,7 @@ export function StepsSwiper(props: TStepsSwiperProps) {
         autoPlay={false}
         autoPlayReverse={false}
         data={data}
-        modeConfig={{
-          snapDirection: "left",
-          stackInterval: 18,
-        }}
+        modeConfig={{}}
         customConfig={() => ({ type: "positive", viewCount: 5 })}
         renderItem={({ index }) => <View style={styles.dataContainer}>{data[index]}</View>}
       />

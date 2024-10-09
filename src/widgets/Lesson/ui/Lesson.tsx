@@ -37,6 +37,10 @@ export const Lesson = () => {
             key={2}
             text={markdownText}
           />,
+          <Markdown
+            key={2}
+            text={markdownText}
+          />,
         ]}
       />
     </View>
