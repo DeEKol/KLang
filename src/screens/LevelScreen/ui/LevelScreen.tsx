@@ -5,7 +5,7 @@ import { View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 // ? Component Imports
 import type { TStudyStackParamList } from "app/providers/NavigationProvider";
-import { ButtonUI } from "shared/ui";
+import { ButtonUI } from "shared/ui/atoms";
 
 // ? Types
 export type TLevelScreenProps = NativeStackScreenProps<TStudyStackParamList, "LevelScreen">;

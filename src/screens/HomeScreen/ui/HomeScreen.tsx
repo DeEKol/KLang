@@ -7,7 +7,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 // ? Layer Imports
 import type { THomeStackParamList } from "app/providers/NavigationProvider";
 import CloseIcon from "assets/icons/CloseIcon.svg";
-import { ButtonUI } from "shared/ui";
+import { ButtonUI } from "shared/ui/atoms";
 import { LangSwitcher } from "widgets/LangSwitcher";
 import { ThemeSwitcher } from "widgets/ThemeSwitcher";
 

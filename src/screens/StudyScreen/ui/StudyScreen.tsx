@@ -7,7 +7,7 @@ import { FlatList, Text, View } from "react-native";
 import type { TStudyStackScreenProps } from "app/providers/NavigationProvider";
 import type { TLevelsModel } from "screens/StudyScreen/models/levelsModel";
 import { levelsModel } from "screens/StudyScreen/models/levelsModel";
-import { ButtonUI } from "shared/ui";
+import { ButtonUI } from "shared/ui/atoms";
 
 // ? Types
 type TStudyScreenProps = TStudyStackScreenProps;

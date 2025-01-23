@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { ViewStyle } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import CloseIcon from "assets/icons/CloseIcon.svg";
-import { ButtonUI, EButtonUITheme } from "shared/ui";
+import { ButtonUI, EButtonUITheme } from "shared/ui/atoms";
 
 export const ThirdScreen = () => {
   const { t } = useTranslation("thirdScreen");

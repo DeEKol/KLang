@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import type { ViewStyle } from "react-native";
 import { FlatList, NativeEventEmitter, StyleSheet, Text, View } from "react-native";
 import type { IWordMatcherSchema } from "features/WordMatcher";
-import { ButtonUI } from "shared/ui";
+import { ButtonUI } from "shared/ui/atoms";
 
 const columnDefaultStyle: ViewStyle = {
   width: "50%",
