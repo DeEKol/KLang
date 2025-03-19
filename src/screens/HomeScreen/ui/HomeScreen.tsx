@@ -1,7 +1,7 @@
 // ? Library Imports
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 // ? Layer Imports
@@ -24,29 +24,7 @@ export const HomeScreen = ({ navigation }: THomeScreenProps) => {
   // ? Render
   return (
     <View>
-      <ButtonUI
-        title={t("Go to UIScreen")}
-        onPress={() => navigation.navigate("UIScreen")}
-      />
-      <LangSwitcher />
-      <ThemeSwitcher />
-      <Svg
-        height="50%"
-        width="50%"
-        viewBox="0 0 100 100">
-        <Circle
-          cx="50"
-          cy="50"
-          r="50"
-          stroke="purple"
-          strokeWidth=".5"
-          fill="violet"
-        />
-      </Svg>
-      <CloseIcon
-        width={120}
-        height={40}
-      />
+      <Text>{t("This is test screen")}</Text>
     </View>
   );
 };

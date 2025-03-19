@@ -2,6 +2,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { TestStackNavigator } from "app/providers/NavigationProvider/MainTabNavigator/TestStackNavigator/ui/TestStackNavigator";
 // ? Layer Imports
 import { PracticeScreen } from "screens/PracticeScreen";
 import { SettingsScreen } from "screens/SettingsScreen";
@@ -66,7 +67,7 @@ export const MainTabNavigator = () => {
       />
       <Tab.Screen
         name="TestScreen"
-        component={TestScreen}
+        component={TestStackNavigator}
         options={{
           title: t("Test Screen"),
         }}
