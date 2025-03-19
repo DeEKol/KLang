@@ -54,15 +54,15 @@ const styles = StyleSheet.create({
   separator: {
     height: 10,
   },
-  activeButton: {
-    backgroundColor: "#7AC6E973",
-    padding: 5,
-    borderRadius: 8,
-  },
-  button: {
-    padding: 5,
-    borderRadius: 8,
-  },
+  // activeButton: {
+  //   backgroundColor: "#7AC6E973",
+  //   padding: 5,
+  //   borderRadius: 8,
+  // },
+  // button: {
+  //   padding: 5,
+  //   borderRadius: 8,
+  // },
 });
 
 const Column = ({ words, type, eventEmitter, setValue }: IWordMatcherSchema) => {
@@ -83,7 +83,7 @@ const Column = ({ words, type, eventEmitter, setValue }: IWordMatcherSchema) => 
           <ButtonUI
             key={word}
             title={word}
-            style={index === selectedIdx ? styles.activeButton : styles.button}
+            // style={index === selectedIdx ? styles.activeButton : styles.button}
             onPress={(e) => {
               console.log("onPress", e.nativeEvent.target);
               setSelectedIdx(index);

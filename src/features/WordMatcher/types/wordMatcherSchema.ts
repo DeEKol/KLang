@@ -4,5 +4,5 @@ export interface IWordMatcherSchema {
   type: string;
   words: string[];
   setValue: (word: any) => void;
-  // eventEmitter: NativeEventEmitter;
+  eventEmitter?: NativeEventEmitter;
 }

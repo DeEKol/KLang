@@ -1,6 +1,5 @@
 // ? Library Imports
-import type { ReactNode } from "react";
-import * as React from "react";
+import React, { type ReactNode } from "react";
 import type { ViewStyle } from "react-native";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
