@@ -7,7 +7,7 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 // ? Layer Imports
 import type { THomeStackParamList } from "app/providers/NavigationProvider";
 import CloseIcon from "assets/icons/CloseIcon.svg";
-import { ButtonUI } from "shared/ui/atoms";
+import { ButtonUI, RoadMapButtonUi } from "shared/ui/atoms";
 import { LangSwitcher } from "widgets/LangSwitcher";
 import { ThemeSwitcher } from "widgets/ThemeSwitcher";
 
@@ -24,7 +24,9 @@ export const HomeScreen = ({ navigation }: THomeScreenProps) => {
   // ? Render
   return (
     <View>
-      <Text>{t("This is test screen")}</Text>
+      {/*<RoadMapButtonUi text={t("Alphabet")} />*/}
+      {/*<RoadMapButtonUi text="btn" />*/}
+      {/*<RoadMapButtonUi text="btn" />*/}
     </View>
   );
 };

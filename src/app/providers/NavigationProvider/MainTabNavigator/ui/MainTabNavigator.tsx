@@ -2,7 +2,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { TestStackNavigator } from "app/providers/NavigationProvider/MainTabNavigator/TestStackNavigator/ui/TestStackNavigator";
 // ? Layer Imports
 import { PracticeScreen } from "screens/PracticeScreen";
 import { SettingsScreen } from "screens/SettingsScreen";
@@ -11,6 +10,7 @@ import { TestScreen } from "screens/TestScreen";
 // ? Slice Imports
 import { HomeStackNavigator } from "../HomeStackNavigator/ui/HomeStackNavigator";
 import { StudyStackNavigator } from "../StudyStackNavigator/ui/StudyStackNavigator";
+import { TestStackNavigator } from "../TestStackNavigator/ui/TestStackNavigator";
 
 // ? Components
 const Tab = createBottomTabNavigator<TMainTabParamList>();

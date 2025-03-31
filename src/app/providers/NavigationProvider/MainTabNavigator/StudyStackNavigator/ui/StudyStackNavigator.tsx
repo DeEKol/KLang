@@ -10,7 +10,7 @@ import { StudyScreen } from "screens/StudyScreen/ui/StudyScreen";
 // ? Types
 export type TStudyStackParamList = {
   StudyScreen: undefined;
-  LevelScreen: undefined;
+  // LevelScreen: undefined;
   LessonScreen: undefined;
 };
 
@@ -28,16 +28,16 @@ export const StudyStackNavigator = () => {
     <Stack.Navigator
       initialRouteName="StudyScreen"
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
       }}>
       <Stack.Screen
         name="StudyScreen"
         component={StudyScreen}
       />
-      <Stack.Screen
-        name="LevelScreen"
-        component={LevelScreen}
-      />
+      {/*<Stack.Screen*/}
+      {/*  name="LevelScreen"*/}
+      {/*  component={LevelScreen}*/}
+      {/*/>*/}
       <Stack.Screen
         name="LessonScreen"
         component={LessonScreen}

@@ -5,9 +5,10 @@ import type { ListRenderItem } from "react-native";
 import { FlatList, Text, View } from "react-native";
 // ? Layer Imports
 import type { TStudyStackScreenProps } from "app/providers/NavigationProvider";
+import { lessonsModel } from "screens/StudyScreen/models/lessonsModel";
 import type { TLevelsModel } from "screens/StudyScreen/models/levelsModel";
-import { levelsModel } from "screens/StudyScreen/models/levelsModel";
-import { ButtonUI } from "shared/ui/atoms";
+// import { levelsModel } from "screens/StudyScreen/models/levelsModel";
+import { ButtonUI, RoadMapButtonUi } from "shared/ui/atoms";
 
 // ? Types
 type TStudyScreenProps = TStudyStackScreenProps;
@@ -19,9 +20,15 @@ export const StudyScreen = ({ navigation }: TStudyScreenProps) => {
   // ? Renders
   // * Функция рендеринга каждого элемента FlatList
   const renderLevel: ListRenderItem<TLevelsModel> = ({ item }) => (
-    <ButtonUI
+    // <ButtonUI
+    //   key={item.key}
+    //   title={t(item.title)}
+    //   onPress={() => navigation.navigate(item.navigate)}
+    // />
+    <RoadMapButtonUi
+      text={t(item.title)}
       key={item.key}
-      title={t(item.title)}
+      // title={t(item.title)}
       onPress={() => navigation.navigate(item.navigate)}
     />
   );
@@ -32,7 +39,7 @@ export const StudyScreen = ({ navigation }: TStudyScreenProps) => {
 
       {/* Iterate over the model */}
       <FlatList
-        data={levelsModel}
+        data={lessonsModel}
         renderItem={renderLevel}
         keyExtractor={(item) => item.key} // Уникальный ключ для каждого элемента
       />
