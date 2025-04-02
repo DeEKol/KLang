@@ -1,8 +1,6 @@
-/* eslint-disable react-native/no-color-literals */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { ViewStyle } from "react-native";
-import { FlatList, NativeEventEmitter, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View, type ViewStyle } from "react-native";
 import type { IWordMatcherSchema } from "features/WordMatcher";
 import { ButtonUI } from "shared/ui/atoms";
 
@@ -54,43 +52,32 @@ const styles = StyleSheet.create({
   separator: {
     height: 10,
   },
-  // activeButton: {
-  //   backgroundColor: "#7AC6E973",
-  //   padding: 5,
-  //   borderRadius: 8,
-  // },
-  // button: {
-  //   padding: 5,
-  //   borderRadius: 8,
-  // },
 });
 
 const Column = ({ words, type, eventEmitter, setValue }: IWordMatcherSchema) => {
-  // const onPress = (word: any) => {
-  //   eventEmitter.emit(`select-${type}-word`, { word: word.item });
-  // };
-  const [selectedIdx, setSelectedIdx] = React.useState(0);
+  const [selectedIdx, setSelectedIdx] = useState(0);
 
   return (
     <View style={type === "native" ? styles.leftColumn : styles.rightColumn}>
       <FlatList
+        keyExtractor={(item) => item}
         ItemSeparatorComponent={({ highlighted }) => (
           <View style={[styles.separator, highlighted]} />
         )}
         data={words}
         renderItem={({ item: word, index }) => (
-          // <View style={index === selectedIdx ? styles.activeButton : null}>
           <ButtonUI
-            key={word}
             title={word}
-            // style={index === selectedIdx ? styles.activeButton : styles.button}
+            style={(state: { pressed: boolean }) => {
+              if (state.pressed) {
+                return [styles.textStyle, styles.match];
+              }
+            }}
             onPress={(e) => {
-              console.log("onPress", e.nativeEvent.target);
               setSelectedIdx(index);
               setValue(word);
             }}
           />
-          // </View>
         )}
       />
     </View>
@@ -98,48 +85,28 @@ const Column = ({ words, type, eventEmitter, setValue }: IWordMatcherSchema) => 
 };
 
 export const WordMatcher = () => {
-  // const eventEmitter = new NativeEventEmitter();
-
-  const [wordsPairs, setPairs] = React.useState<object>({});
-  const [leftValue, setLeftValue] = React.useState<string>("");
-  const [rightValue, setRightValue] = React.useState<string>("");
-
   const wordsMap: { [key: string]: string } = {
     Cat: "Кот",
     Dog: "Собака",
     Fish: "Рыба",
     Elephant: "Слон",
   };
-  const learningWordsCount = 4;
-  const nativeWords = Object.keys(wordsMap);
-  const learningWords = Object.values(wordsMap);
 
-  // eventEmitter.addListener("select-native-word", ({ word }) => {
-  //   setLeftValue(word);
-  // });
-  // eventEmitter.addListener("select-learning-word", ({ word }) => {
-  //   setRightValue(word);
-  // });
+  const [filteredNative, setFilteredNative] = useState(Object.keys(wordsMap));
+  const [filteredLearning, setFilteredLearning] = useState(Object.values(wordsMap));
 
-  const resetValues = () => {
-    setLeftValue("");
-    setRightValue("");
-  };
-
-  const isMatch = (object: object, map: Record<string, string>) => {
-    const entries = Object.entries(object);
-
-    return (
-      entries.every(([key, word]) => word === map[key]) && entries.length === learningWordsCount
-    );
-  };
+  const [leftValue, setLeftValue] = useState<string>("");
+  const [rightValue, setRightValue] = useState<string>("");
 
   useEffect(() => {
-    if (!!leftValue && !!rightValue) {
-      setPairs({ ...wordsPairs, [leftValue]: rightValue });
-      resetValues();
+    if (leftValue && rightValue) {
+      if (wordsMap[leftValue] === rightValue) {
+        setFilteredNative((prev) => prev.filter((w) => w !== leftValue));
+        setFilteredLearning((prev) => prev.filter((w) => w !== rightValue));
+      }
+      setLeftValue("");
+      setRightValue("");
     }
-    // console.log(wordsPairs);
   }, [leftValue, rightValue]);
 
   return (
@@ -147,19 +114,17 @@ export const WordMatcher = () => {
       <Text style={styles.textStyle}>{"Word Matcher"}</Text>
       <View style={styles.columnContainer}>
         <Column
-          // eventEmitter={eventEmitter}
           type="native"
-          words={[...nativeWords].reverse()}
+          words={[...filteredNative].reverse()}
           setValue={setLeftValue}
         />
         <Column
-          // eventEmitter={eventEmitter}
           type="learning"
-          words={learningWords}
+          words={[...filteredLearning]}
           setValue={setRightValue}
         />
       </View>
-      {isMatch(wordsPairs, wordsMap) ? (
+      {filteredNative.length === 0 && filteredLearning.length === 0 ? (
         <Text style={[styles.textStyle, styles.match]}>{"Match!"}</Text>
       ) : (
         <Text style={[styles.textStyle, styles.notMatch]}>{"Not match"}</Text>
