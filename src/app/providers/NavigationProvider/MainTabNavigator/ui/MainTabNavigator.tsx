@@ -9,6 +9,7 @@ import { TestScreen } from "screens/TestScreen";
 
 // ? Slice Imports
 import { HomeStackNavigator } from "../HomeStackNavigator/ui/HomeStackNavigator";
+import { PracticeStackNavigator } from "../PracticeStackNavigator/ui/PracticeStackNavigator";
 import { StudyStackNavigator } from "../StudyStackNavigator/ui/StudyStackNavigator";
 import { TestStackNavigator } from "../TestStackNavigator/ui/TestStackNavigator";
 
@@ -53,7 +54,7 @@ export const MainTabNavigator = () => {
       />
       <Tab.Screen
         name="PracticeScreen"
-        component={PracticeScreen}
+        component={PracticeStackNavigator}
         options={{
           title: t("Practice Screen"),
         }}
