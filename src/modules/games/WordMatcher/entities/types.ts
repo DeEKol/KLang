@@ -1,8 +1,7 @@
-import type { NativeEventEmitter } from "react-native";
+export type TWordsPair = [string, string];
 
 export interface IWordMatcherSchema {
   type: string;
   words: string[];
   setValue: (word: string) => void;
-  eventEmitter?: NativeEventEmitter;
 }
