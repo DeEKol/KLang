@@ -3,12 +3,18 @@ import React from "react";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // ? Layer Imports
-import { HangelScreen, PracticeScreen, WordMatcherScreen } from "screens/PracticeScreen";
+import {
+  HangelScreen,
+  PracticeScreen,
+  SequencesBuilderScreen,
+  WordMatcherScreen,
+} from "screens/PracticeScreen";
 // ? Types
 export type TPracticeStackParamList = {
   PracticeScreen: undefined;
   HangelScreen: undefined;
   WordMatcherScreen: undefined;
+  SequencesBuilderScreen: undefined;
 };
 
 export type TStudyStackScreenProps = NativeStackScreenProps<TPracticeStackParamList, "StudyScreen">;
@@ -37,6 +43,13 @@ export const PracticeStackNavigator = () => {
         component={HangelScreen}
         options={{
           title: "Hangel Board",
+        }}
+      />
+      <Stack.Screen
+        name="SequencesBuilderScreen"
+        component={SequencesBuilderScreen}
+        options={{
+          title: "Sequences Builder",
         }}
       />
       <Stack.Screen

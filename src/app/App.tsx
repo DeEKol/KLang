@@ -1,13 +1,14 @@
 import React from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationProvider } from "app/providers/NavigationProvider";
 import { StoreProvider } from "app/providers/StoreProvider";
-
-import "react-native-gesture-handler";
 
 function App(): React.JSX.Element {
   return (
     <StoreProvider>
-      <NavigationProvider />
+      <GestureHandlerRootView>
+        <NavigationProvider />
+      </GestureHandlerRootView>
     </StoreProvider>
   );
 }

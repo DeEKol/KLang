@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import type { ListRenderItem } from "react-native";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { practicesModel, type TPracticesModel } from "screens/PracticeScreen/models/practicesModel";
 import { ButtonUI } from "shared/ui/atoms";
 
@@ -20,9 +20,6 @@ export const PracticeScreen = ({ navigation }: any) => {
 
   return (
     <View>
-      <Text>{t("Go to practice!")}</Text>
-
-      {/* Iterate over the model */}
       <FlatList
         data={practicesModel}
         renderItem={renderItem}

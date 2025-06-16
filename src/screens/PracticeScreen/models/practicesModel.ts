@@ -2,7 +2,7 @@
 export type TPracticesModel = {
   key: string;
   title: string;
-  navigate: "HangelScreen" | "WordMatcherScreen" | "UIScreen";
+  navigate: "HangelScreen" | "WordMatcherScreen" | "SequencesBuilderScreen" | "UIScreen";
 };
 
 // ? Models
@@ -16,5 +16,10 @@ export const practicesModel: TPracticesModel[] = [
     key: "word_matcher",
     title: "Word Matcher",
     navigate: "WordMatcherScreen",
+  },
+  {
+    key: "sequences_builder",
+    title: "Sequences Builder",
+    navigate: "SequencesBuilderScreen",
   },
 ];
