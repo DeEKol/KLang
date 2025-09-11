@@ -1,1 +1,1 @@
-export { LevelScreen } from "./ui/LevelScreen";
+export { LevelScreen } from "./LevelScreen";

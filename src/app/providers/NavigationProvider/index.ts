@@ -1,7 +1,8 @@
-export { type THomeStackParamList } from "./MainTabNavigator/HomeStackNavigator/ui/HomeStackNavigator";
+export { type THomeStackParamList } from "./MainTabNavigator/HomeStackNavigator";
+export { type TPracticeStackParamList } from "./MainTabNavigator/PracticeStackNavigator";
 export {
   type TStudyStackParamList,
   type TStudyStackScreenProps,
-} from "./MainTabNavigator/StudyStackNavigator/ui/StudyStackNavigator";
-export { type TTestStackParamList } from "./MainTabNavigator/TestStackNavigator/ui/TestStackNavigator";
-export { NavigationProvider } from "./ui/NavigationProvider";
+} from "./MainTabNavigator/StudyStackNavigator";
+export { type TTestStackParamList } from "./MainTabNavigator/TestStackNavigator";
+export { NavigationProvider } from "./NavigationProvider";

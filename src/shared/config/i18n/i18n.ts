@@ -6,7 +6,7 @@ void i18n
   .use(RNLanguageDetector)
   .use(initReactI18next)
   .init({
-    compatibilityJSON: "v3",
+    // compatibilityJSON: "v3",
     fallbackLng: "ru",
     debug: __DEV__,
     lng: "ru",
@@ -20,10 +20,6 @@ void i18n
         navigation: require("../../../../public/locales/en/navigation.json"),
         homeScreen: require("../../../../public/locales/en/homeScreen.json"),
         uiScreen: require("../../../../public/locales/en/uiScreen.json"),
-        firstScreen: require("../../../../public/locales/en/firstScreen.json"),
-        secondScreen: require("../../../../public/locales/en/secondScreen.json"),
-        thirdScreen: require("../../../../public/locales/en/thirdScreen.json"),
-        fourthScreen: require("../../../../public/locales/en/fourthScreen.json"),
         studyScreen: require("../../../../public/locales/en/studyScreen.json"),
         practiceScreen: require("../../../../public/locales/en/practiceScreen.json"),
         settingsScreen: require("../../../../public/locales/en/settingsScreen.json"),
@@ -35,10 +31,6 @@ void i18n
         navigation: require("../../../../public/locales/ru/navigation.json"),
         homeScreen: require("../../../../public/locales/ru/homeScreen.json"),
         uiScreen: require("../../../../public/locales/ru/uiScreen.json"),
-        firstScreen: require("../../../../public/locales/ru/firstScreen.json"),
-        secondScreen: require("../../../../public/locales/ru/secondScreen.json"),
-        thirdScreen: require("../../../../public/locales/ru/thirdScreen.json"),
-        fourthScreen: require("../../../../public/locales/ru/fourthScreen.json"),
         studyScreen: require("../../../../public/locales/ru/studyScreen.json"),
         practiceScreen: require("../../../../public/locales/ru/practiceScreen.json"),
         settingsScreen: require("../../../../public/locales/ru/settingsScreen.json"),

@@ -1,1 +1,1 @@
-export { StepsSwiper } from "./ui/StepsSwiper";
+export { StepsSwiper } from "./StepsSwiper";

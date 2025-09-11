@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { getThemeColor } from "shared/lib/theme/model/selectors/getThemeColor/getThemeColor";
 
 // ? Layer Imports
-import { MainTabNavigator } from "../MainTabNavigator/ui/MainTabNavigator";
+import { MainTabNavigator } from "./MainTabNavigator/MainTabNavigator";
 
 // ? Components
 const RootStack = createNativeStackNavigator<RootStackParamList>();

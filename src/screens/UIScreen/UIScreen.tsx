@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { ViewStyle } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import CloseIcon from "assets/icons/CloseIcon.svg";
-import UIScreenStyles from "screens/UIScreen/ui/UIScreen.styles";
+import UIScreenStyles from "screens/UIScreen/UIScreen.styles";
 import { ButtonUI, EButtonUITheme } from "shared/ui/atoms";
 import { FlipCardUI } from "shared/ui/molecules";
 

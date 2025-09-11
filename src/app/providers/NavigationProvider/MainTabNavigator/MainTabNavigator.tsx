@@ -8,10 +8,10 @@ import { SettingsScreen } from "screens/SettingsScreen";
 import { TestScreen } from "screens/TestScreen";
 
 // ? Slice Imports
-import { HomeStackNavigator } from "../HomeStackNavigator/ui/HomeStackNavigator";
-import { PracticeStackNavigator } from "../PracticeStackNavigator/ui/PracticeStackNavigator";
-import { StudyStackNavigator } from "../StudyStackNavigator/ui/StudyStackNavigator";
-import { TestStackNavigator } from "../TestStackNavigator/ui/TestStackNavigator";
+import { HomeStackNavigator } from "./HomeStackNavigator";
+import { PracticeStackNavigator } from "./PracticeStackNavigator";
+import { StudyStackNavigator } from "./StudyStackNavigator";
+import { TestStackNavigator } from "./TestStackNavigator";
 
 // ? Components
 const Tab = createBottomTabNavigator<TMainTabParamList>();

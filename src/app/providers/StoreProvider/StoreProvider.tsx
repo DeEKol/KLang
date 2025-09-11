@@ -3,10 +3,10 @@ import { Provider, useDispatch } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 
-import { createReduxStore } from "../config/store";
+import { createReduxStore } from "./config/store";
 
 type TStoreProviderProps = {
-  children: string | JSX.Element | JSX.Element[];
+  children: string | React.ReactElement | React.ReactElement[];
 };
 const store = createReduxStore();
 

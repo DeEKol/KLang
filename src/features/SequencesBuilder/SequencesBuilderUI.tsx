@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 
-import DraggableWordUI from "./DraggableWordUI";
+import DraggableWordUI from "./ui/DraggableWordUI";
 
 interface IMockData {
   sentenceParts: string[];
@@ -61,8 +61,9 @@ const SequencesBuilderUI = () => {
             style={[
               styles.blankContainer,
               filled?.correct !== undefined &&
-              (filled?.correct ? styles.correctBlank : styles.incorrectBlank),
-            ]}>
+                (filled?.correct ? styles.correctBlank : styles.incorrectBlank),
+            ]}
+          >
             <Text style={styles.blankText}>{filled?.word || "______"}</Text>
           </View>
         );
@@ -70,7 +71,8 @@ const SequencesBuilderUI = () => {
       return (
         <Text
           key={`text-${index}`}
-          style={styles.sentenceText}>
+          style={styles.sentenceText}
+        >
           {part}
         </Text>
       );

@@ -1,1 +1,1 @@
-export { LessonScreen } from "./ui/LessonScreen";
+export { LessonScreen } from "./LessonScreen";

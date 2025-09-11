@@ -4,6 +4,7 @@ import { useSharedValue, withTiming } from "react-native-reanimated";
 import Slider from "@react-native-community/slider";
 import type { SkPath } from "@shopify/react-native-skia";
 import { Canvas, Group, Path as SkiaPath, Skia, useCanvasRef } from "@shopify/react-native-skia";
+import { v4 as uuid } from "uuid";
 
 interface Stroke {
   path: SkPath;
@@ -49,7 +50,7 @@ const AnimatedStroke = ({ path, width }: Stroke) => {
   );
 };
 
-const GridOverlay = ({ width = 400, height = 400 }: { width: number; height: number }) => {
+const GridOverlay = ({ width = 400, height = 400 }: { width?: number; height?: number }) => {
   // Основные параметры сетки
   const lineColor = Skia.Color("#d3d3d3"); // Серый цвет линий
   const lineWidth = 1.5;
@@ -206,9 +207,9 @@ export const HangelBoard = () => {
           ref={canvasRef}
           style={styles.canvas}>
           <GridOverlay />
-          {strokes.map((s, i) => (
+          {strokes.map((s, key) => (
             <AnimatedStroke
-              key={i}
+              key={uuid()}
               path={s.path}
               width={s.width}
             />

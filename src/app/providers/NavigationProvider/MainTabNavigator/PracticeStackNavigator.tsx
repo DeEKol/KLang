@@ -15,6 +15,7 @@ export type TPracticeStackParamList = {
   HangelScreen: undefined;
   WordMatcherScreen: undefined;
   SequencesBuilderScreen: undefined;
+  StudyScreen: undefined;
 };
 
 export type TStudyStackScreenProps = NativeStackScreenProps<TPracticeStackParamList, "StudyScreen">;

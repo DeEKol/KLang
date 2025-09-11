@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LessonScreen } from "screens/LessonScreen";
 import { LevelScreen } from "screens/LevelScreen";
 // ? Layer Imports
-import { StudyScreen } from "screens/StudyScreen/ui/StudyScreen";
+import { StudyScreen } from "screens/StudyScreen/StudyScreen";
 
 // ? Types
 export type TStudyStackParamList = {

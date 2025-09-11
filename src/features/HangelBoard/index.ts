@@ -1,1 +1,1 @@
-export { HangelBoard } from "./ui/HangelBoard";
+export { HangelBoard } from "./HangelBoard";

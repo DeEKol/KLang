@@ -1,1 +1,1 @@
-export { UIScreen } from "./ui/UIScreen";
+export { UIScreen } from "./UIScreen";
