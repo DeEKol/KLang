@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-//    "baseUrl": ".",
     "paths": {
       "*": [
         "./src/*"
       ]
     },
-    "typeRoots": ["./src/app/types"],
+    "typeRoots": ["./src/app/types", "./node_modules/@types"],
   },
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["**/node_modules", "**/Pods"]
 }

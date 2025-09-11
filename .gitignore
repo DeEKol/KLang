@@ -21,7 +21,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 ios/KLang.xcodeproj
-ios/.xcode.env.local
+**/.xcode.env.local
 
 # Android/IntelliJ
 #
@@ -34,6 +34,7 @@ local.properties
 .cxx/
 *.keystore
 !debug.keystore
+.kotlin/
 
 # node.js
 #
@@ -58,7 +59,7 @@ yarn-error.log
 *.jsbundle
 
 # Ruby / CocoaPods
-/ios/Pods/
+**/Pods/
 /ios/Podfile.lock
 /vendor/bundle/
 
@@ -67,6 +68,14 @@ yarn-error.log
 
 # testing
 /coverage
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
 
 # other
 /.env
