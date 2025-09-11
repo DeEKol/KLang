@@ -3,15 +3,12 @@
  */
 
 import React from "react";
-// Note: test renderer must be required after react-native.
-import renderer from "react-test-renderer";
-// Note: import explicitly to use the types shipped with jest.
-import { it } from "@jest/globals";
-
-import "react-native";
+import ReactTestRenderer from "react-test-renderer";
 
 import App from "../src/app/App";
 
-it("renders correctly", () => {
-  renderer.create(<App />);
+test("renders correctly", async () => {
+  await ReactTestRenderer.act(() => {
+    ReactTestRenderer.create(<App />);
+  });
 });
