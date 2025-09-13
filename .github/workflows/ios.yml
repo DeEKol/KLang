@@ -13,8 +13,8 @@ jobs:
     env:
       NODE_VERSION: "20"
       IOS_SDK: "iphonesimulator"
-      SIMULATOR_NAME: "iPhone 15"
-      SIMULATOR_OS: "17.0"
+      SIMULATOR_NAME: "iPhone 16"
+      SIMULATOR_OS: "18.5"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
