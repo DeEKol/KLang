@@ -45,13 +45,50 @@ jobs:
 
       - name: Install CocoaPods
         run: |
+          set -e
           gem install cocoapods -v 1.16.0 || gem install cocoapods
+          gem install xcpretty -v 0.3.0 || true
+          gem install xcpretty-travis-formatter || true
           cd ios
           pod install --repo-update
           cd ..
 
+      - name: Cache CocoaPods & Pods
+        uses: actions/cache@v4
+        with:
+          path: |
+            ios/Pods
+            ~/.cocoapods
+            ios/Podfile.lock
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
       - name: Build iOS for simulator
+        env:
+          IOS_SDK: 'iphonesimulator'
+          SIMULATOR_NAME: 'iPhone 16'
+          SIMULATOR_OS: '18.5'
         run: |
           set -o pipefail
-          # Replace 'KLang' with the actual Xcode workspace/scheme if different
-          xcodebuild -workspace ios/KLang.xcworkspace -scheme KLang -sdk ${{ env.IOS_SDK }} -configuration Debug -destination "platform=iOS Simulator,name=${{ env.SIMULATOR_NAME }},OS=${{ env.SIMULATOR_OS }}" clean build | xcpretty
+
+          WORKSPACE="ios/KLang.xcworkspace"
+          SCHEME="KLang"
+          DEST="platform=iOS Simulator,OS=${SIMULATOR_OS},name=${SIMULATOR_NAME},arch=arm64"
+
+          echo "Building workspace: $WORKSPACE scheme: $SCHEME dest: $DEST"
+
+          export DERIVED_DATA="${HOME}/Library/Developer/Xcode/DerivedData/${GITHUB_RUN_ID}"
+          mkdir -p "${DERIVED_DATA}"
+
+          xcodebuild -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -sdk "${IOS_SDK}" \
+            -configuration Debug \
+            -destination "${DEST}" \
+            -derivedDataPath "${DERIVED_DATA}" \
+            clean build \
+            -parallelizeTargets -quiet -UseModernBuildSystem=YES | xcpretty || true
+
+          tail -n 200 "${DERIVED_DATA}/Logs/Build/*" || true
+
