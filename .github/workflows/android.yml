@@ -72,15 +72,32 @@ jobs:
           curl -fsSL "${CMDLINE_URL}" -o /tmp/"${cmdline_zip_filename}"
 
           # Распаковываем в нужную структуру: cmdline-tools/latest
-          unzip -q /tmp/"${cmdline_zip_filename}" -d /tmp/cmdline || ( echo "unzip failed"; exit 3 )
+          rm -rf /tmp/cmdline
+          mkdir -p /tmp/cmdline
+          unzip -q /tmp/"${cmdline_zip_filename}" -d /tmp/cmdline
           rm -f /tmp/"${cmdline_zip_filename}"
 
-          mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools/latest"
-          # Перемещаем содержимое распакованной папки cmdline-tools/* -> cmdline-tools/latest/
-          mv /tmp/cmdline/cmdline-tools/* "${ANDROID_SDK_ROOT}/cmdline-tools/latest/"
-          rm -rf /tmp/cmdline
+          sdkmanager_path=$(find /tmp/cmdline -type f -iname sdkmanager -print -quit || true)
+          if [ -z "$sdkmanager_path" ]; then
+            echo "ERROR: sdkmanager not found inside the unpacked zip (ls /tmp/cmdline):"
+            ls -la /tmp/cmdline || true
+            exit 3
+          fi
+          echo "Found sdkmanager at: $sdkmanager_path"
 
-          # Добавляем sdkmanager во временный PATH для этого шага
+          cmdline_root_dir=$(dirname "$(dirname "$sdkmanager_path")")
+          echo "cmdline root dir: $cmdline_root_dir"
+
+          mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools/latest"
+          if command -v rsync >/dev/null 2>&1; then
+            rsync -a "${cmdline_root_dir}/" "${ANDROID_SDK_ROOT}/cmdline-tools/latest/"
+          else
+            cp -a "${cmdline_root_dir}/." "${ANDROID_SDK_ROOT}/cmdline-tools/latest/"
+          fi
+
+          rm -rf /tmp/cmdline || true
+
+          # Add sdkmanager to PATH for this step
           export PATH="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
           echo "Using sdkmanager from: $(command -v sdkmanager || echo 'not found')"
           echo "PATH=${PATH}"
