@@ -1,4 +1,7 @@
 # KLang
+
+![Android CI](https://github.com/DeEKol/KLang/actions/workflows/android.yml/badge.svg)
+![iOS CI](https://github.com/DeEKol/KLang/actions/workflows/ios.yml/badge.svg)
  
 # Getting Started
  
