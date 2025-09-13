@@ -42,33 +42,57 @@ jobs:
           java-version: "11"
 
       - name: Ensure Android SDK & tools (platform 36 + build-tools 36.0.0)
-        env:
-          ANDROID_SDK_ROOT: ${{ runner.tool_cache }}/android-sdk
         run: |
-          set -e
+          set -euo pipefail
+
+          # Устанавливаем Android SDK в домашнюю директорию runner
           export ANDROID_SDK_ROOT="${HOME}/Android/Sdk"
-          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
-          mkdir -p "$ANDROID_SDK_ROOT/platforms" "$ANDROID_SDK_ROOT/build-tools" "$ANDROID_SDK_ROOT/platform-tools"
-          echo "Android SDK root: $ANDROID_SDK_ROOT"
+          mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools"
+          mkdir -p "${ANDROID_SDK_ROOT}/platforms" "${ANDROID_SDK_ROOT}/build-tools" "${ANDROID_SDK_ROOT}/platform-tools"
 
-          CMDLINE_ZIP="commandlinetools-linux_latest.zip"
-          URL="https://dl.google.com/android/repository/${CMDLINE_ZIP}"
-          echo "Downloading commandline tools from $URL"
-          curl -fsSL "$URL" -o /tmp/$CMDLINE_ZIP
+          echo "Android SDK root: ${ANDROID_SDK_ROOT}"
+          echo "Looking up latest commandline tools URL from Google's repository manifest..."
 
-          unzip -q /tmp/$CMDLINE_ZIP -d /tmp/cmdline
-          rm -f /tmp/$CMDLINE_ZIP
-          mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools/latest"
-          mv /tmp/cmdline/cmdline-tools/* "$ANDROID_SDK_ROOT/cmdline-tools/latest/"
+          # Получаем manifest с сервера Google и находим последнюю версию для Linux
+          MANIFEST_URL="https://dl.google.com/android/repository/repository2-1.xml"
+          tmp_manifest="/tmp/repo-manifest.xml"
+          curl -fsSL "${MANIFEST_URL}" -o "${tmp_manifest}"
+
+          # Ищем строки, содержащие commandlinetools-linux-XXXX_latest.zip и выбираем последнюю
+          cmdline_zip_filename=$(grep -oP 'commandlinetools-linux-[0-9]+_latest.zip' "${tmp_manifest}" | tail -n1)
+          if [ -z "${cmdline_zip_filename}" ]; then
+            echo "ERROR: cannot find commandlinetools-linux entry in manifest (${MANIFEST_URL})"
+            exit 2
+          fi
+          echo "Found commandline tools file: ${cmdline_zip_filename}"
+
+          # Составляем URL и скачиваем
+          CMDLINE_URL="https://dl.google.com/android/repository/${cmdline_zip_filename}"
+          echo "Downloading ${CMDLINE_URL} ..."
+          curl -fsSL "${CMDLINE_URL}" -o /tmp/"${cmdline_zip_filename}"
+
+          # Распаковываем в нужную структуру: cmdline-tools/latest
+          unzip -q /tmp/"${cmdline_zip_filename}" -d /tmp/cmdline || ( echo "unzip failed"; exit 3 )
+          rm -f /tmp/"${cmdline_zip_filename}"
+
+          mkdir -p "${ANDROID_SDK_ROOT}/cmdline-tools/latest"
+          # Перемещаем содержимое распакованной папки cmdline-tools/* -> cmdline-tools/latest/
+          mv /tmp/cmdline/cmdline-tools/* "${ANDROID_SDK_ROOT}/cmdline-tools/latest/"
           rm -rf /tmp/cmdline
 
-          export PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
-          echo "PATH=$PATH"
+          # Добавляем sdkmanager во временный PATH для этого шага
+          export PATH="${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
+          echo "Using sdkmanager from: $(command -v sdkmanager || echo 'not found')"
+          echo "PATH=${PATH}"
 
-          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}" --licenses || true
-          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}" "platform-tools" "platforms;android-36" "build-tools;36.0.0" "emulator" "cmdline-tools;latest"
+          # Принимаем лицензии и ставим platform-tools, platforms;android-36, build-tools;36.0.0 и emulator
+          yes | sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" --licenses || true
+          sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" "platform-tools" "platforms;android-36" "build-tools;36.0.0" "emulator" "cmdline-tools;latest"
 
-          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_SDK_ROOT}" --list
+          # Показываем список для отладки
+          sdkmanager --sdk_root="${ANDROID_SDK_ROOT}" --list || true
+
+        shell: bash
 
       - name: Cache Gradle
         uses: actions/cache@v4
