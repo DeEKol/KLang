@@ -7,17 +7,23 @@ import { animations } from "./assets";
 interface ILottieImageProps {
   visible: boolean;
   name: string;
+  onAnimationFinish?: () => void;
 }
 
-const LottieImage: React.FC<ILottieImageProps> = ({ visible, name = "" }) => {
+const LottieImage: React.FC<ILottieImageProps> = (props: ILottieImageProps) => {
+  // ? Props
+  const { visible, name = "", onAnimationFinish } = props;
+
+  // ? Render
   if (!visible) return null;
 
   return (
     <LottieView
       source={animations[name]}
       autoPlay
-      loop={true}
+      loop
       style={styles.container}
+      onAnimationFinish={onAnimationFinish}
     />
   );
 };
