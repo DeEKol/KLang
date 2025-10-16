@@ -3,15 +3,15 @@ import { useTranslation } from "react-i18next";
 import type { TextStyle } from "react-native";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import type { TThemeColors } from "shared/lib/theme";
-import { Colors, getThemeColor, themeActions } from "shared/lib/theme";
+import { getThemeMode, themeActions, type TThemeMode } from "entities/theme";
+import { Colors } from "shared/lib/theme";
 
 export const ThemeSwitcher = () => {
   const { t } = useTranslation();
-  const theme: TThemeColors = useSelector(getThemeColor);
+  const theme: TThemeMode = useSelector(getThemeMode);
   const dispatch = useDispatch();
 
-  const themeHandler = (color: TThemeColors) => {
+  const themeHandler = (color: TThemeMode) => {
     dispatch(themeActions.changeTheme(color));
   };
 
@@ -41,7 +41,7 @@ type TThemeSwitcherStyle = {
   textStyle: TextStyle;
 };
 
-const createStyles = (theme: TThemeColors) => {
+const createStyles = (theme: TThemeMode) => {
   const styles = StyleSheet.create<TThemeSwitcherStyle>({
     textStyle: {
       color: Colors[theme ?? "light"]?.text,

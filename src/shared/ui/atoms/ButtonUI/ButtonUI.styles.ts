@@ -1,7 +1,7 @@
 import type { TextStyle, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
+import type { TThemeMode } from "entities/theme";
 import { exhaustiveCheck } from "shared/helpers";
-import type { TThemeColors } from "shared/lib/theme";
 import { Colors, EPalette } from "shared/lib/theme";
 
 import { EButtonUITheme } from "./types";
@@ -20,7 +20,7 @@ const uiTheme = (themeUI: EButtonUITheme): ViewStyle | undefined => {
         return {
           borderWidth: 2,
           borderStyle: "solid",
-          borderColor: EPalette.RED,
+          borderColor: EPalette.ACCENT,
           borderRadius: 8,
         };
       case EButtonUITheme.CLEAR:
@@ -30,7 +30,7 @@ const uiTheme = (themeUI: EButtonUITheme): ViewStyle | undefined => {
         };
       case EButtonUITheme.DEFAULT:
         return {
-          backgroundColor: EPalette.BLUE_OPACITY,
+          backgroundColor: EPalette.PRIMARY,
           borderRadius: 8,
         };
       default:
@@ -39,7 +39,7 @@ const uiTheme = (themeUI: EButtonUITheme): ViewStyle | undefined => {
   })(themeUI);
 };
 
-export default (themeUI: EButtonUITheme, themeGlobal: TThemeColors) => {
+export default (themeUI: EButtonUITheme, themeGlobal: TThemeMode) => {
   return StyleSheet.create<TButtonUIStyle>({
     viewStyle: {
       margin: "auto",

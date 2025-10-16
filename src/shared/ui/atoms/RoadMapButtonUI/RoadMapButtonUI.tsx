@@ -6,7 +6,8 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import type { FlexStyle, ViewStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import { useDispatch, useSelector } from "react-redux";
 // ? Layer Imports
-import { Colors, EPalette, getThemeColor, type TThemeColors } from "shared/lib/theme";
+import { getThemeMode, type TThemeMode } from "entities/theme";
+import { Colors, EPalette } from "shared/lib/theme";
 
 // ? Types
 type TRoadMapButtonUiProps = {
@@ -24,7 +25,7 @@ export const RoadMapButtonUi = (props: TRoadMapButtonUiProps) => {
   } = props;
 
   // ? Hooks
-  const theme: TThemeColors = useSelector(getThemeColor);
+  const theme: TThemeMode = useSelector(getThemeMode);
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -50,7 +51,7 @@ type TRoadMapButtonUiStyle = {
 };
 
 // ? Styles
-const createStyles = (theme: TThemeColors) => {
+const createStyles = (theme: TThemeMode) => {
   const styles = StyleSheet.create<TRoadMapButtonUiStyle>({
     // container: {
     //   backgroundColor: "red",
@@ -63,7 +64,7 @@ const createStyles = (theme: TThemeColors) => {
     //   alignItems: "center",
     // },
     uiStyle: {
-      backgroundColor: EPalette.RED,
+      backgroundColor: EPalette.PRIMARY,
       width: 100,
       height: 100,
       borderRadius: 50,
@@ -76,7 +77,7 @@ const createStyles = (theme: TThemeColors) => {
       padding: 5,
     },
     buttonPressed: {
-      backgroundColor: EPalette.GREEN,
+      backgroundColor: EPalette.ACCENT,
     },
   });
   return styles;

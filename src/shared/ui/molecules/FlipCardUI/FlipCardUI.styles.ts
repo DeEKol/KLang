@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
-import type { TThemeColors } from "shared/lib/theme";
+import type { TThemeMode } from "entities/theme";
 import { EPalette } from "shared/lib/theme";
 import type { EButtonUITheme } from "shared/ui/atoms";
 
-export default function FlipCardUIStyles(themeUI: EButtonUITheme, themeGlobal: TThemeColors) {
+export default function FlipCardUIStyles(themeUI: EButtonUITheme, themeGlobal: TThemeMode) {
   return StyleSheet.create({
     container: {
       // flex: 1,
@@ -33,7 +33,7 @@ export default function FlipCardUIStyles(themeUI: EButtonUITheme, themeGlobal: T
       transform: [{ rotateY: "180deg" }],
     },
     text: {
-      color: EPalette.WHITE,
+      color: EPalette.PRIMARY,
       fontSize: 20,
       fontWeight: "bold",
     },
