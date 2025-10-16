@@ -3,33 +3,23 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // ? Layer Imports
-import { PracticeScreen } from "screens/PracticeScreen";
 import { SettingsScreen } from "screens/SettingsScreen";
-import { TestScreen } from "screens/TestScreen";
+import { ETabNavigation, type TBottomTabsParamList } from "shared/config/navigation";
 
 // ? Slice Imports
-import { HomeStackNavigator } from "./HomeStackNavigator";
-import { PracticeStackNavigator } from "./PracticeStackNavigator";
-import { StudyStackNavigator } from "./StudyStackNavigator";
-import { TestStackNavigator } from "./TestStackNavigator";
+import { HomeStackNavigator } from "./stacks/HomeStackNavigator";
+import { PracticeStackNavigator } from "./stacks/PracticeStackNavigator";
+import { StudyStackNavigator } from "./stacks/StudyStackNavigator";
+import { TestStackNavigator } from "./stacks/TestStackNavigator";
 
 // ? Components
-const Tab = createBottomTabNavigator<TMainTabParamList>();
-
-// ? Types
-export type TMainTabParamList = {
-  HomeScreen: undefined;
-  Study: undefined;
-  PracticeScreen: undefined;
-  SettingsScreen: undefined;
-  TestScreen: undefined;
-};
+const Tab = createBottomTabNavigator<TBottomTabsParamList>();
 
 /*
  * Компонент, основная таб навигация
  */
-export const MainTabNavigator = () => {
-  // ? Hooks
+export const BottomTabsNavigator = () => {
+  // ? i18n
   const { t } = useTranslation("navigation");
 
   // ? Render
@@ -39,35 +29,35 @@ export const MainTabNavigator = () => {
         headerShown: false,
       }}>
       <Tab.Screen
-        name="HomeScreen"
+        name={ETabNavigation.HOME}
         component={HomeStackNavigator}
         options={{
           title: t("Home"),
         }}
       />
       <Tab.Screen
-        name="Study"
+        name={ETabNavigation.STUDY}
         component={StudyStackNavigator}
         options={{
           title: t("Study Screen"),
         }}
       />
       <Tab.Screen
-        name="PracticeScreen"
+        name={ETabNavigation.PRACTICE}
         component={PracticeStackNavigator}
         options={{
           title: t("Practice Screen"),
         }}
       />
       <Tab.Screen
-        name="SettingsScreen"
+        name={ETabNavigation.SETTINGS}
         component={SettingsScreen}
         options={{
           title: t("Settings Screen"),
         }}
       />
       <Tab.Screen
-        name="TestScreen"
+        name={ETabNavigation.TEST}
         component={TestStackNavigator}
         options={{
           title: t("Test Screen"),

@@ -2,31 +2,26 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // ? Layer Imports
-import { HomeScreen } from "screens/HomeScreen";
+import { TestScreen } from "screens/TestScreen";
 import { UIScreen } from "screens/UIScreen";
-
-// ? Types
-export type THomeStackParamList = {
-  Home: undefined;
-  UIScreen: undefined;
-};
+import { ENavigation, type TTestStackParamList } from "shared/config/navigation";
 
 // ? Components
-const Stack = createNativeStackNavigator<THomeStackParamList>();
+const Stack = createNativeStackNavigator<TTestStackParamList>();
 
 /*
  * Компонент, стек навигация домашней страницы
  */
-export const HomeStackNavigator = () => {
+export const TestStackNavigator = () => {
   // ? Render
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Home"
-        component={HomeScreen}
+        name={ENavigation.TEST}
+        component={TestScreen}
       />
       <Stack.Screen
-        name="UIScreen"
+        name={ENavigation.UI_SCREEN}
         component={UIScreen}
       />
     </Stack.Navigator>

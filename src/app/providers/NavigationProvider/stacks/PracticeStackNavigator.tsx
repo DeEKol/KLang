@@ -1,6 +1,5 @@
 // ? Library Imports
 import React from "react";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // ? Layer Imports
 import {
@@ -9,16 +8,7 @@ import {
   SequencesBuilderScreen,
   WordMatcherScreen,
 } from "screens/PracticeScreen";
-// ? Types
-export type TPracticeStackParamList = {
-  PracticeScreen: undefined;
-  HangelScreen: undefined;
-  WordMatcherScreen: undefined;
-  SequencesBuilderScreen: undefined;
-  StudyScreen: undefined;
-};
-
-export type TStudyStackScreenProps = NativeStackScreenProps<TPracticeStackParamList, "StudyScreen">;
+import { ENavigation, type TPracticeStackParamList } from "shared/config/navigation";
 
 // ? Components
 const Stack = createNativeStackNavigator<TPracticeStackParamList>();
@@ -30,31 +20,31 @@ export const PracticeStackNavigator = () => {
   // ? Render
   return (
     <Stack.Navigator
-      initialRouteName="PracticeScreen"
+      initialRouteName={ENavigation.PRACTICE}
       screenOptions={{
         title: "Practice Screen",
         headerShown: true,
       }}>
       <Stack.Screen
-        name="PracticeScreen"
+        name={ENavigation.PRACTICE}
         component={PracticeScreen}
       />
       <Stack.Screen
-        name="HangelScreen"
+        name={ENavigation.HANGEL}
         component={HangelScreen}
         options={{
           title: "Hangel Board",
         }}
       />
       <Stack.Screen
-        name="SequencesBuilderScreen"
+        name={ENavigation.SEQUENCES_BUILDER}
         component={SequencesBuilderScreen}
         options={{
           title: "Sequences Builder",
         }}
       />
       <Stack.Screen
-        name="WordMatcherScreen"
+        name={ENavigation.WORD_MATCHER}
         component={WordMatcherScreen}
         options={{
           title: "Word Matcher",

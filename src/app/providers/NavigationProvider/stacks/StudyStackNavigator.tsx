@@ -1,20 +1,11 @@
 // ? Library Imports
 import React from "react";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { LessonScreen } from "screens/LessonScreen";
-import { LevelScreen } from "screens/LevelScreen";
 // ? Layer Imports
+import { LessonScreen } from "screens/LessonScreen";
 import { StudyScreen } from "screens/StudyScreen/StudyScreen";
-
-// ? Types
-export type TStudyStackParamList = {
-  StudyScreen: undefined;
-  // LevelScreen: undefined;
-  LessonScreen: undefined;
-};
-
-export type TStudyStackScreenProps = NativeStackScreenProps<TStudyStackParamList, "StudyScreen">;
+// import { LevelScreen } from "screens/LevelScreen";
+import { ENavigation, type TStudyStackParamList } from "shared/config/navigation";
 
 // ? Components
 const Stack = createNativeStackNavigator<TStudyStackParamList>();
@@ -26,20 +17,20 @@ export const StudyStackNavigator = () => {
   // ? Render
   return (
     <Stack.Navigator
-      initialRouteName="StudyScreen"
+      initialRouteName={ENavigation.STUDY}
       screenOptions={{
         headerShown: false,
       }}>
       <Stack.Screen
-        name="StudyScreen"
+        name={ENavigation.STUDY}
         component={StudyScreen}
       />
-      {/*<Stack.Screen*/}
-      {/*  name="LevelScreen"*/}
-      {/*  component={LevelScreen}*/}
-      {/*/>*/}
+      {/* <Stack.Screen
+        name={ENavigation.LEVEL}
+        component={LevelScreen}
+      /> */}
       <Stack.Screen
-        name="LessonScreen"
+        name={ENavigation.LESSON}
         component={LessonScreen}
       />
     </Stack.Navigator>
