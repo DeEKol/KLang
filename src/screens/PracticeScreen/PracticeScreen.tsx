@@ -1,15 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { useTranslation } from "react-i18next";
 import type { ListRenderItem } from "react-native";
 import { FlatList, StyleSheet, View } from "react-native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { TPracticeStackParamList } from "app/providers/NavigationProvider";
 import { practicesModel, type TPracticesModel } from "screens/PracticeScreen/models/practicesModel";
-import { ButtonUI } from "shared/ui/atoms";
+import type { ENavigation, TPracticeStackScreenProps } from "shared/config/navigation";
+import { Button } from "shared/ui/paper-kit";
 
-export type TLevelScreenProps = NativeStackScreenProps<TPracticeStackParamList>;
+const Separator = memo(() => <View style={styles.separator} />);
+Separator.displayName = "Separator";
 
-export const PracticeScreen = (props: TLevelScreenProps) => {
+export const PracticeScreen = (props: TPracticeStackScreenProps<ENavigation.PRACTICE>) => {
   // ? Props
   const { navigation } = props;
 
@@ -17,21 +17,19 @@ export const PracticeScreen = (props: TLevelScreenProps) => {
   const { t } = useTranslation("practiceScreen");
 
   const renderItem: ListRenderItem<TPracticesModel> = ({ item }) => (
-    <ButtonUI
+    <Button
       key={item.key}
-      title={t(item.title)}
-      onPress={() => navigation.navigate(item.navigate as keyof TPracticeStackParamList)}
-    />
+      onPress={() => navigation.navigate(item.navigate)}>
+      {t(item.title)}
+    </Button>
   );
-
-  const Separator = () => <View style={styles.separator} />;
 
   return (
     <View>
       <FlatList
         data={practicesModel}
         renderItem={renderItem}
-        ItemSeparatorComponent={() => <Separator />}
+        ItemSeparatorComponent={Separator}
         keyExtractor={(item) => item.key} // Уникальный ключ для каждого элемента
       />
     </View>
@@ -41,7 +39,7 @@ export const PracticeScreen = (props: TLevelScreenProps) => {
 const styles = StyleSheet.create({
   separator: {
     marginVertical: 8,
-    borderBottomColor: "#737373",
+    // borderBottomColor: "#737373",
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });

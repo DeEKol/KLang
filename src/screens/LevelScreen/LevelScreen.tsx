@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 // ? Component Imports
-import type { TStudyStackParamList } from "app/providers/NavigationProvider";
+import { ENavigation, type TStudyStackParamList } from "shared/config/navigation";
 import { ButtonUI } from "shared/ui/atoms";
 
 // ? Types
-export type TLevelScreenProps = NativeStackScreenProps<TStudyStackParamList, "LessonScreen">;
+export type TLevelScreenProps = NativeStackScreenProps<TStudyStackParamList, ENavigation.LEVEL>;
 
 /*
  * Экран уровня
@@ -25,7 +25,7 @@ export const LevelScreen = (props: TLevelScreenProps) => {
     <View>
       <ButtonUI
         title={t("Lesson")}
-        onPress={() => navigation.navigate("LessonScreen")}
+        onPress={() => navigation.navigate(ENavigation.LESSON)}
       />
     </View>
   );

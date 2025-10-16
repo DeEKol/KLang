@@ -1,8 +1,9 @@
+import { ENavigation, type TPracticeStackParamList } from "shared/config/navigation";
 // ? Types
 export type TPracticesModel = {
   key: string;
   title: string;
-  navigate: "HangelScreen" | "WordMatcherScreen" | "SequencesBuilderScreen" | "UIScreen";
+  navigate: keyof TPracticeStackParamList;
 };
 
 // ? Models
@@ -10,16 +11,16 @@ export const practicesModel: TPracticesModel[] = [
   {
     key: "hangel_board",
     title: "Hangman Board",
-    navigate: "HangelScreen",
+    navigate: ENavigation.HANGEL,
   },
   {
     key: "word_matcher",
     title: "Word Matcher",
-    navigate: "WordMatcherScreen",
+    navigate: ENavigation.WORD_MATCHER,
   },
   {
     key: "sequences_builder",
     title: "Sequences Builder",
-    navigate: "SequencesBuilderScreen",
+    navigate: ENavigation.SEQUENCES_BUILDER,
   },
 ];

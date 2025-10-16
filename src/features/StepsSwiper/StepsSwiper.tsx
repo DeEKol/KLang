@@ -59,14 +59,14 @@ type TStepsSwiperStyle = {
 // ? Styles
 const createStyles = (height: number) => {
   const styles = StyleSheet.create<TStepsSwiperStyle>({
-    container: { flex: 1, backgroundColor: EPalette.BLUE, justifyContent: "center" },
+    container: { flex: 1, backgroundColor: EPalette.PRIMARY, justifyContent: "center" },
     carousel: { width: "100%", height: height, justifyContent: "center" },
     dataContainer: {
       borderWidth: 1,
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: EPalette.RED,
+      backgroundColor: EPalette.ACCENT,
       height: height - 120,
     },
   });

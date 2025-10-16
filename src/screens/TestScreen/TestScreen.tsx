@@ -2,16 +2,17 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { TTestStackParamList } from "app/providers/NavigationProvider";
 import CloseIcon from "assets/icons/CloseIcon.svg";
+import {
+  ENavigation,
+  type TTestStackParamList,
+  type TTestStackScreenProps,
+} from "shared/config/navigation";
 import { ButtonUI } from "shared/ui/atoms";
 import { LangSwitcher } from "widgets/LangSwitcher";
 import { ThemeSwitcher } from "widgets/ThemeSwitcher";
 
-type TTestScreenProps = NativeStackScreenProps<TTestStackParamList, "Test">;
-
-export const TestScreen = ({ navigation }: TTestScreenProps) => {
+export const TestScreen = ({ navigation }: TTestStackScreenProps<ENavigation.TEST>) => {
   // ? Hooks
   const { t } = useTranslation("homeScreen");
 
@@ -20,7 +21,7 @@ export const TestScreen = ({ navigation }: TTestScreenProps) => {
     <View>
       <ButtonUI
         title={t("Go to UIScreen")}
-        onPress={() => navigation.navigate("UIScreen")}
+        onPress={() => navigation.navigate(ENavigation.UI_SCREEN)}
       />
       <LangSwitcher />
       <ThemeSwitcher />

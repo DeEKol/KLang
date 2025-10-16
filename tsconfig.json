@@ -6,7 +6,7 @@
       ]
     },
     "typeRoots": ["./src/app/types", "./node_modules/@types"],
-    "types": ["node"],
+    "types": ["node", "jest"],
   },
   "extends": "@react-native/typescript-config/tsconfig.json",
   "include": ["**/*.ts", "**/*.tsx"],

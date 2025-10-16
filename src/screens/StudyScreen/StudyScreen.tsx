@@ -3,17 +3,16 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import type { ListRenderItem } from "react-native";
 import { FlatList, Text, View } from "react-native";
-// ? Layer Imports
-import type { TStudyStackScreenProps } from "app/providers/NavigationProvider";
 import { lessonsModel } from "screens/StudyScreen/models/lessonsModel";
 import type { TLevelsModel } from "screens/StudyScreen/models/levelsModel";
+// ? Layer Imports
+import type { ENavigation, TStudyStackScreenProps } from "shared/config/navigation";
 // import { levelsModel } from "screens/StudyScreen/models/levelsModel";
 import { ButtonUI, RoadMapButtonUi } from "shared/ui/atoms";
 
 // ? Types
-type TStudyScreenProps = TStudyStackScreenProps;
 
-export const StudyScreen = ({ navigation }: TStudyScreenProps) => {
+export const StudyScreen = ({ navigation }: TStudyStackScreenProps<ENavigation.STUDY>) => {
   // ? Hooks
   const { t } = useTranslation("studyScreen");
 

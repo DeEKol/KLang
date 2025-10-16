@@ -1,4 +1,5 @@
 // ? Layer Imports
+import { ENavigation, type TStudyStackParamList } from "shared/config/navigation";
 
 // ? Types
 export type TLevelsModel = {
@@ -6,7 +7,7 @@ export type TLevelsModel = {
   title: string;
   // navigate: Extract<TStudyStackParamListKey, "LevelScreen">;
   // navigate: "LevelScreen";
-  navigate: "LessonScreen";
+  navigate: keyof TStudyStackParamList;
 };
 
 // ? Models
@@ -14,31 +15,31 @@ export const levelsModel: TLevelsModel[] = [
   {
     key: "level_1",
     title: "Level 1",
-    navigate: "LessonScreen",
+    navigate: ENavigation.LESSON,
   },
   {
     key: "level_2",
     title: "Level 2",
-    navigate: "LessonScreen",
+    navigate: ENavigation.LESSON,
   },
   {
     key: "level_3",
     title: "Level 3",
-    navigate: "LessonScreen",
+    navigate: ENavigation.LESSON,
   },
   {
     key: "level_4",
     title: "Level 4",
-    navigate: "LessonScreen",
+    navigate: ENavigation.LESSON,
   },
   {
     key: "level_5",
     title: "Level 5",
-    navigate: "LessonScreen",
+    navigate: ENavigation.LESSON,
   },
   {
     key: "level_6",
     title: "Level 6",
-    navigate: "LessonScreen",
+    navigate: ENavigation.LESSON,
   },
 ];
