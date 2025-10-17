@@ -11,7 +11,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
     env:
-      NODE_VERSION: "20"
+      NODE_VERSION: "22"
       IOS_SDK: "iphonesimulator"
       SIMULATOR_NAME: "iPhone 16"
       SIMULATOR_OS: "18.5"
