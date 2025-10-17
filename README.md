@@ -1,7 +1,7 @@
 # KLang
 
-![Android CI](https://github.com/DeEKol/KLang/actions/workflows/android.yml/badge.svg)(https://github.com/DeEKol/KLang/actions/workflows/android.yml)
-![iOS CI](https://github.com/DeEKol/KLang/actions/workflows/ios.yml/badge.svg)(https://github.com/DeEKol/KLang/actions/workflows/ios.yml)
+[![Android CI (RN 0.81)](https://github.com/DeEKol/KLang/actions/workflows/android.yml/badge.svg)](https://github.com/DeEKol/KLang/actions/workflows/android.yml)
+[![iOS CI (RN 0.81)](https://github.com/DeEKol/KLang/actions/workflows/ios.yml/badge.svg)](https://github.com/DeEKol/KLang/actions/workflows/ios.yml)
 
 # Getting Started
 
