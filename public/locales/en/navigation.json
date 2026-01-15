@@ -1,13 +1,8 @@
 {
   "Home": "Home",
-  "First Screen": "First Screen",
-  "Second Screen": "Second Screen",
-  "Third Screen": "Third Screen",
-  "Fourth Screen": "Fourth Screen",
-  "UI Screen": "UI Screen",
-  "Study Screen": "Study Screen",
-  "Fifth Screen": "Fifth Screen",
-  "Practice Screen": "Practice Screen",
-  "Settings Screen": "Settings Screen",
-  "Test Screen": "Test Screen"
+  "Study": "Study",
+  "Practice": "Practice",
+  "Test": "Test",
+  "Settings": "Settings",
+  "UI Screen": "UI Screen"
 }

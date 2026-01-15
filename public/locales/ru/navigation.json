@@ -1,13 +1,8 @@
 {
-  "Home": "Начальная",
-  "First Screen": "Первый Экран",
-  "Second Screen": "Второй Экран",
-  "Third Screen": "Третий Экран",
-  "Fourth Screen": "Четвертый Экран",
-  "UI Screen": "UI Экран",
-  "Study Screen": "Экран Изучения",
-  "Fifth Screen": "Пятый Экран",
-  "Practice Screen": "Экран практики",
-  "Settings Screen": "Экран настроек",
-  "Test Screen": "Тестовый экран"
+  "Home": "Домашняя",
+  "Study": "Изучение",
+  "Practice": "Практика",
+  "Test": "Тест",
+  "Settings": "Настройки",
+  "UI Screen": "UI Экран"
 }
