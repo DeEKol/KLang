@@ -1,9 +1,17 @@
-// AnimatedIcon.js
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing } from "react-native";
-import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons";
+import MaterialDesignIcons, {
+  type MaterialDesignIconsIconName,
+} from "@react-native-vector-icons/material-design-icons";
 
-export default function AnimatedIcon({ name, focused, color, size = 24 }) {
+interface Props {
+  name: MaterialDesignIconsIconName;
+  focused: boolean;
+  color: string;
+  size?: number;
+}
+
+export default function AnimatedIcon({ name, focused, color, size = 24 }: Props) {
   const val = useRef(new Animated.Value(focused ? 1 : 0)).current;
 
   useEffect(() => {

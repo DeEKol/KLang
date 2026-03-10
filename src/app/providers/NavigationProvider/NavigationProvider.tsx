@@ -5,7 +5,12 @@ import { useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // ? Slice Imports
-import { clearPendingLink, getIsAuthenticated, setPendingLink } from "entities/auth";
+import {
+  clearPendingLink,
+  getIsAuthenticated,
+  getPendingLink,
+  setPendingLink,
+} from "entities/auth";
 import { ModalScreen } from "screens/ModalScreen";
 import { NotFoundScreen } from "screens/NotFoundScreen";
 // ? Types
@@ -28,9 +33,7 @@ export const NavigationProvider: React.FC = () => {
   // ? Redux
   const dispatch = useAppDispatch();
   const isAuthenticated = useSelector(getIsAuthenticated);
-  const pendingLink = useSelector(
-    (state: { auth: { pendingLink: string | null } }) => state.auth.pendingLink,
-  );
+  const pendingLink = useSelector(getPendingLink);
 
   // ? Theme
   const { theme: navTheme } = useNavigationTheme();
