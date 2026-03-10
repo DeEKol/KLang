@@ -3,15 +3,25 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "lint": "eslint .",
-    "start": "react-native start",
+    
     "test": "jest",
-    "pod-deintegrate": "cd ios && pod deintegrate && cd ..",
-    "pod-cache-clean": "cd ios && pod cache clean --all && cd ..",
-    "pod-rm": "cd ios && rm -rf Pods Podfile.lock && cd ..",
-    "pod-clean": "npm run pod-deintegrate && npm run pod-cache-clean && npm run pod-rm",
+    
+    "pod:deintegrate": "cd ios && pod deintegrate && cd ..",
+    "pod:cache-clean": "cd ios && pod cache clean --all && cd ..",
+    "pod:rm": "cd ios && rm -rf Pods Podfile.lock && cd ..",
+    "pod:clean": "npm run pod:deintegrate && npm run pod:cache-clean && npm run pod:rm",
+    
+    "lint": "eslint . --ext .js,.ts,.jsx,.tsx",
+    "lint:fix": "eslint . --ext .js,.ts,.jsx,.tsx --fix --ignore-path .gitignore",
+    "format": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,jsx,tsx}\"",
+    "format:all": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,jsx,tsx,json,css,scss,md}\"",
+    "format:check": "prettier --check --ignore-path .gitignore \"**/*.{js,ts,jsx,tsx}\"",
+    "fix-all": "npm run lint:fix && npm run format",
+    "validate": "npm run lint && npm run format:check",
+    
     "check-styles": "node scripts/check-unused-styles.mjs",
     "check-styles:screens": "node scripts/check-unused-styles.mjs src/screens"
   },
