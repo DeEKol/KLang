@@ -1,19 +1,4 @@
-// src/shared/navigation/routes.ts
-export enum ENavigation {
-  AUTH = "Auth",
-  MAIN = "Main",
-  MODAL = "Modal",
-  NOT_FOUND = "NotFound",
-  LOGIN = "Login",
-  SIGNUP = "Signup",
-  FORGOT_PASSWORD = "ForgotPassword",
-  EMAIL_CONFIRMATION = "EmailConfirmation",
-  SMS_CONFIRMATION = "SMSConfirmation",
-  TEST = "Test",
-  HOME = "Home",
-  PROFILE = "Profile",
-  ROADMAP = "Roadmap",
-}
+import { ENavigation } from "./types/navigation";
 
 // single source of truth for linking paths
 export const ROUTE_PATHS = {

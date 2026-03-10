@@ -65,7 +65,7 @@ export const SettingsScreen: React.FC = () => {
     }
   };
 
-  const handleGoalChange = (key: string, value: any) => {
+  const handleGoalChange = (key: string, value: unknown) => {
     setLearningGoals((prev) => ({ ...prev, [key]: value }));
   };
 

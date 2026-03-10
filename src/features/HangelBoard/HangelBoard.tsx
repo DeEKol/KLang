@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, PanResponder, StyleSheet, Text, View } from "react-native";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import Slider from "@react-native-community/slider";
 import type { SkPath } from "@shopify/react-native-skia";
 import { Canvas, Group, Path as SkiaPath, Skia, useCanvasRef } from "@shopify/react-native-skia";
-import { key } from "shared/helpers/generateKey";
-
 interface Stroke {
+  id: number;
   path: SkPath;
   width: number;
 }
@@ -31,7 +30,7 @@ const createSmoothedPath = (points: Array<{ x: number; y: number }>) => {
   return path;
 };
 
-const AnimatedStroke = ({ path, width }: Stroke) => {
+const AnimatedStroke = ({ path, width }: Pick<Stroke, "path" | "width">) => {
   const opacity = useSharedValue(1);
 
   useEffect(() => {
@@ -104,6 +103,7 @@ const GridOverlay = ({ width = 400, height = 400 }: { width?: number; height?: n
 };
 
 export const HangelBoard = () => {
+  const strokeIdRef = useRef(0);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [undone, setUndone] = useState<Stroke[]>([]);
   const [strokeWidth, setStrokeWidth] = useState(3);
@@ -136,7 +136,11 @@ export const HangelBoard = () => {
       if (!currentPath) return;
 
       // const smooth = createSmoothedPath(currentPoints);
-      const newStroke: Stroke = { path: currentPath, width: strokeWidth };
+      const newStroke: Stroke = {
+        id: ++strokeIdRef.current,
+        path: currentPath,
+        width: strokeWidth,
+      };
 
       setStrokes((prev) => [...prev, newStroke]);
       setUndone([]);
@@ -209,7 +213,7 @@ export const HangelBoard = () => {
           <GridOverlay />
           {strokes.map((s) => (
             <AnimatedStroke
-              key={key()}
+              key={s.id}
               path={s.path}
               width={s.width}
             />
