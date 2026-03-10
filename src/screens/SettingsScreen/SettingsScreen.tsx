@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Alert, Linking, ScrollView, StyleSheet, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { getAuthUser } from "entities/auth";
-import { getThemeMode } from "entities/theme";
+import type { TThemeMode } from "entities/theme";
+import { getThemeMode, themeActions } from "entities/theme";
 import { useAuth } from "features/auth/hooks/useAuth";
 import { useThemeTokens } from "shared/lib/theme";
 import {
@@ -24,6 +25,7 @@ import {
 import { settingsStrings } from "./settings.i18n";
 
 export const SettingsScreen: React.FC = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { colors } = useThemeTokens();
   const themeName = useSelector(getThemeMode);
@@ -45,7 +47,7 @@ export const SettingsScreen: React.FC = () => {
     reviewEnabled: true,
 
     // Внешний вид
-    theme: themeName,
+    theme: themeName ?? "system",
     fontSize: "medium" as "small" | "medium" | "large",
   });
 
@@ -55,8 +57,12 @@ export const SettingsScreen: React.FC = () => {
   });
 
   // Обработчики изменений
-  const handleSettingChange = (key: string, value: any) => {
+  const handleSettingChange = (key: string, value: unknown) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
+    if (key === "theme") {
+      const mode: TThemeMode = value === "system" ? null : (value as TThemeMode);
+      dispatch(themeActions.changeTheme(mode));
+    }
   };
 
   const handleGoalChange = (key: string, value: any) => {
@@ -96,7 +102,7 @@ export const SettingsScreen: React.FC = () => {
   const themeOptions = [
     { label: settingsStrings.themeLight, value: "light" },
     { label: settingsStrings.themeDark, value: "dark" },
-    { label: settingsStrings.themeAuto, value: "auto" },
+    { label: settingsStrings.themeAuto, value: "system" },
   ];
 
   // Опции для размера шрифта

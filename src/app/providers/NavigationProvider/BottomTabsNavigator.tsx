@@ -41,8 +41,6 @@ export const BottomTabsNavigator = () => {
         component={HomeStackNavigator}
         options={{
           title: t("Home"),
-          tabBarBadgeStyle: { backgroundColor: "red" },
-          tabBarStyle: { backgroundColor: "red" },
           tabBarIcon: ({ color, focused }) => (
             <AnimatedIcon
               focused={focused}
@@ -90,7 +88,7 @@ export const BottomTabsNavigator = () => {
           title: t("Settings"),
           tabBarIcon: ({ color, focused }) => (
             <AnimatedIcon
-              focused
+              focused={focused}
               name="function"
               color={color}
               size={24}
