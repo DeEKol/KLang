@@ -1,9 +1,8 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 import { goBack } from "shared/config/navigation";
 import { Button, Card, Text, TextInput, Touchable } from "shared/ui/paper-kit";
-
-import authStrings from "./auth.i18n";
 
 const SignupScreen: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -17,41 +16,42 @@ const SignupScreen: React.FC = () => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { t } = useTranslation("authScreen");
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const validateForm = () => {
     if (!formData.firstName) {
-      Alert.alert(authStrings.common.error, authStrings.validation.firstNameRequired);
+      Alert.alert(t("common.error"), t("validation.firstNameRequired"));
       return false;
     }
     if (!formData.lastName) {
-      Alert.alert(authStrings.common.error, authStrings.validation.lastNameRequired);
+      Alert.alert(t("common.error"), t("validation.lastNameRequired"));
       return false;
     }
     if (!formData.email) {
-      Alert.alert(authStrings.common.error, authStrings.validation.emailRequired);
+      Alert.alert(t("common.error"), t("validation.emailRequired"));
       return false;
     }
     if (!formData.phone) {
-      Alert.alert(authStrings.common.error, authStrings.validation.phoneRequired);
+      Alert.alert(t("common.error"), t("validation.phoneRequired"));
       return false;
     }
     if (!formData.password) {
-      Alert.alert(authStrings.common.error, authStrings.validation.passwordRequired);
+      Alert.alert(t("common.error"), t("validation.passwordRequired"));
       return false;
     }
     if (formData.password.length < 8) {
-      Alert.alert(authStrings.common.error, authStrings.validation.passwordMinLength);
+      Alert.alert(t("common.error"), t("validation.passwordMinLength"));
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
-      Alert.alert(authStrings.common.error, authStrings.validation.passwordsNotMatch);
+      Alert.alert(t("common.error"), t("validation.passwordsNotMatch"));
       return false;
     }
     if (!acceptedTerms) {
-      Alert.alert(authStrings.common.error, authStrings.validation.termsRequired);
+      Alert.alert(t("common.error"), t("validation.termsRequired"));
       return false;
     }
     return true;
@@ -68,8 +68,8 @@ const SignupScreen: React.FC = () => {
       // Navigate to email confirmation screen
       // ! navigation.navigate("EmailConfirmation", { email: formData.email });
     } catch (error) {
-      const errorMessage = String(error) || authStrings.errors.unknownError;
-      Alert.alert(authStrings.common.error, errorMessage);
+      const errorMessage = String(error) || t("errors.unknownError");
+      Alert.alert(t("common.error"), errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -87,12 +87,12 @@ const SignupScreen: React.FC = () => {
           <Text
             variant="headline"
             style={styles.title}>
-            {authStrings.registration.title}
+            {t("registration.title")}
           </Text>
           <Text
             variant="body"
             style={styles.subtitle}>
-            {authStrings.registration.subtitle}
+            {t("registration.subtitle")}
           </Text>
         </View>
 
@@ -100,14 +100,14 @@ const SignupScreen: React.FC = () => {
         <Card style={styles.formCard}>
           <View style={styles.nameRow}>
             <TextInput
-              label={authStrings.registration.firstName}
+              label={t("registration.firstName")}
               value={formData.firstName}
               onChangeText={(value) => handleInputChange("firstName", value)}
               // style={[styles.textInput, styles.halfInput]}
               autoCapitalize="words"
             />
             <TextInput
-              label={authStrings.registration.lastName}
+              label={t("registration.lastName")}
               value={formData.lastName}
               onChangeText={(value) => handleInputChange("lastName", value)}
               // style={[styles.textInput, styles.halfInput]}
@@ -116,7 +116,7 @@ const SignupScreen: React.FC = () => {
           </View>
 
           <TextInput
-            label={authStrings.common.email}
+            label={t("common.email")}
             value={formData.email}
             onChangeText={(value) => handleInputChange("email", value)}
             keyboardType="email-address"
@@ -126,7 +126,7 @@ const SignupScreen: React.FC = () => {
           />
 
           <TextInput
-            label={authStrings.registration.phoneNumber}
+            label={t("registration.phoneNumber")}
             value={formData.phone}
             onChangeText={(value) => handleInputChange("phone", value)}
             keyboardType="numeric"
@@ -136,7 +136,7 @@ const SignupScreen: React.FC = () => {
           />
 
           <TextInput
-            label={authStrings.common.password}
+            label={t("common.password")}
             value={formData.password}
             onChangeText={(value) => handleInputChange("password", value)}
             secureTextEntry
@@ -144,7 +144,7 @@ const SignupScreen: React.FC = () => {
           />
 
           <TextInput
-            label={authStrings.common.confirmPassword}
+            label={t("common.confirmPassword")}
             value={formData.confirmPassword}
             onChangeText={(value) => handleInputChange("confirmPassword", value)}
             secureTextEntry
@@ -163,10 +163,10 @@ const SignupScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.termsText}>
-              {authStrings.registration.agreeToTerms}{" "}
-              <Text style={styles.termsLink}>{authStrings.registration.termsAndConditions}</Text>{" "}
-              {authStrings.registration.and}{" "}
-              <Text style={styles.termsLink}>{authStrings.registration.privacyPolicy}</Text>
+              {t("registration.agreeToTerms")}{" "}
+              <Text style={styles.termsLink}>{t("registration.termsAndConditions")}</Text>{" "}
+              {t("registration.and")}{" "}
+              <Text style={styles.termsLink}>{t("registration.privacyPolicy")}</Text>
             </Text>
           </View>
 
@@ -177,19 +177,17 @@ const SignupScreen: React.FC = () => {
             style={styles.registerButton}
             icon="account-plus"
             mode="contained">
-            {isLoading
-              ? authStrings.registration.creatingAccount
-              : authStrings.registration.createAccount}
+            {isLoading ? t("registration.creatingAccount") : t("registration.createAccount")}
           </Button>
 
           <View style={styles.loginContainer}>
             <Text
               variant="caption"
               style={styles.loginText}>
-              {authStrings.registration.alreadyHaveAccount}{" "}
+              {t("registration.alreadyHaveAccount")}{" "}
             </Text>
             <Touchable onPress={() => goBack()}>
-              <Text style={styles.loginLink}>{authStrings.registration.signIn}</Text>
+              <Text style={styles.loginLink}>{t("registration.signIn")}</Text>
             </Touchable>
           </View>
         </Card>

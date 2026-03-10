@@ -1,3 +1,57 @@
 {
-  "This is settings screen": "This is settings screen"
+  "title": "Settings",
+  "subtitle": "Personalize your learning",
+
+  "appearance": "Appearance",
+  "notifications": "Notifications",
+  "learning": "Learning",
+  "account": "Account",
+  "about": "About",
+
+  "theme": "Theme",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeAuto": "System",
+  "language": "App language",
+  "fontSize": "Font size",
+  "fontSizeSmall": "Small",
+  "fontSizeMedium": "Medium",
+  "fontSizeLarge": "Large",
+
+  "dailyReminders": "Daily reminders",
+  "studyReminders": "Study reminders",
+  "progressUpdates": "Progress updates",
+  "soundEffects": "Sound effects",
+  "vibration": "Vibration",
+
+  "dailyGoal": "Daily goal",
+  "studyMinutes": "minutes per day",
+  "difficulty": "Difficulty",
+  "difficultyEasy": "Easy",
+  "difficultyMedium": "Medium",
+  "difficultyHard": "Hard",
+  "autoPlayAudio": "Auto-play audio",
+  "showRomanization": "Show romanization",
+  "reviewEnabled": "Review mode",
+
+  "profile": "Profile",
+  "subscription": "Subscription",
+  "dataExport": "Export data",
+  "privacy": "Privacy",
+  "logout": "Log out",
+
+  "version": "Version",
+  "rateApp": "Rate the app",
+  "shareApp": "Share the app",
+  "feedback": "Feedback",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+
+  "minutes": "min",
+  "words": "words",
+  "lessons": "lessons",
+
+  "subscriptionFree": "Free",
+  "subscriptionPremium": "Premium",
+  "subscriptionDescription": "Get access to all features"
 }

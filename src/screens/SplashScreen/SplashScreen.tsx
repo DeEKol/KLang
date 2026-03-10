@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, {
   Easing,
@@ -11,8 +12,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { Canvas, Circle, Group, Skia, SweepGradient, vec } from "@shopify/react-native-skia";
 import { Text } from "shared/ui/paper-kit";
-
-import { splashStrings } from "./splash.i18n";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,6 +32,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   const textTranslateY = useSharedValue(50);
   const progressOpacity = useSharedValue(0);
   const rotation = useSharedValue(0);
+
+  const { t } = useTranslation("splashScreen");
 
   // Анимация появления логотипа
   useEffect(() => {
@@ -179,7 +180,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         <Text
           variant="caption"
           style={styles.progressText}>
-          {splashStrings.loading} {Math.round(progress * 100)}%
+          {t("loading")} {Math.round(progress * 100)}%
         </Text>
       </Animated.View>
     );
@@ -206,12 +207,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           <Text
             variant="headline"
             style={styles.appName}>
-            {splashStrings.appName}
+            {t("appName")}
           </Text>
           <Text
             variant="body"
             style={styles.appSubtitle}>
-            {splashStrings.appSubtitle}
+            {t("appSubtitle")}
           </Text>
         </Animated.View>
 
@@ -230,7 +231,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       <Text
         variant="caption"
         style={styles.version}>
-        {splashStrings.version} 1.0.0
+        {t("version")} 1.0.0
       </Text>
     </View>
   );

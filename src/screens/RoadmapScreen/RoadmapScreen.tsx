@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import Animated, {
   FadeInRight,
@@ -14,8 +15,6 @@ import { scheduleOnRN } from "react-native-worklets";
 import { Canvas, LinearGradient, Path, Skia, vec } from "@shopify/react-native-skia";
 import { key } from "shared/helpers/generateKey";
 import { Button, Card, Surface, Text, Touchable } from "shared/ui/paper-kit";
-
-import { roadmapStrings } from "./roadmap.i18n";
 
 const { width: screenWidth } = Dimensions.get("window");
 const AnimatedSurface = Animated.createAnimatedComponent(Surface);
@@ -33,14 +32,15 @@ interface RoadmapItem {
 }
 
 export const RoadmapScreen: React.FC = () => {
+  const { t } = useTranslation("roadmapScreen");
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const roadmapData: RoadmapItem[] = [
     {
       id: "1",
-      title: roadmapStrings.modules.hangeul,
+      title: t("modules.hangeul"),
       description: "Изучение корейского алфавита и основных звуков",
-      level: roadmapStrings.levels.beginner,
+      level: t("levels.beginner"),
       progress: 1,
       status: "completed",
       modules: 5,
@@ -49,9 +49,9 @@ export const RoadmapScreen: React.FC = () => {
     },
     {
       id: "2",
-      title: roadmapStrings.modules.greetings,
+      title: t("modules.greetings"),
       description: "Основные приветствия и повседневные фразы",
-      level: roadmapStrings.levels.beginner,
+      level: t("levels.beginner"),
       progress: 0.8,
       status: "current",
       modules: 8,
@@ -60,9 +60,9 @@ export const RoadmapScreen: React.FC = () => {
     },
     {
       id: "3",
-      title: roadmapStrings.modules.dailyLife,
+      title: t("modules.dailyLife"),
       description: "Фразы для повседневного общения",
-      level: roadmapStrings.levels.elementary,
+      level: t("levels.elementary"),
       progress: 0,
       status: "upcoming",
       modules: 10,
@@ -71,9 +71,9 @@ export const RoadmapScreen: React.FC = () => {
     },
     {
       id: "4",
-      title: roadmapStrings.modules.food,
+      title: t("modules.food"),
       description: "Еда, рестораны и корейская кухня",
-      level: roadmapStrings.levels.elementary,
+      level: t("levels.elementary"),
       progress: 0,
       status: "locked",
       modules: 8,
@@ -82,9 +82,9 @@ export const RoadmapScreen: React.FC = () => {
     },
     {
       id: "5",
-      title: roadmapStrings.modules.travel,
+      title: t("modules.travel"),
       description: "Путешествия по Корее и транспорт",
-      level: roadmapStrings.levels.intermediate,
+      level: t("levels.intermediate"),
       progress: 0,
       status: "locked",
       modules: 12,
@@ -101,25 +101,25 @@ export const RoadmapScreen: React.FC = () => {
     switch (status) {
       case "completed":
         return {
-          label: roadmapStrings.completed,
+          label: t("completed"),
           color: "#4CAF50",
           bgColor: "rgba(76, 175, 80, 0.1)",
         };
       case "current":
         return {
-          label: roadmapStrings.inProgress,
+          label: t("inProgress"),
           color: "#2196F3",
           bgColor: "rgba(33, 150, 243, 0.1)",
         };
       case "upcoming":
         return {
-          label: roadmapStrings.upcoming,
+          label: t("upcoming"),
           color: "#FF9800",
           bgColor: "rgba(255, 152, 0, 0.1)",
         };
       case "locked":
         return {
-          label: roadmapStrings.locked,
+          label: t("locked"),
           color: "#9E9E9E",
           bgColor: "rgba(158, 158, 158, 0.1)",
         };
@@ -168,12 +168,12 @@ export const RoadmapScreen: React.FC = () => {
         <Text
           variant="headline"
           style={styles.title}>
-          {roadmapStrings.title}
+          {t("title")}
         </Text>
         <Text
           variant="body"
           style={styles.subtitle}>
-          {roadmapStrings.subtitle}
+          {t("subtitle")}
         </Text>
 
         <Surface style={styles.progressOverview}>
@@ -186,7 +186,7 @@ export const RoadmapScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.overviewLabel}>
-              {roadmapStrings.currentProgress}
+              {t("currentProgress")}
             </Text>
           </View>
           <View style={styles.overviewDivider} />

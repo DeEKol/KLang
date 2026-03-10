@@ -1,24 +1,25 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 import { goBack } from "shared/config/navigation";
 import { Button, Card, Text, TextInput, Touchable } from "shared/ui/paper-kit";
-
-import authStrings from "./auth.i18n";
 
 const ForgotPasswordScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { t } = useTranslation("authScreen");
+
   const handleSendInstructions = async () => {
     if (!email) {
-      Alert.alert(authStrings.common.error, authStrings.validation.emailRequired);
+      Alert.alert(t("common.error"), t("validation.emailRequired"));
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Alert.alert(authStrings.common.error, authStrings.validation.emailInvalid);
+      Alert.alert(t("common.error"), t("validation.emailInvalid"));
       return;
     }
 
@@ -27,13 +28,11 @@ const ForgotPasswordScreen: React.FC = () => {
       // TODO: Integrate with your auth API
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
 
-      Alert.alert(
-        authStrings.forgotPassword.successTitle,
-        authStrings.forgotPassword.successMessage,
-        [{ text: "OK", onPress: () => goBack() }],
-      );
+      Alert.alert(t("forgotPassword.successTitle"), t("forgotPassword.successMessage"), [
+        { text: "OK", onPress: () => goBack() },
+      ]);
     } catch (error) {
-      Alert.alert(authStrings.common.error, authStrings.errors.unknownError);
+      Alert.alert(t("common.error"), t("errors.unknownError"));
     } finally {
       setIsLoading(false);
     }
@@ -51,12 +50,12 @@ const ForgotPasswordScreen: React.FC = () => {
           <Text
             variant="headline"
             style={styles.title}>
-            {authStrings.forgotPassword.title}
+            {t("forgotPassword.title")}
           </Text>
           <Text
             variant="body"
             style={styles.subtitle}>
-            {authStrings.forgotPassword.subtitle}
+            {t("forgotPassword.subtitle")}
           </Text>
         </View>
 
@@ -68,14 +67,14 @@ const ForgotPasswordScreen: React.FC = () => {
           <Text
             variant="body"
             style={styles.instructionText}>
-            {authStrings.forgotPassword.instruction}
+            {t("forgotPassword.instruction")}
           </Text>
         </Card>
 
         {/* Form Card */}
         <Card style={styles.formCard}>
           <TextInput
-            label={authStrings.common.email}
+            label={t("common.email")}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -90,9 +89,7 @@ const ForgotPasswordScreen: React.FC = () => {
             style={styles.submitButton}
             icon="email-send"
             mode="contained">
-            {isLoading
-              ? authStrings.forgotPassword.sending
-              : authStrings.forgotPassword.sendInstructions}
+            {isLoading ? t("forgotPassword.sending") : t("forgotPassword.sendInstructions")}
           </Button>
 
           <Touchable
@@ -101,7 +98,7 @@ const ForgotPasswordScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.backButtonText}>
-              {authStrings.forgotPassword.backToLogin}
+              {t("forgotPassword.backToLogin")}
             </Text>
           </Touchable>
         </Card>

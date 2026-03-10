@@ -1,3 +1,57 @@
 {
-  "This is settings screen": "Экран настроек"
+  "title": "Настройки",
+  "subtitle": "Персонализируйте ваше обучение",
+
+  "appearance": "Внешний вид",
+  "notifications": "Уведомления",
+  "learning": "Обучение",
+  "account": "Аккаунт",
+  "about": "О приложении",
+
+  "theme": "Тема",
+  "themeLight": "Светлая",
+  "themeDark": "Тёмная",
+  "themeAuto": "Системная",
+  "language": "Язык приложения",
+  "fontSize": "Размер шрифта",
+  "fontSizeSmall": "Маленький",
+  "fontSizeMedium": "Средний",
+  "fontSizeLarge": "Большой",
+
+  "dailyReminders": "Ежедневные напоминания",
+  "studyReminders": "Напоминания об учебе",
+  "progressUpdates": "Обновления прогресса",
+  "soundEffects": "Звуковые эффекты",
+  "vibration": "Вибрация",
+
+  "dailyGoal": "Ежедневная цель",
+  "studyMinutes": "минут в день",
+  "difficulty": "Сложность",
+  "difficultyEasy": "Лёгкая",
+  "difficultyMedium": "Средняя",
+  "difficultyHard": "Сложная",
+  "autoPlayAudio": "Автовоспроизведение аудио",
+  "showRomanization": "Показывать романизацию",
+  "reviewEnabled": "Повторение пройденного",
+
+  "profile": "Профиль",
+  "subscription": "Подписка",
+  "dataExport": "Экспорт данных",
+  "privacy": "Конфиденциальность",
+  "logout": "Выйти",
+
+  "version": "Версия",
+  "rateApp": "Оценить приложение",
+  "shareApp": "Поделиться приложением",
+  "feedback": "Обратная связь",
+  "privacyPolicy": "Политика конфиденциальности",
+  "termsOfService": "Условия использования",
+
+  "minutes": "мин",
+  "words": "слов",
+  "lessons": "уроков",
+
+  "subscriptionFree": "Бесплатная",
+  "subscriptionPremium": "Премиум",
+  "subscriptionDescription": "Получите доступ ко всем функциям"
 }

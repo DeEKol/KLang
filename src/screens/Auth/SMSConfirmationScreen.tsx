@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 import type { Route } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
@@ -6,14 +7,14 @@ import { ENavigation, resetTo } from "shared/config/navigation";
 import { Button, Card, Text, TextInput, Touchable } from "shared/ui/paper-kit";
 import { v4 as uuid } from "uuid";
 
-import authStrings from "./auth.i18n";
-
 const SMSConfirmationScreen: React.FC = () => {
   const route: Route<string, { phone: string }> = useRoute();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   // const inputRefs = useRef<any[]>([]);
+
+  const { t } = useTranslation("authScreen");
 
   const phone = route.params?.phone || "+7 (XXX) XXX-XX-XX";
 
@@ -71,7 +72,7 @@ const SMSConfirmationScreen: React.FC = () => {
     const verificationCode = code.join("");
 
     if (verificationCode.length !== 6) {
-      Alert.alert(authStrings.common.error, authStrings.validation.codeInvalid);
+      Alert.alert(t("common.error"), t("validation.codeInvalid"));
       return;
     }
 
@@ -80,19 +81,15 @@ const SMSConfirmationScreen: React.FC = () => {
       // TODO: Integrate with your SMS verification API
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
 
-      Alert.alert(
-        authStrings.smsConfirmation.successTitle,
-        authStrings.smsConfirmation.successMessage,
-        [
-          {
-            text: "OK",
-            onPress: () => resetTo(ENavigation.MAIN),
-          },
-        ],
-      );
+      Alert.alert(t("smsConfirmation.successTitle"), t("smsConfirmation.successMessage"), [
+        {
+          text: "OK",
+          onPress: () => resetTo(ENavigation.MAIN),
+        },
+      ]);
     } catch (error) {
-      const errorMessage = String(error) || authStrings.errors.unknownError;
-      Alert.alert(authStrings.common.error, errorMessage);
+      const errorMessage = String(error) || t("errors.unknownError");
+      Alert.alert(t("common.error"), errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +104,7 @@ const SMSConfirmationScreen: React.FC = () => {
       startResendCooldown();
       Alert.alert("Успешно", "SMS отправлено повторно");
     } catch (error) {
-      Alert.alert(authStrings.common.error, authStrings.errors.unknownError);
+      Alert.alert(t("common.error"), t("errors.unknownError"));
     }
   };
 
@@ -126,12 +123,12 @@ const SMSConfirmationScreen: React.FC = () => {
           <Text
             variant="headline"
             style={styles.title}>
-            {authStrings.smsConfirmation.title}
+            {t("smsConfirmation.title")}
           </Text>
           <Text
             variant="body"
             style={styles.subtitle}>
-            {authStrings.smsConfirmation.subtitle}
+            {t("smsConfirmation.subtitle")}
           </Text>
           <Text
             variant="caption"
@@ -145,7 +142,7 @@ const SMSConfirmationScreen: React.FC = () => {
           <Text
             variant="body"
             style={styles.instruction}>
-            {authStrings.smsConfirmation.instruction}
+            {t("smsConfirmation.instruction")}
           </Text>
 
           <View style={styles.codeContainer}>
@@ -173,14 +170,14 @@ const SMSConfirmationScreen: React.FC = () => {
             style={styles.verifyButton}
             icon="cellphone-check"
             mode="contained">
-            {isLoading ? authStrings.smsConfirmation.verifying : authStrings.smsConfirmation.verify}
+            {isLoading ? t("smsConfirmation.verifying") : t("smsConfirmation.verify")}
           </Button>
 
           <View style={styles.resendContainer}>
             <Text
               variant="caption"
               style={styles.resendText}>
-              {authStrings.smsConfirmation.resendCode}
+              {t("smsConfirmation.resendCode")}
             </Text>
             <Touchable
               onPress={handleResendCode}
@@ -189,8 +186,8 @@ const SMSConfirmationScreen: React.FC = () => {
                 variant="caption"
                 style={styles.resendButton}>
                 {resendCooldown > 0
-                  ? `${authStrings.smsConfirmation.resendIn} ${resendCooldown}${authStrings.smsConfirmation.seconds}`
-                  : authStrings.common.resend}
+                  ? `${t("smsConfirmation.resendIn")} ${resendCooldown}${t("smsConfirmation.seconds")}`
+                  : t("common.resend")}
               </Text>
             </Touchable>
           </View>

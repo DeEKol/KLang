@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Switch } from "react-native-paper";
 import Animated, {
@@ -13,12 +14,11 @@ import { getAuthUser } from "entities/auth";
 import { useAuth } from "features/auth/hooks/useAuth";
 import { Button, Card, Surface, Text, Touchable } from "shared/ui/paper-kit";
 
-import { profileStrings } from "./profile.i18n";
-
 const AnimatedSurface = Animated.createAnimatedComponent(Surface);
 const AnimatedCard = Animated.createAnimatedComponent(Card);
 
 export const ProfileScreen: React.FC = () => {
+  const { t } = useTranslation("profileScreen");
   const navigation = useNavigation();
   const { logout } = useAuth();
   const user = useSelector(getAuthUser);
@@ -46,36 +46,36 @@ export const ProfileScreen: React.FC = () => {
   const achievements = [
     {
       id: 1,
-      name: profileStrings.firstSteps,
-      desc: profileStrings.firstStepsDesc,
+      name: t("firstSteps"),
+      desc: t("firstStepsDesc"),
       completed: true,
       icon: "🎯",
     },
     {
       id: 2,
-      name: profileStrings.consistentLearner,
-      desc: profileStrings.consistentLearnerDesc,
+      name: t("consistentLearner"),
+      desc: t("consistentLearnerDesc"),
       completed: true,
       icon: "🔥",
     },
     {
       id: 3,
-      name: profileStrings.vocabularyMaster,
-      desc: profileStrings.vocabularyMasterDesc,
+      name: t("vocabularyMaster"),
+      desc: t("vocabularyMasterDesc"),
       completed: false,
       icon: "📚",
     },
     {
       id: 4,
-      name: profileStrings.grammarGuru,
-      desc: profileStrings.grammarGuruDesc,
+      name: t("grammarGuru"),
+      desc: t("grammarGuruDesc"),
       completed: false,
       icon: "🧠",
     },
     {
       id: 5,
-      name: profileStrings.speedDemon,
-      desc: profileStrings.speedDemonDesc,
+      name: t("speedDemon"),
+      desc: t("speedDemonDesc"),
       completed: true,
       icon: "⚡",
     },
@@ -121,7 +121,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.memberSince}>
-              {profileStrings.memberSince} {userStats.joinDate}
+              {t("memberSince")} {userStats.joinDate}
             </Text>
           </View>
         </View>
@@ -130,7 +130,7 @@ export const ProfileScreen: React.FC = () => {
           mode="outlined"
           style={styles.editButton}
           onPress={() => {}}>
-          {profileStrings.actions.editProfile}
+          {t("actions").editProfile}
         </Button>
       </AnimatedSurface>
 
@@ -141,7 +141,7 @@ export const ProfileScreen: React.FC = () => {
         <Text
           variant="title"
           style={styles.sectionTitle}>
-          {profileStrings.statistics}
+          {t("statistics")}
         </Text>
 
         <View style={styles.statsGrid}>
@@ -154,7 +154,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.statLabel}>
-              {profileStrings.learningStreak}
+              {t("learningStreak")}
             </Text>
           </View>
 
@@ -167,7 +167,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.statLabel}>
-              {profileStrings.wordsLearned}
+              {t("wordsLearned")}
             </Text>
           </View>
 
@@ -180,7 +180,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.statLabel}>
-              {profileStrings.accuracy}
+              {t("accuracy")}
             </Text>
           </View>
         </View>
@@ -190,7 +190,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="body"
               style={styles.levelLabel}>
-              {profileStrings.currentLevel}
+              {t("currentLevel")}
             </Text>
             <Text
               variant="title"
@@ -205,7 +205,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.nextLevel}>
-              {profileStrings.nextLevel}: {userStats.nextLevel}
+              {t("nextLevel")}: {userStats.nextLevel}
             </Text>
           </View>
         </View>
@@ -218,7 +218,7 @@ export const ProfileScreen: React.FC = () => {
         <Text
           variant="title"
           style={styles.sectionTitle}>
-          {profileStrings.settings}
+          {t("settings")}
         </Text>
 
         <View style={styles.settingItem}>
@@ -226,7 +226,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="body"
               style={styles.settingTitle}>
-              {profileStrings.notifications}
+              {t("notifications")}
             </Text>
             <Text
               variant="caption"
@@ -245,7 +245,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="body"
               style={styles.settingTitle}>
-              {profileStrings.soundEffects}
+              {t("soundEffects")}
             </Text>
             <Text
               variant="caption"
@@ -264,7 +264,7 @@ export const ProfileScreen: React.FC = () => {
             <Text
               variant="body"
               style={styles.settingTitle}>
-              {profileStrings.vibration}
+              {t("vibration")}
             </Text>
             <Text
               variant="caption"
@@ -286,7 +286,7 @@ export const ProfileScreen: React.FC = () => {
         <Text
           variant="title"
           style={styles.sectionTitle}>
-          {profileStrings.achievements}
+          {t("achievements")}
         </Text>
 
         {achievements.map((achievement, index) => (
@@ -336,7 +336,7 @@ export const ProfileScreen: React.FC = () => {
           mode="outlined"
           style={styles.logoutButton}
           onPress={handleLogout}>
-          {profileStrings.actions.logout}
+          {t("actions").logout}
         </Button>
       </Animated.View>
     </ScrollView>

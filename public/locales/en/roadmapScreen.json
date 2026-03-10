@@ -1,0 +1,36 @@
+{
+  "title": "Learning path",
+  "subtitle": "Your journey into Korean",
+  "currentProgress": "Current progress",
+  "completed": "Completed",
+  "inProgress": "In progress",
+  "locked": "Locked",
+  "upcoming": "Upcoming",
+  "levels": {
+    "beginner": "Beginner",
+    "elementary": "Elementary",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "fluent": "Fluent"
+  },
+  "modules": {
+    "hangeul": "Learning Hangul",
+    "greetings": "Greetings & basics",
+    "dailyLife": "Daily life",
+    "food": "Food & restaurants",
+    "travel": "Travel",
+    "culture": "Korean culture",
+    "business": "Business Korean",
+    "advanced": "Advanced topics"
+  },
+  "lessons": {
+    "alphabet": "Korean alphabet",
+    "basicPhrases": "Basic phrases",
+    "numbers": "Numbers & counting",
+    "time": "Time & dates",
+    "family": "Family & relationships",
+    "shopping": "Shopping",
+    "directions": "Directions & transport",
+    "weather": "Weather & seasons"
+  }
+}

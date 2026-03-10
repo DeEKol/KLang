@@ -25,6 +25,10 @@ void i18n
         settingsScreen: require("../../../../public/locales/en/settingsScreen.json"),
         testScreen: require("../../../../public/locales/en/testScreen.json"),
         levelScreen: require("../../../../public/locales/en/levelScreen.json"),
+        splashScreen: require("../../../../public/locales/en/splashScreen.json"),
+        roadmapScreen: require("../../../../public/locales/en/roadmapScreen.json"),
+        profileScreen: require("../../../../public/locales/en/profileScreen.json"),
+        authScreen: require("../../../../public/locales/en/authScreen.json"),
       },
       ru: {
         translation: require("../../../../public/locales/ru/translation.json"),
@@ -36,6 +40,10 @@ void i18n
         settingsScreen: require("../../../../public/locales/ru/settingsScreen.json"),
         testScreen: require("../../../../public/locales/ru/testScreen.json"),
         levelScreen: require("../../../../public/locales/ru/levelScreen.json"),
+        splashScreen: require("../../../../public/locales/ru/splashScreen.json"),
+        roadmapScreen: require("../../../../public/locales/ru/roadmapScreen.json"),
+        profileScreen: require("../../../../public/locales/ru/profileScreen.json"),
+        authScreen: require("../../../../public/locales/ru/authScreen.json"),
       },
     },
 

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import { useAuth } from "features/auth/hooks/useAuth";
 import { ENavigation, navigate } from "shared/config/navigation";
 import { Button, Card, Text, TextInput, Touchable } from "shared/ui/paper-kit";
-
-import authStrings from "./auth.i18n";
 
 /**
  * Стильный экран входа с корейской тематикой
  * Использует кастомный UI Kit на основе React Native Paper
  */
 export const LoginScreen: React.FC = () => {
+  const { t } = useTranslation("authScreen");
   const { loginWithEmail, loginWithGoogle, loginAnonymously } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +18,7 @@ export const LoginScreen: React.FC = () => {
 
   const onLoginPress = async () => {
     if (!email || !password) {
-      Alert.alert(authStrings.login.errorTitle, authStrings.login.fillFields);
+      Alert.alert(t("login.errorTitle"), t("login.fillFields"));
       return;
     }
 
@@ -27,7 +27,7 @@ export const LoginScreen: React.FC = () => {
       await loginWithEmail(email, password);
     } catch (e) {
       console.warn("Login failed:", e);
-      Alert.alert(authStrings.login.loginError, String(e) ?? authStrings.login.unknownError);
+      Alert.alert(t("login.loginError"), String(e) ?? t("login.unknownError"));
     } finally {
       setIsLoading(false);
     }
@@ -38,7 +38,7 @@ export const LoginScreen: React.FC = () => {
       await loginAnonymously();
     } catch (e) {
       console.warn("Login failed:", e);
-      Alert.alert(authStrings.login.loginError, String(e) ?? authStrings.login.unknownError);
+      Alert.alert(t("login.loginError"), String(e) ?? t("login.unknownError"));
     }
   };
 
@@ -48,12 +48,12 @@ export const LoginScreen: React.FC = () => {
       console.log("Google login success:", user);
     } catch (e) {
       console.warn("Google login failed:", e);
-      Alert.alert(authStrings.login.googleError, String(e));
+      Alert.alert(t("login.googleError"), String(e));
     }
   };
 
   const onBiometricPress = async () => {
-    Alert.alert(authStrings.login.biometricTitle, authStrings.login.biometricMessage);
+    Alert.alert(t("login.biometricTitle"), t("login.biometricMessage"));
   };
 
   return (
@@ -70,18 +70,18 @@ export const LoginScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.koreanBadgeText}>
-              {authStrings.login.koreanTitle}
+              {t("login.koreanTitle")}
             </Text>
           </View>
           <Text
             variant="headline"
             style={styles.heroTitle}>
-            {authStrings.login.welcomeTitle}
+            {t("login.welcomeTitle")}
           </Text>
           <Text
             variant="body"
             style={styles.heroSubtitle}>
-            {authStrings.login.welcomeSubtitle}
+            {t("login.welcomeSubtitle")}
           </Text>
         </View>
 
@@ -92,11 +92,11 @@ export const LoginScreen: React.FC = () => {
           <Text
             variant="title"
             style={styles.formTitle}>
-            {authStrings.login.loginTitle}
+            {t("login.loginTitle")}
           </Text>
 
           <TextInput
-            label={authStrings.login.emailLabel}
+            label={t("login.emailLabel")}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -105,7 +105,7 @@ export const LoginScreen: React.FC = () => {
           />
 
           <TextInput
-            label={authStrings.login.passwordLabel}
+            label={t("login.passwordLabel")}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -119,7 +119,7 @@ export const LoginScreen: React.FC = () => {
             style={styles.loginButton}
             icon="login"
             mode="contained">
-            {isLoading ? authStrings.login.loggingIn : authStrings.login.loginButton}
+            {isLoading ? t("login.loggingIn") : t("login.loginButton")}
           </Button>
 
           <Touchable
@@ -128,7 +128,7 @@ export const LoginScreen: React.FC = () => {
             <Text
               variant="caption"
               style={styles.forgotPasswordText}>
-              {authStrings.login.forgotPassword}
+              {t("login.forgotPassword")}
             </Text>
           </Touchable>
         </Card>
@@ -139,7 +139,7 @@ export const LoginScreen: React.FC = () => {
           <Text
             variant="caption"
             style={styles.dividerText}>
-            {authStrings.login.orDivider}
+            {t("login.orDivider")}
           </Text>
           <View style={styles.dividerLine} />
         </View>
@@ -151,7 +151,7 @@ export const LoginScreen: React.FC = () => {
             onPress={onGooglePress}
             style={styles.alternativeButton}
             icon="google">
-            {authStrings.login.googleLogin}
+            {t("login.googleLogin")}
           </Button>
 
           <Button
@@ -159,7 +159,7 @@ export const LoginScreen: React.FC = () => {
             onPress={onBiometricPress}
             style={styles.alternativeButton}
             icon="fingerprint">
-            {authStrings.login.biometricLogin}
+            {t("login.biometricLogin")}
           </Button>
 
           <Button
@@ -167,7 +167,7 @@ export const LoginScreen: React.FC = () => {
             onPress={onAnonymousPress}
             style={styles.anonymousButton}
             icon="incognito">
-            {authStrings.login.anonymousLogin}
+            {t("login.anonymousLogin")}
           </Button>
         </View>
 
@@ -176,13 +176,13 @@ export const LoginScreen: React.FC = () => {
           <Text
             variant="caption"
             style={styles.footerText}>
-            {authStrings.login.noAccount}{" "}
+            {t("login.noAccount")}{" "}
           </Text>
           <Touchable onPress={() => navigate(ENavigation.SIGNUP)}>
             <Text
               variant="caption"
               style={styles.footerLink}>
-              {authStrings.login.register}
+              {t("login.register")}
             </Text>
           </Touchable>
         </View>

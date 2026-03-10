@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 import type { Route } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
@@ -6,14 +7,14 @@ import { navigate } from "shared/config/navigation";
 import { Button, Card, Text, TextInput, Touchable } from "shared/ui/paper-kit";
 import { v4 as uuid } from "uuid";
 
-import authStrings from "./auth.i18n";
-
 const EmailConfirmationScreen: React.FC = () => {
   const route: Route<string, { email: string }> = useRoute();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   // const inputRefs = useRef<any[]>([]);
+
+  const { t } = useTranslation("authScreen");
 
   const email = route.params?.email || "your@email.com";
 
@@ -71,7 +72,7 @@ const EmailConfirmationScreen: React.FC = () => {
     const verificationCode = code.join("");
 
     if (verificationCode.length !== 6) {
-      Alert.alert(authStrings.common.error, authStrings.validation.codeInvalid);
+      Alert.alert(t("common.error"), t("validation.codeInvalid"));
       return;
     }
 
@@ -80,20 +81,16 @@ const EmailConfirmationScreen: React.FC = () => {
       // TODO: Integrate with your verification API
       await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
 
-      Alert.alert(
-        authStrings.emailConfirmation.successTitle,
-        authStrings.emailConfirmation.successMessage,
-        [
-          {
-            text: "OK",
-            // onPress: () => navigate("SMSConfirmation", { email }),
-            onPress: () => {},
-          },
-        ],
-      );
+      Alert.alert(t("emailConfirmation.successTitle"), t("emailConfirmation.successMessage"), [
+        {
+          text: "OK",
+          // onPress: () => navigate("SMSConfirmation", { email }),
+          onPress: () => {},
+        },
+      ]);
     } catch (error) {
-      const errorMessage = String(error) || authStrings.errors.unknownError;
-      Alert.alert(authStrings.common.error, errorMessage);
+      const errorMessage = String(error) || t("errors.unknownError");
+      Alert.alert(t("common.error"), errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -108,7 +105,7 @@ const EmailConfirmationScreen: React.FC = () => {
       startResendCooldown();
       Alert.alert("Успешно", "Код отправлен повторно");
     } catch (error) {
-      Alert.alert(authStrings.common.error, authStrings.errors.unknownError);
+      Alert.alert(t("common.error"), t("errors.unknownError"));
     }
   };
 
@@ -124,12 +121,12 @@ const EmailConfirmationScreen: React.FC = () => {
           <Text
             variant="headline"
             style={styles.title}>
-            {authStrings.emailConfirmation.title}
+            {t("emailConfirmation.title")}
           </Text>
           <Text
             variant="body"
             style={styles.subtitle}>
-            {authStrings.emailConfirmation.subtitle}
+            {t("emailConfirmation.subtitle")}
           </Text>
           <Text
             variant="caption"
@@ -143,7 +140,7 @@ const EmailConfirmationScreen: React.FC = () => {
           <Text
             variant="body"
             style={styles.instruction}>
-            {authStrings.emailConfirmation.instruction}
+            {t("emailConfirmation.instruction")}
           </Text>
 
           <View style={styles.codeContainer}>
@@ -171,16 +168,14 @@ const EmailConfirmationScreen: React.FC = () => {
             style={styles.verifyButton}
             icon="email-check"
             mode="contained">
-            {isLoading
-              ? authStrings.emailConfirmation.verifying
-              : authStrings.emailConfirmation.verify}
+            {isLoading ? t("emailConfirmation.verifying") : t("emailConfirmation.verify")}
           </Button>
 
           <View style={styles.resendContainer}>
             <Text
               variant="caption"
               style={styles.resendText}>
-              {authStrings.emailConfirmation.resendCode}
+              {t("emailConfirmation.resendCode")}
             </Text>
             <Touchable
               onPress={handleResendCode}
@@ -189,8 +184,8 @@ const EmailConfirmationScreen: React.FC = () => {
                 variant="caption"
                 style={styles.resendButton}>
                 {resendCooldown > 0
-                  ? `${authStrings.emailConfirmation.resendIn} ${resendCooldown}${authStrings.emailConfirmation.seconds}`
-                  : authStrings.common.resend}
+                  ? `${t("emailConfirmation.resendIn")} ${resendCooldown}${t("emailConfirmation.seconds")}`
+                  : t("common.resend")}
               </Text>
             </Touchable>
           </View>

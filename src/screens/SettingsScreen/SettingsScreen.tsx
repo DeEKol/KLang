@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Linking, ScrollView, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -22,9 +23,8 @@ import {
   SettingSwitch,
 } from "shared/ui/paper-kit/settings-components";
 
-import { settingsStrings } from "./settings.i18n";
-
 export const SettingsScreen: React.FC = () => {
+  const { t } = useTranslation("settingsScreen");
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { colors } = useThemeTokens();
@@ -100,32 +100,32 @@ export const SettingsScreen: React.FC = () => {
 
   // Опции для выбора темы
   const themeOptions = [
-    { label: settingsStrings.themeLight, value: "light" },
-    { label: settingsStrings.themeDark, value: "dark" },
-    { label: settingsStrings.themeAuto, value: "system" },
+    { label: t("themeLight"), value: "light" },
+    { label: t("themeDark"), value: "dark" },
+    { label: t("themeAuto"), value: "system" },
   ];
 
   // Опции для размера шрифта
   const fontSizeOptions = [
-    { label: settingsStrings.fontSizeSmall, value: "small" },
-    { label: settingsStrings.fontSizeMedium, value: "medium" },
-    { label: settingsStrings.fontSizeLarge, value: "large" },
+    { label: t("fontSizeSmall"), value: "small" },
+    { label: t("fontSizeMedium"), value: "medium" },
+    { label: t("fontSizeLarge"), value: "large" },
   ];
 
   // Опции для сложности
   const difficultyOptions = [
     {
-      label: settingsStrings.difficultyEasy,
+      label: t("difficultyEasy"),
       value: "easy",
       description: "Медленный темп, больше повторений",
     },
     {
-      label: settingsStrings.difficultyMedium,
+      label: t("difficultyMedium"),
       value: "medium",
       description: "Сбалансированный темп обучения",
     },
     {
-      label: settingsStrings.difficultyHard,
+      label: t("difficultyHard"),
       value: "hard",
       description: "Быстрый темп, меньше подсказок",
     },
@@ -149,12 +149,12 @@ export const SettingsScreen: React.FC = () => {
             <Text
               variant="headline"
               style={[styles.title, { color: colors.text }]}>
-              {settingsStrings.title}
+              {t("title")}
             </Text>
             <Text
               variant="body"
               style={[styles.subtitle, { color: colors.placeholder }]}>
-              {settingsStrings.subtitle}
+              {t("subtitle")}
             </Text>
           </View>
         </View>
@@ -162,13 +162,13 @@ export const SettingsScreen: React.FC = () => {
 
       {/* Внешний вид */}
       <SettingsSection
-        title={settingsStrings.appearance}
+        title={t("appearance")}
         icon="🎨">
         <SlideInRightView
           delay={100}
           duration={500}>
           <SettingRadio
-            label={settingsStrings.theme}
+            label={t("theme")}
             value={settings.theme}
             onValueChange={(value) => handleSettingChange("theme", value)}
             options={themeOptions}
@@ -179,7 +179,7 @@ export const SettingsScreen: React.FC = () => {
           delay={150}
           duration={500}>
           <SettingRadio
-            label={settingsStrings.fontSize}
+            label={t("fontSize")}
             value={settings.fontSize}
             onValueChange={(value) => handleSettingChange("fontSize", value)}
             options={fontSizeOptions}
@@ -189,13 +189,13 @@ export const SettingsScreen: React.FC = () => {
 
       {/* Уведомления */}
       <SettingsSection
-        title={settingsStrings.notifications}
+        title={t("notifications")}
         icon="🔔">
         <SlideInRightView
           delay={200}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.dailyReminders}
+            label={t("dailyReminders")}
             value={settings.dailyReminders}
             onValueChange={(value) => handleSettingChange("dailyReminders", value)}
             description="Напоминания о ежедневной практике"
@@ -206,7 +206,7 @@ export const SettingsScreen: React.FC = () => {
           delay={250}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.studyReminders}
+            label={t("studyReminders")}
             value={settings.studyReminders}
             onValueChange={(value) => handleSettingChange("studyReminders", value)}
             description="Напоминания о новых уроках"
@@ -217,7 +217,7 @@ export const SettingsScreen: React.FC = () => {
           delay={300}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.progressUpdates}
+            label={t("progressUpdates")}
             value={settings.progressUpdates}
             onValueChange={(value) => handleSettingChange("progressUpdates", value)}
             description="Уведомления о достижениях"
@@ -228,7 +228,7 @@ export const SettingsScreen: React.FC = () => {
           delay={350}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.soundEffects}
+            label={t("soundEffects")}
             value={settings.soundEffects}
             onValueChange={(value) => handleSettingChange("soundEffects", value)}
             description="Звуки при взаимодействии"
@@ -239,7 +239,7 @@ export const SettingsScreen: React.FC = () => {
           delay={400}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.vibration}
+            label={t("vibration")}
             value={settings.vibration}
             onValueChange={(value) => handleSettingChange("vibration", value)}
             description="Вибрация при действиях"
@@ -249,14 +249,14 @@ export const SettingsScreen: React.FC = () => {
 
       {/* Обучение */}
       <SettingsSection
-        title={settingsStrings.learning}
+        title={t("learning")}
         icon="📚">
         <SlideInRightView
           delay={450}
           duration={500}>
           <SettingAction
-            label={settingsStrings.dailyGoal}
-            value={`${learningGoals.dailyMinutes} ${settingsStrings.minutes}`}
+            label={t("dailyGoal")}
+            value={`${learningGoals.dailyMinutes} ${t("minutes")}`}
             onPress={() => {
               // Навигация к экрану изменения цели
               Alert.alert("Ежедневная цель", "Измените вашу ежедневную цель обучения");
@@ -269,7 +269,7 @@ export const SettingsScreen: React.FC = () => {
           delay={500}
           duration={500}>
           <SettingRadio
-            label={settingsStrings.difficulty}
+            label={t("difficulty")}
             value={learningGoals.difficulty}
             onValueChange={(value) => handleGoalChange("difficulty", value)}
             options={difficultyOptions}
@@ -280,7 +280,7 @@ export const SettingsScreen: React.FC = () => {
           delay={550}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.autoPlayAudio}
+            label={t("autoPlayAudio")}
             value={settings.autoPlayAudio}
             onValueChange={(value) => handleSettingChange("autoPlayAudio", value)}
             description="Автоматически воспроизводить корейское произношение"
@@ -291,7 +291,7 @@ export const SettingsScreen: React.FC = () => {
           delay={600}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.showRomanization}
+            label={t("showRomanization")}
             value={settings.showRomanization}
             onValueChange={(value) => handleSettingChange("showRomanization", value)}
             description="Показывать романизацию корейских слов"
@@ -302,7 +302,7 @@ export const SettingsScreen: React.FC = () => {
           delay={650}
           duration={500}>
           <SettingSwitch
-            label={settingsStrings.reviewEnabled}
+            label={t("reviewEnabled")}
             value={settings.reviewEnabled}
             onValueChange={(value) => handleSettingChange("reviewEnabled", value)}
             description="Автоматическое повторение пройденного материала"
@@ -312,13 +312,13 @@ export const SettingsScreen: React.FC = () => {
 
       {/* Аккаунт */}
       <SettingsSection
-        title={settingsStrings.account}
+        title={t("account")}
         icon="👤">
         <SlideInRightView
           delay={700}
           duration={500}>
           <SettingAction
-            label={settingsStrings.profile}
+            label={t("profile")}
             value={user?.displayName || "Анна Ким"}
             onPress={() => navigation.navigate("Profile")}
             icon="👤"
@@ -329,8 +329,8 @@ export const SettingsScreen: React.FC = () => {
           delay={750}
           duration={500}>
           <SettingAction
-            label={settingsStrings.subscription}
-            value={settingsStrings.subscriptionFree}
+            label={t("subscription")}
+            value={t("subscriptionFree")}
             onPress={() => {
               Alert.alert("Премиум подписка", "Получите доступ ко всем функциям приложения", [
                 { text: "Позже", style: "cancel" },
@@ -345,7 +345,7 @@ export const SettingsScreen: React.FC = () => {
           delay={800}
           duration={500}>
           <SettingAction
-            label={settingsStrings.dataExport}
+            label={t("dataExport")}
             onPress={() => {
               Alert.alert("Экспорт данных", "Ваши данные будут экспортированы в файл");
             }}
@@ -357,7 +357,7 @@ export const SettingsScreen: React.FC = () => {
           delay={850}
           duration={500}>
           <SettingAction
-            label={settingsStrings.privacy}
+            label={t("privacy")}
             onPress={() => {
               Alert.alert("Конфиденциальность", "Настройки конфиденциальности");
             }}
@@ -369,7 +369,7 @@ export const SettingsScreen: React.FC = () => {
           delay={900}
           duration={500}>
           <SettingAction
-            label={settingsStrings.logout}
+            label={t("logout")}
             onPress={handleLogout}
             icon="🚪"
             showChevron={false}
@@ -379,13 +379,13 @@ export const SettingsScreen: React.FC = () => {
 
       {/* О приложении */}
       <SettingsSection
-        title={settingsStrings.about}
+        title={t("about")}
         icon="ℹ️">
         <SlideInRightView
           delay={950}
           duration={500}>
           <SettingAction
-            label={settingsStrings.version}
+            label={t("version")}
             value="1.0.0"
             onPress={() => {}}
             icon="📱"
@@ -397,7 +397,7 @@ export const SettingsScreen: React.FC = () => {
           delay={1000}
           duration={500}>
           <SettingAction
-            label={settingsStrings.rateApp}
+            label={t("rateApp")}
             onPress={handleRateApp}
             icon="⭐"
           />
@@ -407,7 +407,7 @@ export const SettingsScreen: React.FC = () => {
           delay={1050}
           duration={500}>
           <SettingAction
-            label={settingsStrings.shareApp}
+            label={t("shareApp")}
             onPress={handleShareApp}
             icon="📤"
           />
@@ -417,7 +417,7 @@ export const SettingsScreen: React.FC = () => {
           delay={1100}
           duration={500}>
           <SettingAction
-            label={settingsStrings.feedback}
+            label={t("feedback")}
             onPress={handleFeedback}
             icon="💌"
           />
@@ -427,7 +427,7 @@ export const SettingsScreen: React.FC = () => {
           delay={1150}
           duration={500}>
           <SettingAction
-            label={settingsStrings.privacyPolicy}
+            label={t("privacyPolicy")}
             onPress={handlePrivacyPolicy}
             icon="📄"
           />
@@ -437,7 +437,7 @@ export const SettingsScreen: React.FC = () => {
           delay={1200}
           duration={500}>
           <SettingAction
-            label={settingsStrings.termsOfService}
+            label={t("termsOfService")}
             onPress={handleTermsOfService}
             icon="📝"
           />
