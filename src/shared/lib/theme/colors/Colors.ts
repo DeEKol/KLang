@@ -1,4 +1,4 @@
-import type { TThemeMode } from "entities/theme";
+import type { TThemeMode } from "shared/lib/theme/types";
 
 import type { EPaletteValue } from "./Palette";
 import { EDarkPalette, EPalette } from "./Palette";

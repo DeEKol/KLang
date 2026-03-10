@@ -8,10 +8,9 @@
 - Used in component as: `const styles = useMemo(() => createStyles(colors), [colors])`
 - Unused styles in `*.styles.ts` checked by: `npm run check-styles` (scripts/check-unused-styles.js) — to be added to CI/CD
 
-### i18n
+### i18n ✅ DONE
 - Single approach: `useTranslation(namespace)` + JSON files in `public/locales/`
-- `.i18n.ts` files (in screens/) were temp scaffolding → convert to JSON + delete
-- Namespaces: translation, navigation, homeScreen, uiScreen, studyScreen, practiceScreen, settingsScreen, testScreen, levelScreen
+- All `.i18n.ts` files deleted. Active namespaces: translation, navigation, homeScreen, uiScreen, studyScreen, practiceScreen, settingsScreen, testScreen, levelScreen, splashScreen, roadmapScreen, profileScreen, authScreen
 
 ### Games / Modules
 - Games live in `src/modules/games/` as a separate non-FSD layer
@@ -24,10 +23,13 @@
 - `AuthContext` keeps only methods (signIn, signOut, etc.) — no user state duplication
 - Do not break existing auth flow during migration
 
-## Key Bugs to Fix (from ISSUES_AND_ROADMAP.md)
-- TS-02: `AnimatedIcon` — no props interface
-- TS-03: inline anonymous state type in `NavigationProvider` selector (should use `IStateSchema`)
-- FSD violations, i18n `.i18n.ts` → `useTranslation` migration
+## Key Bugs / Tasks Remaining (from ISSUES_AND_ROADMAP.md)
+- FSD-01: HangelBoard, SequencesBuilder → move from `features/` to `modules/games/`
+- FSD-02: `settings-components.tsx` → move from `shared/ui/paper-kit/` to `screens/SettingsScreen/ui/`
+- FSD-03: Remove `Counter` and `PostsTestApi` test entities
+- FSD-08 known exception: `useThemeTokens.ts` imports `getThemeMode` from `entities` — acceptable until Theme Context added
+- I18N-02/03: SequencesBuilderUI and HangelBoard still have hardcoded Russian strings
+- Theme types now live in `shared/lib/theme/types.ts`, re-exported from `entities/theme` (all consumers work unchanged)
 
 ## Code Style Rules
 - Modern JS/TS: ESM `import`/`export`, no `require()` unless CJS is unavoidable (e.g. metro.config.js, babel.config.js)

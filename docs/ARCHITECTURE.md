@@ -82,10 +82,11 @@ Redux (theme.mode: TThemeMode)
 
 ### Типы
 
+- `TThemeMode`, `IThemeColors`, `IThemeTokens`, `IThemeTypography`, `IThemeSpacing` — определены в `shared/lib/theme/types.ts`, ре-экспортируются из `entities/theme`
+- `IThemeSchema` — Redux-состояние (только `mode`), определена в `entities/theme/types/themeSchema.ts`
 - `TThemeMode = ColorSchemeName | "normal"` — `"normal"` является легаси-алиасом для `"system"`
-- `IThemeTokens` — дизайн-токены (colors, typography, spacing)
-- `IThemeSchema` — Redux-состояние (только `mode`)
 - В Redux хранится только `mode`; `IThemeTokens` создаются на лету через хук
+- **Известное исключение FSD:** `shared/lib/theme/useThemeTokens.ts` импортирует `getThemeMode` из `entities/theme`. Неустранимо без выноса темы в React Context.
 
 ### Цвета
 
@@ -115,7 +116,7 @@ FirebaseAdapter (shared/services/firebase)  — IAuthRepository
 SessionService (shared/auth/SessionService) — синхронизирует Firebase token с API
 AuthProvider   (app/providers/AuthProvider) — React Context + Redux dispatch
 AuthContext    (shared/auth/AuthContext)     — useAuthContext() хук
-features/auth/hooks/useAuth                 — обёртка для компонентов
+features/auth (index.ts)                    — обёртка для компонентов (публичный API)
 ```
 
 ### Жизненный цикл

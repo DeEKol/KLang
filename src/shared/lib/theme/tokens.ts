@@ -1,4 +1,4 @@
-import type { IThemeTokens, TThemeMode } from "entities/theme";
+import type { IThemeTokens, TThemeMode } from "shared/lib/theme/types";
 
 import { Colors, type TColors } from "./colors/Colors";
 

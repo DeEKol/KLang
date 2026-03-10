@@ -1,5 +1,5 @@
 import { useColorScheme } from "react-native";
-import type { TThemeMode } from "entities/theme";
+import type { TThemeMode } from "shared/lib/theme/types";
 
 /**
  * Normalize legacy value

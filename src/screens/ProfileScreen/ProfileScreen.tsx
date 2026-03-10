@@ -11,7 +11,7 @@ import Animated, {
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { getAuthUser } from "entities/auth";
-import { useAuth } from "features/auth/hooks/useAuth";
+import { useAuth } from "features/auth";
 import { Button, Card, Surface, Text, Touchable } from "shared/ui/paper-kit";
 
 const AnimatedSurface = Animated.createAnimatedComponent(Surface);

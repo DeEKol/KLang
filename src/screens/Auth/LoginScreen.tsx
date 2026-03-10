@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
-import { useAuth } from "features/auth/hooks/useAuth";
+import { useAuth } from "features/auth";
 import { ENavigation, navigate } from "shared/config/navigation";
 import { Button, Card, Text, TextInput, Touchable } from "shared/ui/paper-kit";
 

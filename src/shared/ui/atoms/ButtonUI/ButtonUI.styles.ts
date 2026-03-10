@@ -1,8 +1,8 @@
 import type { TextStyle, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
-import type { TThemeMode } from "entities/theme";
 import { exhaustiveCheck } from "shared/helpers";
 import { Colors, EPalette } from "shared/lib/theme";
+import type { TThemeMode } from "shared/lib/theme/types";
 
 import { EButtonUITheme } from "./types";
 

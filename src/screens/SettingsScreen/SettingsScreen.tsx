@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getAuthUser } from "entities/auth";
 import type { TThemeMode } from "entities/theme";
 import { getThemeMode, themeActions } from "entities/theme";
-import { useAuth } from "features/auth/hooks/useAuth";
+import { useAuth } from "features/auth";
 import { useThemeTokens } from "shared/lib/theme";
 import {
   AnimatedView,

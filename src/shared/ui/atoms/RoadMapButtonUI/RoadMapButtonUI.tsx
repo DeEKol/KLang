@@ -4,10 +4,8 @@ import { useTranslation } from "react-i18next";
 import type { TextStyle } from "react-native";
 import { Pressable, StyleSheet, Text } from "react-native";
 import type { FlexStyle, ViewStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
-import { useDispatch, useSelector } from "react-redux";
 // ? Layer Imports
-import { getThemeMode, type TThemeMode } from "entities/theme";
-import { Colors, EPalette } from "shared/lib/theme";
+import { Colors, EPalette, useThemeTokens } from "shared/lib/theme";
 
 // ? Types
 type TRoadMapButtonUiProps = {
@@ -25,9 +23,8 @@ export const RoadMapButtonUi = (props: TRoadMapButtonUiProps) => {
   } = props;
 
   // ? Hooks
-  const theme: TThemeMode = useSelector(getThemeMode);
+  const { mode: theme } = useThemeTokens();
   const { t } = useTranslation();
-  const dispatch = useDispatch();
 
   // ? Styles
   const styles = createStyles(theme);

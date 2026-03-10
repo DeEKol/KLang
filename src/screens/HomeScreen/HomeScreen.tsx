@@ -2,7 +2,7 @@ import React from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useSelector } from "react-redux";
 import { getAuthUser } from "entities/auth";
-import { useAuth } from "features/auth/hooks/useAuth";
+import { useAuth } from "features/auth";
 import { ENavigation, navigate } from "shared/config/navigation";
 import {
   AvatarImage,

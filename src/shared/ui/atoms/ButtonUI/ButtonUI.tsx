@@ -3,8 +3,7 @@ import React from "react";
 import type { ButtonProps, ViewStyle } from "react-native";
 import { Pressable, Text, View } from "react-native";
 import type { SvgProps } from "react-native-svg";
-import { useSelector } from "react-redux";
-import { getThemeMode, type TThemeMode } from "entities/theme";
+import { useThemeTokens } from "shared/lib/theme";
 
 import ButtonUIStyles from "./ButtonUI.styles";
 import { EButtonUITheme } from "./types";
@@ -29,9 +28,9 @@ export const ButtonUI = (props: TButtonUIProps) => {
     ...anyProps
   } = props;
 
-  const themeGlobal: TThemeMode = useSelector(getThemeMode);
+  const { mode } = useThemeTokens();
 
-  const styles = ButtonUIStyles(themeUI, themeGlobal);
+  const styles = ButtonUIStyles(themeUI, mode);
 
   return (
     <View style={[styles.viewStyle, outerViewStyle]}>

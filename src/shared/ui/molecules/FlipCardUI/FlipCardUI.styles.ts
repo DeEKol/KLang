@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
-import type { TThemeMode } from "entities/theme";
 import { EPalette } from "shared/lib/theme";
+import type { TThemeMode } from "shared/lib/theme/types";
 import type { EButtonUITheme } from "shared/ui/atoms";
 
 export default function FlipCardUIStyles(themeUI: EButtonUITheme, themeGlobal: TThemeMode) {

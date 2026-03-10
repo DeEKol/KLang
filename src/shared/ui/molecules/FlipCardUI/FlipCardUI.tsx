@@ -7,8 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useAppSelector } from "app/providers/StoreProvider/StoreProvider";
-import { getThemeMode, type TThemeMode } from "entities/theme";
+import { useThemeTokens } from "shared/lib/theme";
 import { EButtonUITheme } from "shared/ui/atoms";
 
 // ? Slice Imports
@@ -25,7 +24,7 @@ export const FlipCardUI = (props: TFlipCardUIProps) => {
 
   // ? Hooks
   const rotation = useSharedValue(0);
-  const themeGlobal: TThemeMode = useAppSelector(getThemeMode);
+  const { mode: themeGlobal } = useThemeTokens();
   const [flipped, setFlipped] = useState(false);
 
   const frontAnimatedStyle = useAnimatedStyle(() => {

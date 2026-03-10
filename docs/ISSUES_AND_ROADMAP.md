@@ -71,6 +71,19 @@ Index signature удалён — динамический доступ `colors[k
 `HangelBoard` и `SequencesBuilder` перенести из `src/features/` в `src/modules/games/`
 по аналогии с уже лежащим там `WordMatcher`.
 
+### FSD-06 — `features/auth/` не имел `index.ts` (прямые импорты из hooks/) ✅ Решено
+Создан `src/features/auth/index.ts`. Все 4 экрана (Login, Settings, Home, Profile) переведены на `import { useAuth } from "features/auth"`.
+
+### FSD-07 — Типы темы определены в `entities/`, используются в `shared/` ✅ Решено
+`TThemeMode`, `IThemeColors`, `IThemeTokens` и др. перенесены в `src/shared/lib/theme/types.ts`.
+`entities/theme/types/themeSchema.ts` теперь ре-экспортирует их из `shared/`.
+6 файлов в `shared/` обновлены (больше не импортируют из `entities/theme`).
+
+### FSD-08 — Runtime-селектор `getThemeMode` в `shared/ui` компонентах ✅ Решено
+`ButtonUI`, `FlipCardUI`, `RoadMapButtonUI` — удалены прямые вызовы `useSelector(getThemeMode)`.
+Заменены на `useThemeTokens().mode`. Дополнительно исправлено нарушение `shared→app` в FlipCardUI (удалён импорт `useAppSelector` из `app/providers/StoreProvider`).
+**Единственное оставшееся исключение:** `useThemeTokens.ts` сам импортирует `getThemeMode` — неустранимо без Theme Context.
+
 ### FSD-02 — `settings-components.tsx` в `shared/ui/paper-kit/`
 `SettingsSection`, `SettingSwitch`, `SettingRadio`, `SettingAction` — UI, специфичный для настроек.
 `shared/ui` — для общих атомов. Эти компоненты правильнее положить в `features/settings/ui/` или `screens/SettingsScreen/ui/`.
@@ -90,14 +103,8 @@ Index signature удалён — динамический доступ `colors[k
 
 ## i18n
 
-### I18N-01 — Два подхода к строкам, несогласованность
-**Решено**: стандарт — `useTranslation(namespace)` + JSON-файлы.
-`.i18n.ts` файлы в screens/ — временные, конвертировать в JSON + удалить:
-- `src/screens/Auth/auth.i18n.ts`
-- `src/screens/ProfileScreen/profile.i18n.ts`
-- `src/screens/RoadmapScreen/roadmap.i18n.ts`
-- `src/screens/SplashScreen/splash.i18n.ts`
-- `src/screens/SettingsScreen/settings.i18n.ts`
+### I18N-01 — Два подхода к строкам, несогласованность ✅ Решено
+Все 5 `.i18n.ts` файлов удалены. Созданы JSON namespace'ы: `authScreen`, `splashScreen`, `roadmapScreen`, `profileScreen` (en + ru). `settingsScreen.json` заполнен. Все экраны переведены на `useTranslation(namespace)`.
 
 ### I18N-02 — `SequencesBuilderUI.tsx` — весь текст захардкожен на русском
 "Корейская практика — вставьте пропущенные слова", "Правильно:", "Варианты", "Сброс",

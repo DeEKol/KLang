@@ -1,5 +1,5 @@
 import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
-import type { IThemeTokens } from "entities/theme";
+import type { IThemeTokens } from "shared/lib/theme/types";
 
 /**
  * Map our ThemeTokens -> MD3-like theme for react-native-paper.
