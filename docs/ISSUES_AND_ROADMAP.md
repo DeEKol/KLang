@@ -9,10 +9,8 @@
 ### NAV-01 — `AnimatedIcon` у Settings всегда `focused=true` ✅ Решено
 `focused={focused}` передан корректно. Заодно убраны отладочные `tabBarBadgeStyle`/`tabBarStyle: { backgroundColor: "red" }` в Home tab.
 
-### NAV-02 — `routes.ts` дублирует и обрезает `ENavigation`
-`src/shared/config/navigation/routes.ts` объявляет собственный `ENavigation` с 12 значениями,
-тогда как `navigation.ts` содержит полный список из 25. `ROUTE_PATHS` не покрывает Practice/Study.
-Риск: импорт не того enum в компоненте пройдёт TS, но маршрут не найдётся.
+### NAV-02 — `routes.ts` дублирует и обрезает `ENavigation` ✅ Решено
+Дублирующий enum удалён из `routes.ts`. Теперь файл импортирует `ENavigation` из `./types/navigation` — единственный источник истины.
 
 ### THEME-01 — Theme Radio в SettingsScreen не диспатчит в Redux ✅ Решено
 `handleSettingChange` теперь диспатчит `themeActions.changeTheme(mode)` при `key === "theme"`.
@@ -28,12 +26,8 @@
 console.log("User account created & signed in!");  // это sign-in, не sign-up
 ```
 
-### GAME-01 — Нестабильные ключи в `HangelBoard`
-```tsx
-// HangelBoard.tsx:211
-<AnimatedStroke key={key()} .../>  // key() генерирует новый id на каждый рендер
-```
-React будет пересоздавать все штрихи при каждом рендере. Нужен стабильный id (например, индекс или uid при создании штриха).
+### GAME-01 — Нестабильные ключи в `HangelBoard` ✅ Решено
+`Stroke` получил поле `id: number`, присваивается через `strokeIdRef` (инкремент) при `onPanResponderRelease`. `key={key()}` заменён на `key={s.id}`. Импорт `generateKey` удалён.
 
 ---
 
@@ -59,8 +53,8 @@ const pendingLink = useSelector(
 ```
 Должен использовать `IStateSchema` вместо inline anonymous type.
 
-### TS-04 — `handleSettingChange` / `handleGoalChange` — `value: any`
-В `SettingsScreen.tsx` — нет типизации значений настроек.
+### TS-04 — `handleSettingChange` / `handleGoalChange` — `value: any` ✅ Частично решено
+`handleGoalChange` переведён на `value: unknown`. `handleSettingChange` уже был `value: unknown` после предыдущего фикса.
 
 ### TS-05 — `error: any` в catch-блоках `FirebaseAdapter`
 Стоит использовать `error instanceof Error` или приводить к `FirebaseError`.

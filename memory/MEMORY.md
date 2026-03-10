@@ -25,9 +25,10 @@
 - Do not break existing auth flow during migration
 
 ## Key Bugs to Fix (from ISSUES_AND_ROADMAP.md)
-- GAME-01: unstable `key()` in HangelBoard strokes list
-- NAV-02: `routes.ts` duplicates and truncates `ENavigation` (12 vs 25 values)
-- TS-04: `handleGoalChange` still has `value: any` in SettingsScreen
+- TS-01: `PaperBottomTabs` props typed as `any`
+- TS-05: `error: any` in FirebaseAdapter catch blocks
+- TS-06: `IThemeColors` index signature hides strictness
+- AUTH-01: wrong console.log message in `signInWithEmail`
 
 ## Code Style Rules
 - Modern JS/TS: ESM `import`/`export`, no `require()` unless CJS is unavoidable (e.g. metro.config.js, babel.config.js)
