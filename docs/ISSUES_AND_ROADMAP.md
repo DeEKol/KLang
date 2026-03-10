@@ -6,28 +6,21 @@
 
 ## Баги (поломано прямо сейчас)
 
-### NAV-01 — `AnimatedIcon` у Settings всегда `focused=true`
-```tsx
-// BottomTabsNavigator.tsx:93
-<AnimatedIcon focused name="function" color={color} size={24} />
-//                   ^ должно быть: focused={focused}
-```
+### NAV-01 — `AnimatedIcon` у Settings всегда `focused=true` ✅ Решено
+`focused={focused}` передан корректно. Заодно убраны отладочные `tabBarBadgeStyle`/`tabBarStyle: { backgroundColor: "red" }` в Home tab.
 
 ### NAV-02 — `routes.ts` дублирует и обрезает `ENavigation`
 `src/shared/config/navigation/routes.ts` объявляет собственный `ENavigation` с 12 значениями,
 тогда как `navigation.ts` содержит полный список из 25. `ROUTE_PATHS` не покрывает Practice/Study.
 Риск: импорт не того enum в компоненте пройдёт TS, но маршрут не найдётся.
 
-### THEME-01 — Theme Radio в SettingsScreen не диспатчит в Redux
-```tsx
-// SettingsScreen.tsx
-handleSettingChange("theme", value)  // меняет только локальный useState
-```
-Нет `dispatch(setThemeMode(value))` → выбор темы не сохраняется.
+### THEME-01 — Theme Radio в SettingsScreen не диспатчит в Redux ✅ Решено
+`handleSettingChange` теперь диспатчит `themeActions.changeTheme(mode)` при `key === "theme"`.
+`"system"` → `null` (для Redux), остальные значения передаются как `TThemeMode`.
 
-### THEME-02 — Несоответствие значений тем
-`themeOptions` использует `value: "auto"`, но Redux/ThemeMode знает `null | "light" | "dark" | "system" | "normal"`.
-Строка `"auto"` никогда не совпадёт с `TThemeMode` → тема всегда резолвится как `light`.
+### THEME-02 — Несоответствие значений тем ✅ Решено
+`value: "auto"` заменено на `value: "system"` в `themeOptions`.
+`themeName ?? "system"` — корректный fallback для начального состояния.
 
 ### AUTH-01 — Ошибочный log в `signInWithEmail`
 ```ts
@@ -75,11 +68,9 @@ const pendingLink = useSelector(
 ### TS-06 — `IThemeColors` имеет `[key: string]: string | undefined`
 Index signature перекрывает конкретные поля и убирает strictness.
 
-### TS-07 — Два `stateSchema.ts` с разным содержимым
-- `src/entities/theme/types/stateSchema.ts` — содержит только `{ theme }` (неполная копия)
-- `src/app/providers/StoreProvider/types/stateSchema.ts` — полная `IStateSchema`
-
-Первый файл — лишний, вводит в заблуждение.
+### TS-07 — Два `stateSchema.ts` с разным содержимым ✅ Решено
+`src/entities/theme/types/stateSchema.ts` удалён. Экспорт убран из `entities/theme/index.ts`.
+`getTheme.ts` переключён на импорт `IStateSchema` из `app/providers/StoreProvider`.
 
 ---
 

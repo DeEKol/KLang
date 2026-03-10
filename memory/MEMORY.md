@@ -25,10 +25,9 @@
 - Do not break existing auth flow during migration
 
 ## Key Bugs to Fix (from ISSUES_AND_ROADMAP.md)
-- NAV-01: `focused` hardcoded true in Settings AnimatedIcon
-- THEME-01+02: Theme not dispatched to Redux, "auto" value mismatch with TThemeMode
 - GAME-01: unstable `key()` in HangelBoard strokes list
-- TS-07: duplicate stateSchema.ts in entities/theme/types/
+- NAV-02: `routes.ts` duplicates and truncates `ENavigation` (12 vs 25 values)
+- TS-04: `handleGoalChange` still has `value: any` in SettingsScreen
 
 ## Code Style Rules
 - Modern JS/TS: ESM `import`/`export`, no `require()` unless CJS is unavoidable (e.g. metro.config.js, babel.config.js)
