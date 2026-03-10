@@ -4,7 +4,7 @@ import { useSharedValue, withTiming } from "react-native-reanimated";
 import Slider from "@react-native-community/slider";
 import type { SkPath } from "@shopify/react-native-skia";
 import { Canvas, Group, Path as SkiaPath, Skia, useCanvasRef } from "@shopify/react-native-skia";
-import { v4 as uuid } from "uuid";
+import { key } from "shared/helpers/generateKey";
 
 interface Stroke {
   path: SkPath;
@@ -207,9 +207,9 @@ export const HangelBoard = () => {
           ref={canvasRef}
           style={styles.canvas}>
           <GridOverlay />
-          {strokes.map((s, key) => (
+          {strokes.map((s) => (
             <AnimatedStroke
-              key={uuid()}
+              key={key()}
               path={s.path}
               width={s.width}
             />
