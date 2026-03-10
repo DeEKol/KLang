@@ -1,3 +1,4 @@
+import type { ReactNativeFirebase } from "@react-native-firebase/app";
 import type { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import {
   createUserWithEmailAndPassword,
@@ -13,6 +14,8 @@ import {
 import { apiClient } from "shared/api/client";
 import type { IAuthRepository, TFirebaseAuthUser } from "shared/auth/IAuthRepository";
 import { SecureStore } from "shared/storage/secureStore";
+
+type NativeFirebaseError = ReactNativeFirebase.NativeFirebaseError;
 
 export class FirebaseAdapter implements IAuthRepository {
   private unsub?: () => void;
@@ -42,15 +45,15 @@ export class FirebaseAdapter implements IAuthRepository {
     try {
       const cred = await signInWithEmailAndPassword(this.auth, email, password);
 
-      console.log("User account created & signed in!");
       return this.normalize(cred.user);
-      // eslint-disable-next-line
-    } catch (error: any) {
-      if (error.code === "auth/email-already-in-use") {
+    } catch (error) {
+      const fbError = error as NativeFirebaseError;
+
+      if (fbError.code === "auth/email-already-in-use") {
         console.log("That email address is already in use!");
       }
 
-      if (error.code === "auth/invalid-email") {
+      if (fbError.code === "auth/invalid-email") {
         console.log("That email address is invalid!");
       }
 

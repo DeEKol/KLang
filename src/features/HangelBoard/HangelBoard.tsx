@@ -4,6 +4,7 @@ import { useSharedValue, withTiming } from "react-native-reanimated";
 import Slider from "@react-native-community/slider";
 import type { SkPath } from "@shopify/react-native-skia";
 import { Canvas, Group, Path as SkiaPath, Skia, useCanvasRef } from "@shopify/react-native-skia";
+
 interface Stroke {
   id: number;
   path: SkPath;

@@ -25,10 +25,9 @@
 - Do not break existing auth flow during migration
 
 ## Key Bugs to Fix (from ISSUES_AND_ROADMAP.md)
-- TS-01: `PaperBottomTabs` props typed as `any`
-- TS-05: `error: any` in FirebaseAdapter catch blocks
-- TS-06: `IThemeColors` index signature hides strictness
-- AUTH-01: wrong console.log message in `signInWithEmail`
+- TS-02: `AnimatedIcon` — no props interface
+- TS-03: inline anonymous state type in `NavigationProvider` selector (should use `IStateSchema`)
+- FSD violations, i18n `.i18n.ts` → `useTranslation` migration
 
 ## Code Style Rules
 - Modern JS/TS: ESM `import`/`export`, no `require()` unless CJS is unavoidable (e.g. metro.config.js, babel.config.js)

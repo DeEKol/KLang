@@ -20,11 +20,8 @@
 `value: "auto"` заменено на `value: "system"` в `themeOptions`.
 `themeName ?? "system"` — корректный fallback для начального состояния.
 
-### AUTH-01 — Ошибочный log в `signInWithEmail`
-```ts
-// FirebaseAdapter.ts:44
-console.log("User account created & signed in!");  // это sign-in, не sign-up
-```
+### AUTH-01 — Ошибочный log в `signInWithEmail` ✅ Решено
+Неверный `console.log("User account created & signed in!")` удалён из `signInWithEmail`.
 
 ### GAME-01 — Нестабильные ключи в `HangelBoard` ✅ Решено
 `Stroke` получил поле `id: number`, присваивается через `strokeIdRef` (инкремент) при `onPanResponderRelease`. `key={key()}` заменён на `key={s.id}`. Импорт `generateKey` удалён.
@@ -33,11 +30,10 @@ console.log("User account created & signed in!");  // это sign-in, не sign-
 
 ## TypeScript
 
-### TS-01 — `PaperBottomTabs` — props типизированы как `any`
-```tsx
-export default function PaperBottomTabs({ navigation, state, descriptors, insets, TabBarComponent = BottomNavigation.Bar }: any)
-```
-Нужен тип из `@react-navigation/bottom-tabs` (`BottomTabBarProps`).
+### TS-01 — `PaperBottomTabs` — props типизированы как `any` ✅ Решено
+`any` заменён на `Props extends BottomTabBarProps` с `TabBarComponent?: ComponentType<BarProps>`.
+`BarRoute` — intersection Paper-типа и `{ name: string; params? }` для совместимости с React Navigation.
+Все внутренние callbacks (`onTabPress`, `renderIcon`, `getLabelText`) явно типизированы.
 
 ### TS-02 — `AnimatedIcon` — без типов (файл называется `.tsx`, но описан как `.js`)
 ```tsx
@@ -56,11 +52,11 @@ const pendingLink = useSelector(
 ### TS-04 — `handleSettingChange` / `handleGoalChange` — `value: any` ✅ Частично решено
 `handleGoalChange` переведён на `value: unknown`. `handleSettingChange` уже был `value: unknown` после предыдущего фикса.
 
-### TS-05 — `error: any` в catch-блоках `FirebaseAdapter`
-Стоит использовать `error instanceof Error` или приводить к `FirebaseError`.
+### TS-05 — `error: any` в catch-блоках `FirebaseAdapter` ✅ Решено
+`error: any` убран. Используется `ReactNativeFirebase.NativeFirebaseError` (namespace из `@react-native-firebase/app`) через локальный type alias. Убран `// eslint-disable-next-line`.
 
-### TS-06 — `IThemeColors` имеет `[key: string]: string | undefined`
-Index signature перекрывает конкретные поля и убирает strictness.
+### TS-06 — `IThemeColors` имеет `[key: string]: string | undefined` ✅ Решено
+Index signature удалён — динамический доступ `colors[key]` нигде не использовался. Интерфейс стал строгим.
 
 ### TS-07 — Два `stateSchema.ts` с разным содержимым ✅ Решено
 `src/entities/theme/types/stateSchema.ts` удалён. Экспорт убран из `entities/theme/index.ts`.

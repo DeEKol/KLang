@@ -14,7 +14,6 @@ export interface IThemeColors {
   accent?: string;
   error?: string;
   border?: string;
-  [key: string]: string | undefined;
 }
 
 export interface IThemeTypography {
