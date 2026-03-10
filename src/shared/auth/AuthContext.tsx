@@ -2,8 +2,6 @@ import { createContext, useContext } from "react";
 import type { TCredential, TFirebaseAuthUser } from "shared/auth/IAuthRepository";
 
 type TAuthContextShape = {
-  user: TFirebaseAuthUser;
-  isLoading: boolean;
   signInAnonymously: () => Promise<TFirebaseAuthUser | null>;
   signInWithEmail: (email: string, password: string) => Promise<TFirebaseAuthUser | null>;
   signUpWithEmail: (email: string, password: string) => Promise<TFirebaseAuthUser | null>;
@@ -16,8 +14,6 @@ type TAuthContextShape = {
 };
 
 const defaultCtx: TAuthContextShape = {
-  user: null,
-  isLoading: true,
   signInAnonymously: async () => null,
   signInWithEmail: async () => null,
   signUpWithEmail: async () => null,
