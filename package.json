@@ -23,7 +23,13 @@
     "validate": "npm run lint && npm run format:check",
     
     "check-styles": "node scripts/check-unused-styles.mjs",
-    "check-styles:screens": "node scripts/check-unused-styles.mjs src/screens"
+    "check-styles:screens": "node scripts/check-unused-styles.mjs src/screens",
+
+    "dump": "node scripts/dump-structure.mjs",
+    "dump:root": "node scripts/dump-structure.mjs --root .",
+    "dump:content": "node scripts/dump-structure.mjs --content",
+    "dump:mini": "node scripts/dump-structure.mjs --content --mini",
+    "dump:module": "node scripts/dump-structure.mjs --content --mini --module"
   },
   "dependencies": {
     "@maplibre/maplibre-react-native": "^10.4.0",
