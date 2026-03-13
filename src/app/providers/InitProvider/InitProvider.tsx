@@ -41,7 +41,7 @@ export const InitProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // ? Render
   return (
     <>
-      {isLoading ? (
+      {/* {isLoading ? (
         <SplashScreen
           onAnimationComplete={handleSplashComplete}
           isLoading={true}
@@ -49,9 +49,9 @@ export const InitProvider: React.FC<{ children: React.ReactNode }> = ({ children
         />
       ) : showOnboarding ? (
         <Text>{"Onboarding"}</Text>
-      ) : (
+      ) : ( */}
         <>{children}</>
-      )}
+      {/* )} */}
     </>
   );
 };

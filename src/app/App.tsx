@@ -11,18 +11,18 @@ function App(): React.JSX.Element {
   // ? Render
   return (
     <StoreProvider>
-      <InitProvider>
-        <SafeAreaProvider>
-          <UIProvider>
-            <AuthProvider>
-              <ThemeInitializer />
-              <GestureHandlerRootView>
-                <NavigationProvider />
-              </GestureHandlerRootView>
-            </AuthProvider>
-          </UIProvider>
-        </SafeAreaProvider>
-      </InitProvider>
+      {/* <InitProvider> */}
+      <SafeAreaProvider>
+        <UIProvider>
+          <AuthProvider>
+            <ThemeInitializer />
+            <GestureHandlerRootView>
+              <NavigationProvider />
+            </GestureHandlerRootView>
+          </AuthProvider>
+        </UIProvider>
+      </SafeAreaProvider>
+      {/* </InitProvider> */}
     </StoreProvider>
   );
 }
