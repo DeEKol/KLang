@@ -6,14 +6,11 @@
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    
     "test": "jest",
-    
     "pod:deintegrate": "cd ios && pod deintegrate && cd ..",
     "pod:cache-clean": "cd ios && pod cache clean --all && cd ..",
     "pod:rm": "cd ios && rm -rf Pods Podfile.lock && cd ..",
     "pod:clean": "npm run pod:deintegrate && npm run pod:cache-clean && npm run pod:rm",
-    
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx",
     "lint:fix": "eslint . --ext .js,.ts,.jsx,.tsx --fix --ignore-path .gitignore",
     "format": "prettier --write --ignore-path .gitignore \"**/*.{js,ts,jsx,tsx}\"",
@@ -21,10 +18,8 @@
     "format:check": "prettier --check --ignore-path .gitignore \"**/*.{js,ts,jsx,tsx}\"",
     "fix-all": "npm run lint:fix && npm run format",
     "validate": "npm run lint && npm run format:check",
-    
     "check-styles": "node scripts/check-unused-styles.mjs",
     "check-styles:screens": "node scripts/check-unused-styles.mjs src/screens",
-
     "dump": "node scripts/dump-structure.mjs",
     "dump:root": "node scripts/dump-structure.mjs --root .",
     "dump:content": "node scripts/dump-structure.mjs --content",
@@ -32,7 +27,7 @@
     "dump:module": "node scripts/dump-structure.mjs --content --mini --module"
   },
   "dependencies": {
-    "@maplibre/maplibre-react-native": "^10.4.0",
+    "@invertase/react-native-apple-authentication": "^2.5.1",
     "@os-team/i18next-react-native-language-detector": "1.1.6",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/slider": "^5.0.1",
@@ -60,8 +55,7 @@
     "react-native-screens": "4.15.4",
     "react-native-svg": "15.12.1",
     "react-native-tts": "^4.1.1",
-    "react-native-webview": "^13.16.0",
-    "react-native-worklets": "^0.5.0",
+    "react-native-worklets": "0.5.1",
     "react-redux": "9.2.0",
     "redux": "5.0.1",
     "redux-persist": "6.0.0",
