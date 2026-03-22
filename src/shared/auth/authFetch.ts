@@ -2,9 +2,7 @@ import { sessionService } from "./sessionService";
 
 export async function authFetch(url: string, opts: RequestInit = {}) {
   const attachToken = async () => {
-    let token = await sessionService.getAccessToken();
-
-    if (!token) token = await sessionService.refreshAccessTokenIfNeeded();
+    const token = await sessionService.getAccessToken();
 
     const headers = opts.headers ? new Headers(opts.headers) : new Headers();
 

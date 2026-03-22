@@ -1,11 +1,11 @@
 import { apiClient } from "../api/client";
+import { firebaseAdapter } from "../services/firebase";
 import { SecureStore } from "../storage/secureStore";
 
-import type { TFirebaseAuthUser } from "./IAuthRepository";
+import type { TAuthUser } from "./IAuthRepository";
 
 type ExchangeResult = {
   accessToken: string;
-  refreshToken?: string;
   expiresIn?: number;
 };
 
@@ -17,23 +17,13 @@ export class SessionService {
   private maxRetries = 2;
   private baseDelay = 1000; // ms
 
-  async syncForUser(user: TFirebaseAuthUser | null) {
+  async syncForUser(user: TAuthUser | null) {
     if (!user) {
-      // * user signed out -> clear session
       await this.clearSession();
       return;
     }
 
-    // * If a user is present, get idToken and exchange
-    const uid = user.uid;
-
-    // * Do single-flight exchange for this uid
-    try {
-      await this._exchangeIdTokenAndStoreSingleFlight(() => user.getIdToken(), uid);
-    } catch (e) {
-      console.error("session exchange failed: ", e);
-      // optionally notify UI via event/dispatch
-    }
+    await this._exchangeIdTokenAndStoreSingleFlight(user.uid);
   }
 
   // Get stored access token, or attempt refresh if missing/expired
@@ -63,10 +53,7 @@ export class SessionService {
   }
 
   // * internal helpers
-  private async _exchangeIdTokenAndStoreSingleFlight(
-    getIdTokenFn: () => Promise<string>,
-    uid: string,
-  ): Promise<ExchangeResult | null> {
+  private async _exchangeIdTokenAndStoreSingleFlight(uid: string): Promise<ExchangeResult | null> {
     // If there is already an exchange in flight:
     if (this.currentExchangePromise) {
       // If it's for the same uid, reuse it
@@ -82,8 +69,9 @@ export class SessionService {
       let idToken: string;
 
       try {
-        // * attempt to get idToken
-        idToken = await getIdTokenFn();
+        const token = await firebaseAdapter.getIdToken();
+        if (!token) throw new Error("No Firebase user");
+        idToken = token;
       } catch (e) {
         throw new Error("Failed to get idToken: " + String(e));
       }
@@ -93,23 +81,17 @@ export class SessionService {
 
       for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
         try {
-          const resp = await apiClient.post("/auth/firebase", { idToken });
-          console.log("Firebase exchange result:", resp);
+          const resp = await apiClient.post("/mob/users/auth", { idToken });
 
           const result: ExchangeResult = {
-            accessToken: resp.accessToken || resp.token || resp.token, // adapt payload
-            refreshToken: resp.refreshToken,
+            accessToken: resp.accessToken || resp.token, // adapt payload
             expiresIn: resp.expiresIn,
           };
-          // * stale result protection**
+          // * stale result protection
           // * only store if currently still exchanging for this uid
           if (this.exchangeForUid === uid) {
             if (result.accessToken) {
               await SecureStore.setBackendToken(result.accessToken);
-            }
-
-            if (result.refreshToken) {
-              await SecureStore.setBackendRefresh(result.refreshToken);
             }
 
             return result;
@@ -140,26 +122,29 @@ export class SessionService {
   }
 
   private async _refreshAccessTokenInternal(): Promise<string | null> {
-    const refreshToken = await SecureStore.getBackendRefresh();
+    // Firebase auto-refreshes its own token — use it to get a fresh backend JWT
+    let idToken: string | null = null;
 
-    if (!refreshToken) return null;
+    try {
+      idToken = await firebaseAdapter.getIdToken(true);
+    } catch {
+      return null;
+    }
 
-    // * retry logic
+    if (!idToken) return null;
+
     let lastErr: unknown = null;
 
     for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
       try {
-        const resp = await apiClient.post("/auth/refresh", { refreshToken });
+        const resp = await apiClient.post("/mob/users/auth", { idToken });
 
         if (resp?.accessToken) {
           await SecureStore.setBackendToken(resp.accessToken);
+          return resp.accessToken;
         }
 
-        if (resp?.refreshToken) {
-          await SecureStore.setBackendRefresh(resp.refreshToken);
-        }
-
-        return resp.accessToken || null;
+        return null;
       } catch (err) {
         lastErr = err;
         const delay = this.baseDelay * Math.pow(2, attempt);
@@ -167,8 +152,10 @@ export class SessionService {
         await this.sleep(delay);
       }
     }
+
     // refresh failed: clear session to force re-auth at next onAuthStateChanged
     await this.clearSession();
+    console.error("SessionService: refresh failed", lastErr);
 
     return null;
   }

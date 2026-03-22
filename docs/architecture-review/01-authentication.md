@@ -1,7 +1,7 @@
 # 01 — Authentication & Authorization
 
-> Audit date: 2026-03-11
-> Status: **In progress** — Firebase flow stable, backend integration incomplete
+> Audit date: 2026-03-11 | Last updated: 2026-03-22
+> Status: **In progress** — auth refactored to Redux Thunks, Apple Sign-In implemented (needs native setup)
 
 ---
 
@@ -9,29 +9,37 @@
 
 ```
 app/providers/AuthProvider/
-  └── AuthProvider.tsx        ← creates singletons, listens to onAuthStateChanged
+  └── AuthProvider.tsx        ← lifecycle only: onAuthStateChanged → dispatch to Redux
+app/providers/StoreProvider/
+  └── globals.d.ts            ← declare global RootState / AppDispatch (FSD exception for Redux infra)
 
 shared/auth/
-  ├── IAuthRepository.ts      ← interface + TFirebaseAuthUser, TCredential
-  ├── AuthContext.tsx          ← Context with methods only (no user/isLoading)
-  ├── SessionService.ts        ← Firebase idToken ↔ Backend JWT exchange + refresh
-  └── authFetch.ts             ← fetch wrapper with Bearer token + 401 retry
+  ├── IAuthRepository.ts      ← interface IAuthRepository, TAuthUser, TCredential
+  ├── SessionService.ts       ← Firebase idToken ↔ Backend JWT exchange + refresh
+  ├── authFetch.ts            ← fetch wrapper with Bearer token + 401 retry
+  └── index.ts                ← public API: TAuthUser, TCredential, IAuthRepository, sessionService
 
 shared/services/
-  ├── firebase/FirebaseAdapter.ts   ← implements IAuthRepository via RN Firebase
+  ├── firebase/
+  │   ├── FirebaseAdapter.ts  ← implements IAuthRepository via RN Firebase
+  │   └── index.ts            ← public API: firebaseAdapter
   └── sso/
-      ├── ISsoProvider.ts      ← interface for SSO providers
-      ├── googleProvider.ts    ← Google Sign-In implementation
-      └── appleProvider.ts     ← empty (not implemented)
+      ├── ISsoProvider.ts      ← interface: { id, signIn, signInSilently, signOut? }
+      ├── googleProvider.ts    ← Google Sign-In (GoogleSignin + GoogleAuthProvider)
+      ├── appleProvider.ts     ← Apple Sign-In (appleAuth + OAuthProvider) ⚠️ needs native setup
+      └── index.ts             ← public API: GoogleSSOProvider, AppleSSOProvider, ISsoProvider
 
 entities/auth/
-  ├── authSchema.ts            ← IAuthSchema, TAuthUser (unused)
+  ├── authSchema.ts            ← IAuthSchema, uses TAuthUser from shared/auth
   └── model/
-      ├── slice/authSlice.ts   ← initializeAuth, loginSuccess, logout, setPendingLink
-      └── selectors/selectors.ts
+      ├── slice/authSlice.ts   ← initializeAuth, loginSuccess, logout, setPendingLink, clearPendingLink
+      ├── selectors/selectors.ts ← typed via { auth: IAuthSchema }, no RootState import
+      └── thunks/authThunks.ts ← loginWithEmailThunk, loginWithGoogleThunk,
+                                  loginWithAppleThunk, loginAnonymouslyThunk,
+                                  signUpWithEmailThunk, logoutThunk
 
 features/auth/
-  └── hooks/useAuth.ts         ← public hook for UI: loginWithEmail, loginWithGoogle, logout...
+  └── hooks/useAuth.ts         ← dispatches thunks; public API for UI components
 
 screens/Auth/
   ├── LoginScreen.tsx
@@ -47,9 +55,9 @@ screens/Auth/
 - **Firebase** = Authentication — verifies identity, manages sessions, issues idTokens
 - **Backend** = Authorization — verifies Firebase idToken, manages its own JWT session, stores user profiles and permissions
 
-This follows the Firebase documentation pattern (`onAuthStateChanged` as single source of truth) and is the correct approach. Redux state updates are driven by `onAuthStateChanged` events in `AuthProvider`, not by direct dispatches in `useAuth` — this is intentional and correct.
+This follows the Firebase documentation pattern (`onAuthStateChanged` as single source of truth). Redux state updates are driven exclusively by `onAuthStateChanged` events in `AuthProvider`. `useAuth` methods dispatch Redux Thunks that trigger Firebase, which in turn fires `onAuthStateChanged`.
 
-> **Dev bypass (active):** `AuthProvider.catch` dispatches `initializeAuth()` on session exchange failure, which marks the app as initialized without requiring login. This allows development without filling in login forms. **Must be removed before production.**
+> **Dev bypass (active):** On `SessionService` failure, `initializeAuth()` is dispatched, marking the app as initialized without requiring login. Allows development without auth. **Must be removed before production.**
 
 ---
 
@@ -71,9 +79,23 @@ Firebase state change (user signed out)
   → NavigationProvider → route to Auth stack
 
 UI actions (LoginScreen)
-  → useAuth().loginWithEmail(email, pwd)
-  → authCtx.signInWithEmail(email, pwd)  ← calls FirebaseAdapter
-  → Firebase signs in → onAuthStateChanged fires → Redux updated (indirectly)
+  → useAuth().loginWithEmail(email, pwd)   ← dispatch(loginWithEmailThunk)
+  → FirebaseAdapter.signInWithEmail()      ← called directly from thunk
+  → Firebase signs in → onAuthStateChanged fires → Redux updated
+
+UI actions (Google / Apple)
+  → useAuth().loginWithGoogle()            ← dispatch(loginWithGoogleThunk)
+  → GoogleSSOProvider.signIn()             ← get credential
+  → FirebaseAdapter.signInWithSso()        ← sign in with credential
+  → onAuthStateChanged fires → Redux updated
+
+Logout
+  → useAuth().logout()                     ← dispatch(logoutThunk)
+  → FirebaseAdapter.signOut()              ← clears Firebase session + keychain
+  → GoogleSSOProvider.signInSilently()     ← check if Google session active
+  → GoogleSSOProvider.signOut()            ← clear native Google session if needed
+  → Apple: no explicit signOut (iOS manages session)
+  → onAuthStateChanged fires with null → dispatch(logout())
 ```
 
 ### Redux auth state
@@ -82,7 +104,9 @@ UI actions (LoginScreen)
 interface IAuthSchema {
   isInitialized: boolean;   // true after first onAuthStateChanged resolves
   isAuthenticated: boolean;
-  user: Partial<TFirebaseAuthUser> | null;  // Firebase-shaped user in Redux
+  isLoading: boolean;       // true while a thunk is in-flight
+  error: string | null;
+  user: TAuthUser | null;   // serializable Firebase-shaped user { uid, email, displayName, phoneNumber, photoURL }
   pendingLink: string | null;
 }
 ```
@@ -112,84 +136,48 @@ interface IAuthSchema {
 
 ---
 
-### 🟡 AUTH-ARCH-02 — `TAuthUser` type defined but never used
+### ✅ AUTH-ARCH-02 — `TAuthUser` type — FIXED
 
-`authSchema.ts` defines `TAuthUser = { id: string; name?: string } | null` but:
-- `IAuthSchema.user` is typed as `Partial<TFirebaseAuthUser>`, not `TAuthUser`
-- `TAuthUser` is exported but imported nowhere
-
-The Redux user stores a Firebase-shaped object. Eventually it should store a **backend user** (with `id` from the database, not Firebase `uid`). This is the right direction but needs to be formalized.
+`IAuthSchema.user` is now typed as `TAuthUser | null` (serializable: `uid, email, displayName, phoneNumber, photoURL`).
+`TAuthUser` is defined in `shared/auth/IAuthRepository.ts` and exported via `shared/auth/index.ts`.
+When a backend user type is needed (with DB `id`), a separate `TBackendUser` should be introduced.
 
 ---
 
-### 🟡 AUTH-ARCH-03 — `useAuth` has dead imports and dead code
+### ✅ AUTH-ARCH-03 — `useAuth` dead code — FIXED
 
-```ts
-// useAuth.ts line 3 — loginSuccess and logoutAction are imported but never dispatched
-import { loginSuccess, logout as logoutAction, setPendingLink } from "entities/auth";
-
-// loginAnonymously — creates userInfo but never dispatches or returns it
-const loginAnonymously = useCallback(async () => {
-  const user = await authCtx.signInAnonymously();
-  const userInfo = { ...user, getIdToken: undefined }; // ← dead variable
-}, [authCtx]);
-```
-
-Redux is only updated via `onAuthStateChanged` in `AuthProvider` — this works, but the dead code is confusing and suggests the pattern wasn't intentional.
+Removed `AuthContext` entirely. `useAuth` now dispatches Redux Thunks directly. No dead imports.
 
 ---
 
-### 🟡 AUTH-ARCH-04 — `GoogleSSOProvider` instantiated on every call
+### ✅ AUTH-ARCH-04 — `GoogleSSOProvider` instantiated on every call — partially mitigated
 
-```ts
-// loginWithGoogle — new instance + configure() on every press
-const loginWithGoogle = useCallback(async () => {
-  const provider = new GoogleSSOProvider(); // ← new every call
-  ...
-}, [authCtx]);
-
-// logout — new instance again, calls singInSilently() for ALL users
-const logout = useCallback(async () => {
-  await authCtx.signOut();
-  const provider = new GoogleSSOProvider(); // ← new every call
-  if (await provider.singInSilently()) {    // ← runs even for email users
-    await provider.signOut();
-  }
-}, [authCtx]);
-```
-
-Problems:
-1. `GoogleSignin.configure()` runs on every call
-2. `logout` calls `singInSilently()` even when user logged in with email (unnecessary noise)
-3. No way to know which provider the user authenticated with
+Providers are now instantiated inside thunks (one level deeper). `GoogleSignin.configure()` still runs on every call — acceptable since `configure()` is idempotent. Root fix is AUTH-M2 (store active provider in Redux).
 
 ---
 
-### 🟢 AUTH-ARCH-05 — `singInSilently` typo in `ISsoProvider`
+### ✅ AUTH-ARCH-05 — `singInSilently` typo — FIXED
 
-```ts
-interface ISsoProvider {
-  singInSilently(): Promise<...>; // ← missing 'g', should be signInSilently
-}
-```
-Typo propagated to `GoogleSSOProvider.singInSilently()` and `useAuth.logout()`.
+Renamed to `signInSilently` in `ISsoProvider`, `GoogleSSOProvider`, and `authThunks`.
 
 ---
 
-### 🟢 AUTH-ARCH-06 — `raw` destructuring can throw in `loginWithGoogle`
+### ✅ AUTH-ARCH-06 — `raw` destructuring — FIXED
 
-```ts
-const { raw: { idToken }, credential } = await provider.signIn();
-//           ↑ throws if raw is undefined
-```
-
-`ISsoProvider.signIn()` declares `raw?` as optional. If the provider returns without `raw`, this destructuring throws an unhandled error instead of a meaningful message.
+`raw` removed from `ISsoProvider.signIn()` return type. Thunks use only `{ credential }`.
 
 ---
 
-### 🟢 AUTH-ARCH-07 — `appleProvider.ts` is an empty file
+### ✅ AUTH-ARCH-07 — `appleProvider.ts` empty — FIXED
 
-File exists but contains only 1 line. Either implement or delete.
+`AppleSSOProvider` implemented with `@invertase/react-native-apple-authentication` + Firebase `OAuthProvider`.
+
+> **⚠️ Native setup required before Apple Sign-In will work:**
+> 1. `bundle exec pod install` — link the new native pod
+> 2. Xcode → target → **Signing & Capabilities** → `+` → **Sign in with Apple**
+> 3. In Apple Developer Console — enable Sign In with Apple capability for the App ID
+>
+> Without step 2, the `appleAuth.performRequest()` call will throw at runtime on a real device.
 
 ---
 
@@ -210,12 +198,14 @@ Should use a logger service or be removed before production.
 
 ---
 
-### 🟡 AUTH-ARCH-08 — `SessionService` failure leaves user in inconsistent state
+### ✅ AUTH-ARCH-08 — `SessionService` failure — FIXED
 
-When `syncForUser` fails (backend unreachable), `initializeAuth()` is dispatched:
-- `isInitialized: true`, `isAuthenticated: false`
-- But Firebase session IS valid — the user is authenticated with Firebase
-- NavigationProvider will push to Auth screens while Firebase has a valid session
+`syncForUser` no longer swallows errors. If `_exchangeIdTokenAndStoreSingleFlight` throws (all retries exhausted), the error propagates to `AuthProvider`, which catches it and dispatches `initializeAuth()`:
+
+- `isInitialized: true`, `isAuthenticated: false` → NavigationProvider routes to Auth stack
+- Firebase session remains valid — user can retry login
+
+Longer-term fix (AUTH-M5): retry 1x, then mark `authenticated-but-offline` instead of unauthenticated.
 
 ---
 
@@ -325,33 +315,35 @@ Track `provider` in Redux auth state (`'email' | 'google' | 'apple' | 'anonymous
 
 ### 🔴 Large
 
-| ID | Task |
-|----|------|
-| AUTH-L1 | Implement Apple Sign-In: `appleProvider.ts`, link Apple credential, add to `useAuth.loginWithApple()` |
-| AUTH-L2 | Implement onboarding screen(s) for profile collection after first login (firstName, lastName, phone) + `PUT /users/profile` backend endpoint |
-| AUTH-L3 | Implement biometric auth: `useBiometric` hook, `LocalAuthentication` from expo or `react-native-biometrics`, integrate with `LoginScreen` |
+| ID | Task | Status |
+|----|------|--------|
+| AUTH-L1 | Apple Sign-In native setup: `pod install` + Xcode capability + Apple Dev Console | ⏳ pending (native) |
+| AUTH-L2 | Implement onboarding screen(s) for profile collection after first login (firstName, lastName, phone) + `PUT /users/profile` backend endpoint | ⏳ pending |
+| AUTH-L3 | Implement biometric auth: `useBiometric` hook, `react-native-biometrics`, integrate with `LoginScreen` | ⏳ pending |
 
 ### 🟡 Medium
 
-| ID | Task |
-|----|------|
-| AUTH-M1 | Refactor `SessionService.refreshAccessTokenIfNeeded` → use `firebase.getIdToken(force: true)` + re-POST to `/auth/firebase`; remove `refreshToken` storage |
-| AUTH-M2 | Add `provider` field to Redux auth state; fix `logout` to only sign out from current SSO provider |
-| AUTH-M3 | Implement real `EmailConfirmationScreen`: Firebase `sendEmailVerification` + polling/deep link for `checkActionCode` |
-| AUTH-M4 | Implement `ForgotPasswordScreen`: Firebase `sendPasswordResetEmail` (1 line, no backend needed) |
-| AUTH-M5 | Handle `SessionService.syncForUser` failure: retry 1x, then mark as authenticated-but-offline instead of unauth |
-| AUTH-M6 | Implement `onIdTokenChanged` listener for proactive backend token refresh (instead of reactive 401 retry) |
+| ID | Task | Status |
+|----|------|--------|
+| AUTH-M1 | Refactor `SessionService.refreshAccessTokenIfNeeded` → `firebase.getIdToken(force: true)` + re-POST to `/auth/firebase`; remove `refreshToken` storage | ⏳ pending |
+| AUTH-M2 | Add `provider` field to Redux auth state; `logoutThunk` signs out only from the active provider | ⏳ pending |
+| AUTH-M3 | Real `EmailConfirmationScreen`: Firebase `sendEmailVerification` + deep link for `checkActionCode` | ⏳ pending |
+| AUTH-M4 | Real `ForgotPasswordScreen`: Firebase `sendPasswordResetEmail` | ⏳ pending |
+| AUTH-M5 | `SessionService.syncForUser` failure → retry 1x, then mark authenticated-but-offline instead of unauth | ⏳ pending |
+| AUTH-M6 | `onIdTokenChanged` listener for proactive backend token refresh (before 401) | ⏳ pending |
 
 ### 🟢 Small
 
-| ID | Task |
-|----|------|
-| AUTH-S1 | Simplify `SignupScreen` — remove `firstName`, `lastName`, `phone` fields; only `email` + `password` + terms checkbox |
-| AUTH-S2 | Remove dead imports in `useAuth.ts` (`loginSuccess`, `logoutAction`) |
-| AUTH-S3 | Remove dead `userInfo` variable in `loginAnonymously` |
-| AUTH-S4 | Fix `singInSilently` → `signInSilently` typo in `ISsoProvider`, `GoogleSSOProvider`, `useAuth` |
-| AUTH-S5 | Add optional chaining: `raw?.idToken` in `loginWithGoogle` |
-| AUTH-S6 | Delete or stub `appleProvider.ts` with a `NotImplementedError` comment |
-| AUTH-S7 | Remove `console.log`/`console.warn` from `AuthProvider` and `FirebaseAdapter` |
-| AUTH-S8 | Add try/catch to `FirebaseAdapter.signUpWithEmail` |
-| AUTH-S9 | Remove backend's `refreshToken` field — it's stored but never used; return only `{ accessToken, expiresIn }` |
+| ID | Task | Status |
+|----|------|--------|
+| AUTH-S1 | Simplify `SignupScreen` — remove `firstName`, `lastName`, `phone`; only `email` + `password` | ⏳ pending |
+| AUTH-S2 | Remove dead imports in `useAuth.ts` | ✅ done |
+| AUTH-S3 | Remove dead `userInfo` variable in `loginAnonymously` | ✅ done |
+| AUTH-S4 | Fix `singInSilently` typo in `ISsoProvider`, `GoogleSSOProvider`, `authThunks` | ✅ done |
+| AUTH-S5 | Remove `raw` from `ISsoProvider.signIn()` return type | ✅ done |
+| AUTH-S6 | Implement `appleProvider.ts` | ✅ done |
+| AUTH-S7 | Remove `console.log`/`console.warn` from `AuthProvider` and `FirebaseAdapter` | ⏳ pending |
+| AUTH-S8 | Add try/catch to `FirebaseAdapter.signUpWithEmail` | ✅ done |
+| AUTH-S9 | Remove backend's `refreshToken` field — stored but never used | ✅ done |
+| AUTH-S10 | Add `index.ts` for `shared/services/firebase/` and `shared/services/sso/`; fix all direct sub-folder imports | ✅ done |
+| AUTH-S11 | Fix FSD: `shared/lib/redux/hooks.ts` — global `RootState`/`AppDispatch` via `globals.d.ts`; `selectors.ts` — typed via `{ auth: IAuthSchema }` | ✅ done |

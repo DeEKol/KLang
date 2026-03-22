@@ -1,7 +1,10 @@
-// src/features/auth/selectors.ts
-import type { RootState } from "app/providers/StoreProvider/StoreProvider"; // см. ниже — как экспортируется
+import type { IAuthSchema } from "../../authSchema";
 
-export const getIsInitialized = (state: RootState) => state.auth.isInitialized;
-export const getIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
-export const getAuthUser = (state: RootState) => state.auth.user;
-export const getPendingLink = (state: RootState) => state.auth.pendingLink;
+type StateWithAuth = { auth: IAuthSchema };
+
+export const getIsInitialized = (state: StateWithAuth) => state.auth.isInitialized;
+export const getIsAuthenticated = (state: StateWithAuth) => state.auth.isAuthenticated;
+export const getAuthUser = (state: StateWithAuth) => state.auth.user;
+export const getPendingLink = (state: StateWithAuth) => state.auth.pendingLink;
+export const getAuthIsLoading = (state: StateWithAuth) => state.auth.isLoading;
+export const getAuthError = (state: StateWithAuth) => state.auth.error;

@@ -1,2 +1,2 @@
-export { AuthContext } from "./AuthContext";
-export type { IAuthRepository, TCredential, TFirebaseAuthUser } from "./IAuthRepository";
+export type { IAuthRepository, TAuthUser, TCredential } from "./IAuthRepository";
+export { sessionService } from "./SessionService";

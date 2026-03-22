@@ -1,15 +1,34 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
-import type { TFirebaseAuthUser } from "shared/auth/IAuthRepository";
+import type { TAuthUser } from "shared/auth/IAuthRepository";
 
 import type { IAuthSchema } from "../../authSchema";
+import {
+  loginAnonymouslyThunk,
+  loginWithAppleThunk,
+  loginWithEmailThunk,
+  loginWithGoogleThunk,
+  logoutThunk,
+  signUpWithEmailThunk,
+} from "../thunks/authThunks";
 
 const initialState: IAuthSchema = {
   isInitialized: false,
   isAuthenticated: false,
+  isLoading: false,
+  error: null,
   user: null,
   pendingLink: null,
 };
+
+const authActionThunks = [
+  loginWithEmailThunk,
+  signUpWithEmailThunk,
+  loginWithGoogleThunk,
+  loginWithAppleThunk,
+  loginAnonymouslyThunk,
+  logoutThunk,
+];
 
 const authSlice = createSlice({
   name: "auth",
@@ -19,15 +38,19 @@ const authSlice = createSlice({
       state.isInitialized = true;
     },
 
-    loginSuccess(state, action: PayloadAction<Partial<TFirebaseAuthUser> | null>) {
+    loginSuccess(state, action: PayloadAction<TAuthUser | null>) {
       state.isInitialized = true;
       state.isAuthenticated = true;
+      state.isLoading = false;
+      state.error = null;
       state.user = action.payload;
     },
 
     logout(state) {
       state.isInitialized = true;
       state.isAuthenticated = false;
+      state.isLoading = false;
+      state.error = null;
       state.user = null;
       state.pendingLink = null;
     },
@@ -39,6 +62,22 @@ const authSlice = createSlice({
     clearPendingLink(state) {
       state.pendingLink = null;
     },
+  },
+  extraReducers: (builder) => {
+    authActionThunks.forEach((thunk) => {
+      builder
+        .addCase(thunk.pending, (state) => {
+          state.isLoading = true;
+          state.error = null;
+        })
+        .addCase(thunk.fulfilled, (state) => {
+          state.isLoading = false;
+        })
+        .addCase(thunk.rejected, (state, action) => {
+          state.isLoading = false;
+          state.error = action.error.message ?? "Unknown error";
+        });
+    });
   },
 });
 
