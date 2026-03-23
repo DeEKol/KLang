@@ -102,6 +102,42 @@ iOS и Android симуляторы работают локально.
 
 ---
 
+## Запланированные архитектурные изменения (direction)
+
+### AUTH-DIR-01: Разделение `entities/auth` на `entities/session` + `entities/user`
+
+**Суть:** Текущий `authSlice` смешивает два домена — статус сессии и данные пользователя.
+Целевая архитектура:
+
+```
+entities/
+  session/          ← "ты авторизован?"
+    model/
+      sessionSlice  ← { isInitialized, isAuthenticated, isLoading, uid: string | null }
+      selectors     ← selectIsAuthenticated, selectUid
+
+  user/             ← "кто ты?"
+    api/userApi     ← GET /mob/users/profile
+    model/
+      userSlice     ← { profile: UserProfile | null, isLoading }
+      selectors     ← selectUserProfile, selectDisplayName
+    types/
+      UserProfile   ← { uid, displayName, photoURL, email, stats... }
+
+features/
+  auth/
+    model/thunks    ← loginWithEmail, loginWithGoogle, logout (сюда из entities)
+    hooks/useAuth   ← остаётся
+```
+
+**Ключевой принцип:** `TAuthUser` из Firebase — не хранить в Redux. Хранить только `uid` в session, полный профиль брать с бэкенда в `entities/user`.
+
+**Почему не сейчас:** Бэкенд не имеет `GET /mob/users/profile`. Без него `entities/user` — мёртвый код, а `email`/`displayName`/`photoURL` неоткуда взять для UI. Делать `entities/session` без `entities/user` — просто переименование текущего слайса.
+
+**Триггер:** Когда бэкенд добавит `/mob/users/profile`.
+
+---
+
 ## Открытые вопросы
 
 - [ ] Стратегия синхронизации learning-настроек: только AsyncStorage или бэкенд? (SET-S4)
