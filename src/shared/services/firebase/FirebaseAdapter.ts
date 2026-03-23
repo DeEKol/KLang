@@ -11,7 +11,7 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
 } from "@react-native-firebase/auth";
-import type { IAuthRepository, TAuthUser } from "shared/auth/IAuthRepository";
+import type { IAuthRepository, TAuthProvider, TAuthUser } from "shared/auth/IAuthRepository";
 import { SecureStore } from "shared/storage/secureStore";
 
 type NativeFirebaseError = ReactNativeFirebase.NativeFirebaseError;
@@ -110,12 +110,24 @@ export class FirebaseAdapter implements IAuthRepository {
   private normalize(u: FirebaseAuthTypes.User | null): TAuthUser | null {
     if (!u) return null;
 
+    const providerId = u.providerData[0]?.providerId;
+    const provider: TAuthProvider = u.isAnonymous
+      ? "anonymous"
+      : providerId === "google.com"
+        ? "google"
+        : providerId === "apple.com"
+          ? "apple"
+          : providerId === "password"
+            ? "email"
+            : null;
+
     return {
       uid: u.uid,
       email: u.email ?? null,
       displayName: u.displayName ?? null,
       phoneNumber: u.phoneNumber ?? null,
       photoURL: u.photoURL ?? null,
+      provider,
     };
   }
 }

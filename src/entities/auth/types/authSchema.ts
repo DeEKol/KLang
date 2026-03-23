@@ -1,4 +1,4 @@
-import type { TAuthUser } from "shared/auth/IAuthRepository";
+import type { TAuthProvider, TAuthUser } from "shared/auth/IAuthRepository";
 
 export interface IAuthSchema {
   isInitialized: boolean;
@@ -6,5 +6,6 @@ export interface IAuthSchema {
   isLoading: boolean;
   error: string | null;
   user: TAuthUser | null;
+  provider: TAuthProvider;
   pendingLink: string | null;
 }

@@ -56,14 +56,18 @@ export const loginAnonymouslyThunk = createAsyncThunk<void, void>(
 // Logout
 // ---------------------------------------------------------------------------
 
-export const logoutThunk = createAsyncThunk<void, void>("auth/logout", async () => {
-  const googleProvider = new GoogleSSOProvider();
+export const logoutThunk = createAsyncThunk<void, void>("auth/logout", async (_, { getState }) => {
+  const { provider } = (getState() as { auth: { provider: string | null } }).auth;
 
   await firebaseAdapter.signOut();
 
-  // Clear the native Google session so silent sign-in doesn't auto-restore it
-  if (await googleProvider.signInSilently()) {
-    await googleProvider.signOut();
+  if (provider === "google") {
+    const googleProvider = new GoogleSSOProvider();
+
+    // Clear the native Google session so silent sign-in doesn't auto-restore it
+    if (await googleProvider.signInSilently()) {
+      await googleProvider.signOut();
+    }
   }
 
   // Apple: no explicit signOut needed — iOS manages the session

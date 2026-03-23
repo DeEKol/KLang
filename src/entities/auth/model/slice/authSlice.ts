@@ -2,7 +2,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import type { TAuthUser } from "shared/auth/IAuthRepository";
 
-import type { IAuthSchema } from "../../authSchema";
+import type { IAuthSchema } from "../../types/authSchema";
 import {
   loginAnonymouslyThunk,
   loginWithAppleThunk,
@@ -18,6 +18,7 @@ const initialState: IAuthSchema = {
   isLoading: false,
   error: null,
   user: null,
+  provider: null,
   pendingLink: null,
 };
 
@@ -44,6 +45,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.user = action.payload;
+      state.provider = action.payload?.provider ?? null;
     },
 
     logout(state) {
@@ -52,6 +54,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.user = null;
+      state.provider = null;
       state.pendingLink = null;
     },
 

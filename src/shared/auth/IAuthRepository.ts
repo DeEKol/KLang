@@ -4,6 +4,8 @@ import type { FirebaseAuthTypes } from "@react-native-firebase/auth";
 // passed straight to signInWithCredential without ever touching Redux or the UI.
 export type TCredential = FirebaseAuthTypes.AuthCredential;
 
+export type TAuthProvider = "email" | "google" | "apple" | "anonymous" | null;
+
 // Serializable auth user — the single user type used across the app.
 // Safe for Redux, UI, and cross-layer passing.
 export type TAuthUser = {
@@ -12,6 +14,7 @@ export type TAuthUser = {
   displayName: string | null;
   phoneNumber: string | null;
   photoURL: string | null;
+  provider: TAuthProvider;
 };
 
 export interface IAuthRepository {
