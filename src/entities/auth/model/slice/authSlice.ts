@@ -1,6 +1,6 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
-import type { TAuthUser } from "shared/auth/IAuthRepository";
+import type { TAuthUser } from "shared/services/firebase";
 
 import type { IAuthSchema } from "../../types/authSchema";
 import {

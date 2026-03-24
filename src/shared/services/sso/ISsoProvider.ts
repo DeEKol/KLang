@@ -1,4 +1,4 @@
-import type { TCredential } from "shared/auth/IAuthRepository";
+import type { TCredential } from "shared/services/firebase";
 
 export interface ISsoProvider {
   readonly id: string;

@@ -1,8 +1,7 @@
-import { apiClient } from "../api/client";
-import { firebaseAdapter } from "../services/firebase";
-import { SecureStore } from "../storage/secureStore";
-
-import type { TAuthUser } from "./IAuthRepository";
+import { apiClient } from "../../api/client";
+import { SecureStore } from "../../storage/secureStore";
+import { firebaseAdapter } from "../firebase";
+import type { TAuthUser } from "../firebase/IAuthRepository";
 
 type ExchangeResult = {
   accessToken: string;

@@ -11,8 +11,9 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
 } from "@react-native-firebase/auth";
-import type { IAuthRepository, TAuthProvider, TAuthUser } from "shared/auth/IAuthRepository";
 import { SecureStore } from "shared/storage/secureStore";
+
+import type { IAuthRepository, TAuthProvider, TAuthUser } from "./IAuthRepository";
 
 type NativeFirebaseError = ReactNativeFirebase.NativeFirebaseError;
 

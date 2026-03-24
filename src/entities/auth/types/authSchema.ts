@@ -1,4 +1,4 @@
-import type { TAuthProvider, TAuthUser } from "shared/auth/IAuthRepository";
+import type { TAuthProvider, TAuthUser } from "shared/services/firebase";
 
 export interface IAuthSchema {
   isInitialized: boolean;

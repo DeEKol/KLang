@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { initializeAuth, loginSuccess, logout } from "entities/auth";
-import { sessionService } from "shared/auth";
 import { firebaseAdapter } from "shared/services/firebase";
+import { sessionService } from "shared/services/session";
 
 import { useAppDispatch } from "../StoreProvider";
 
