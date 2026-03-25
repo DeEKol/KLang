@@ -22,8 +22,7 @@ export const PracticeStackNavigator = () => {
     <Stack.Navigator
       initialRouteName={ENavigation.PRACTICE}
       screenOptions={{
-        title: "Practice Screen",
-        headerShown: true,
+        headerShown: false,
       }}>
       <Stack.Screen
         name={ENavigation.PRACTICE}
@@ -32,23 +31,14 @@ export const PracticeStackNavigator = () => {
       <Stack.Screen
         name={ENavigation.HANGEL}
         component={HangelScreen}
-        options={{
-          title: "Hangel Board",
-        }}
       />
       <Stack.Screen
         name={ENavigation.SEQUENCES_BUILDER}
         component={SequencesBuilderScreen}
-        options={{
-          title: "Sequences Builder",
-        }}
       />
       <Stack.Screen
         name={ENavigation.WORD_MATCHER}
         component={WordMatcherScreen}
-        options={{
-          title: "Word Matcher",
-        }}
       />
     </Stack.Navigator>
   );

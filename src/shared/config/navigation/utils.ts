@@ -25,7 +25,7 @@ export function navigate<RouteName extends keyof TAllStackParamList>(
   }
 }
 
-export function resetTo(name: keyof TAllStackParamList) {
+export function resetTo(name: keyof TRootStackParamList) {
   if (navigationRef.isReady()) {
     navigationRef.dispatch(
       CommonActions.reset({

@@ -1,18 +1,15 @@
 // ? Library Imports
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
 import MaterialDesignIcons from "@react-native-vector-icons/material-design-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { BlurMask } from "@shopify/react-native-skia";
 // ? Layer Imports
-import { SettingsScreen } from "screens/SettingsScreen";
-import { BounceInView } from "shared/animations/Animated";
 import { ETabNavigation, type TBottomTabsParamList } from "shared/config/navigation";
 
 // ? Slice Imports
 import { HomeStackNavigator } from "./stacks/HomeStackNavigator";
 import { PracticeStackNavigator } from "./stacks/PracticeStackNavigator";
+import { SettingsStackNavigator } from "./stacks/SettingsStackNavigator";
 import { StudyStackNavigator } from "./stacks/StudyStackNavigator";
 import { TestStackNavigator } from "./stacks/TestStackNavigator";
 import AnimatedIcon from "./AnimatedIcon";
@@ -83,7 +80,7 @@ export const BottomTabsNavigator = () => {
       />
       <Tab.Screen
         name={ETabNavigation.SETTINGS}
-        component={SettingsScreen}
+        component={SettingsStackNavigator}
         options={{
           title: t("Settings"),
           tabBarIcon: ({ color, focused }) => (

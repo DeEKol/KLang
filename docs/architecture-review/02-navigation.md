@@ -52,32 +52,9 @@ return !isAuthenticated ? <AuthStackNavigator /> : <MainNavigator />;
 
 ---
 
-### 🔴 NAV-02 — Deeplink конфиг (`linking.ts`) не совпадает с именами экранов
+### ✅ NAV-02 — Deeplink конфиг (`linking.ts`) — РЕШЕНО
 
-`linking.ts` содержит hardcoded строки, которые **не совпадают** с реальными именами табов из `ETabNavigation`:
-
-| `linking.ts` key | Реальный tab name | Правильно |
-|---|---|---|
-| `"HomeScreen"` | `ETabNavigation.HOME = "HomeTab"` | `"HomeTab"` |
-| `"Study"` | `ETabNavigation.STUDY = "StudyTab"` | `"StudyTab"` |
-| `"PracticeScreen"` | `ETabNavigation.PRACTICE = "PracticeTab"` | `"PracticeTab"` |
-| `"SettingsScreen"` | `ETabNavigation.SETTINGS = "SettingsTab"` | `"SettingsTab"` |
-| `"TestScreen"` | `ETabNavigation.TEST = "TestTab"` | `"TestTab"` |
-
-**Следствие:** deep links на табы вообще не работают. React Navigation не может найти экраны по неправильным именам.
-
-**Правильно:** использовать `ETabNavigation` в `linking.ts`, а не строки вручную:
-```ts
-screens: {
-  [ENavigation.MAIN]: {
-    screens: {
-      [ETabNavigation.HOME]: "home",
-      [ETabNavigation.STUDY]: "study",
-      // ...
-    },
-  },
-},
-```
+`linking.ts` теперь использует `ETabNavigation`/`ENavigation` enum-значения. Deep links на табы работают корректно.
 
 ---
 
@@ -95,73 +72,39 @@ screens: {
 
 ---
 
-### 🟡 NAV-04 — `makeUrl` использует `"myapp://"` вместо `"klang://"`
+### ✅ NAV-04 — `makeUrl` использует `"klang://"` — РЕШЕНО
 
-```ts
-// url/makeUrl.ts
-return `myapp://${path}${qs}`;  // ← неправильная схема
-```
-
-```ts
-// linking.ts
-prefixes: ["klang://"],  // ← реальная схема приложения
-```
-
-Тест тоже проверяет неправильный префикс. Сгенерированные URL невалидны.
+`makeUrl.ts` уже использует `klang://` как схему.
 
 ---
 
-### 🟡 NAV-05 — `SettingsScreen` — прямой компонент в табе, без стека
+### ✅ NAV-05 — `SettingsStackNavigator` добавлен — РЕШЕНО
 
-Все табы используют Stack navigator, `Settings` — нет:
-```tsx
-<Tab.Screen name={ETabNavigation.SETTINGS} component={SettingsScreen} />
-```
-
-Если понадобится навигация внутри Settings (например, отдельный экран уведомлений, экран смены пароля), это потребует добавления `SettingsStackNavigator`. Лучше сделать заранее.
+`SettingsStackNavigator` создан, `SettingsScreen` обёрнут в стек. Готово к расширению.
 
 ---
 
-### 🟡 NAV-06 — `AnimatedIcon`: неправильный `inputRange` в `translateY`
+### ✅ NAV-06 — `AnimatedIcon.translateY` — РЕШЕНО
 
-```ts
-const translateY = val.interpolate({
-  inputRange: [0, 10],  // ← val меняется от 0 до 1, до 10 никогда не дойдёт
-  outputRange: [0, -2],
-});
-```
-
-`val` всегда в диапазоне `[0, 1]`, поэтому `translateY` меняется только на `-0.2px` вместо `-2px`. Анимация подъёма иконки не работает.
-
-**Правильно:** `inputRange: [0, 1]`
+`inputRange: [0, 1]` — исправлено, анимация работает корректно.
 
 ---
 
-### 🟢 NAV-07 — Мёртвые импорты в `BottomTabsNavigator`
+### ✅ NAV-07 — Мёртвые импорты в `BottomTabsNavigator` — РЕШЕНО
 
-```ts
-import { BlurMask } from "@shopify/react-native-skia";  // нигде не используется
-import { BounceInView } from "shared/animations/Animated";  // нигде не используется
-```
+Удалены. `BlurMask` и `BounceInView` больше не импортируются.
 
 ---
 
-### 🟢 NAV-08 — Хардкод в заголовках `PracticeStackNavigator`
+### ✅ NAV-08 — Хардкод в `PracticeStackNavigator` — РЕШЕНО
 
-```tsx
-screenOptions={{
-  title: "Practice Screen",  // хардкод EN, без i18n
-  headerShown: true,
-}}
-```
-
-Все остальные навигаторы имеют `headerShown: false`. Если заголовок нужен — использовать `t("practiceScreen")`.
+`headerShown: false`, хардкода нет.
 
 ---
 
-### 🟢 NAV-09 — `useAppNavigation.ts` содержит коментарий "IS THIS SHOULD USE?"
+### ✅ NAV-09 — Комментарий в `useAppNavigation.ts` — РЕШЕНО
 
-Указывает на неопределённость в статусе файла. Файл нужен, но нужно убрать этот комментарий.
+Комментарий удалён. Файл чистый.
 
 ---
 
@@ -245,17 +188,9 @@ export const linking: LinkingOptions<TRootStackParamList> = {
 };
 ```
 
-### SettingsStackNavigator (на будущее)
+### SettingsStackNavigator ✅
 
-```tsx
-// stacks/SettingsStackNavigator.tsx
-export const SettingsStackNavigator = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name={ENavigation.SETTINGS} component={SettingsScreen} />
-    {/* <Stack.Screen name={ENavigation.NOTIFICATIONS} component={NotificationsScreen} /> */}
-  </Stack.Navigator>
-);
-```
+`SettingsStackNavigator` уже создан и используется в `BottomTabsNavigator`.
 
 ---
 
@@ -265,22 +200,23 @@ export const SettingsStackNavigator = () => (
 
 | ID | Task |
 |----|------|
-| NAV-L1 | Fix `linking.ts`: использовать `ETabNavigation`/`ENavigation` вместо строк; синхронизировать с реальными именами экранов; добавить все экраны |
+| NAV-L1 | ~~Fix `linking.ts`: использовать `ETabNavigation`/`ENavigation` вместо строк~~ ✅ Done |
+| NAV-L2 | ~~Добавить nested screen config в `linking.ts` для `Profile`, `Roadmap`, `Hangel` и других sub-screens~~ ✅ Done — все стеки раскрыты в `linking.ts`; `routes.ts` стал единым источником путей |
 
 ### 🟡 Medium
 
 | ID | Task |
 |----|------|
 | NAV-M1 | ~~**Auth flash fix**: добавить проверку `getIsInitialized` в `NavigationProvider`~~ ✅ Done — `SplashScreen` показывается пока `!isInitialized \|\| !animationDone`; в `__DEV__` скипается |
-| NAV-M2 | Добавить `SettingsStackNavigator` — обернуть `SettingsScreen` в стек для будущих вложенных экранов |
-| NAV-M3 | Удалить `routes.ts` или зарефакторить `linking.ts` чтобы использовал `ROUTE_PATHS`; единый источник правды для путей |
+| NAV-M2 | ~~Добавить `SettingsStackNavigator`~~ ✅ Done |
+| NAV-M3 | ~~Удалить `routes.ts` или выровнять с `linking.ts`~~ ✅ Done — `linking.ts` теперь импортирует из `routes.ts`; `routes.ts` — единственный источник путей для всех экранов |
 
 ### 🟢 Small
 
 | ID | Task |
 |----|------|
-| NAV-S1 | Fix `AnimatedIcon.translateY`: `inputRange: [0, 10]` → `[0, 1]` |
-| NAV-S2 | Fix `makeUrl`: `"myapp://"` → `"klang://"`, обновить тест |
-| NAV-S3 | Убрать мёртвые импорты в `BottomTabsNavigator` (`BlurMask`, `BounceInView`) |
-| NAV-S4 | Заменить хардкод `"Practice Screen"` в `PracticeStackNavigator` на i18n |
-| NAV-S5 | Убрать комментарий `"IS THIS SHOULD USE?"` из `useAppNavigation.ts` |
+| NAV-S1 | ~~Fix `AnimatedIcon.translateY`: `inputRange: [0, 10]` → `[0, 1]`~~ ✅ Done |
+| NAV-S2 | ~~Fix `makeUrl`: `"myapp://"` → `"klang://"`~~ ✅ Done |
+| NAV-S3 | ~~Убрать мёртвые импорты в `BottomTabsNavigator`~~ ✅ Done |
+| NAV-S4 | ~~Заменить хардкод `"Practice Screen"` в `PracticeStackNavigator` на i18n~~ ✅ Done — `headerShown: false`, заголовка нет |
+| NAV-S5 | ~~Убрать комментарий `"IS THIS SHOULD USE?"` из `useAppNavigation.ts`~~ ✅ Done |

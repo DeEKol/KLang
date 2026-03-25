@@ -2,7 +2,6 @@ import type { CompositeNavigationProp, RouteProp } from "@react-navigation/nativ
 import { useNavigation, useRoute } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-// IS THIS SHOULD USE?
 import type {
   TAllStackParamList,
   TPracticeStackParamList,

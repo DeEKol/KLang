@@ -29,7 +29,7 @@ export default function AnimatedIcon({ name, focused, color, size = 24 }: Props)
   });
 
   const translateY = val.interpolate({
-    inputRange: [0, 10],
+    inputRange: [0, 1],
     outputRange: [0, -2],
   });
 

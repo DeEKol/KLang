@@ -35,11 +35,9 @@
 `BarRoute` — intersection Paper-типа и `{ name: string; params? }` для совместимости с React Navigation.
 Все внутренние callbacks (`onTabPress`, `renderIcon`, `getLabelText`) явно типизированы.
 
-### TS-02 — `AnimatedIcon` — без типов (файл называется `.tsx`, но описан как `.js`)
-```tsx
-export default function AnimatedIcon({ name, focused, color, size = 24 })
-```
-Нет интерфейса пропсов.
+### TS-02 — `AnimatedIcon` — без типов (файл называется `.tsx`, но описан как `.js`) ✅ Решено
+
+Добавлен интерфейс `Props` с полями `name: MaterialDesignIconsIconName`, `focused: boolean`, `color: string`, `size?: number`.
 
 ### TS-03 — Inline тип selector в `NavigationProvider`
 ```tsx
@@ -59,8 +57,26 @@ const pendingLink = useSelector(
 Index signature удалён — динамический доступ `colors[key]` нигде не использовался. Интерфейс стал строгим.
 
 ### TS-07 — Два `stateSchema.ts` с разным содержимым ✅ Решено
+
 `src/entities/theme/types/stateSchema.ts` удалён. Экспорт убран из `entities/theme/index.ts`.
 `getTheme.ts` переключён на импорт `IStateSchema` из `app/providers/StoreProvider`.
+
+### TS-08 — `IThemeColors` неполный — `tokens.ts` создавал объект с extra-полями скрытыми `as` кастом ✅ Решено
+
+`IThemeColors` дополнен: `disabled`, `placeholder`, `notification`, `onSurface`, `backdrop`.
+Все поля сделаны обязательными (убраны `?`). Убран `as IThemeTokens` cast в `tokens.ts`.
+
+### TS-09 — `resetTo()` принимал `keyof TAllStackParamList` — слишком широко ✅ Решено
+
+Тип сужен до `keyof TRootStackParamList` — логически корректно (reset только к корневым экранам).
+
+### TS-10 — `TRootStackParamList[MODAL]` использовал `?:` (optional key) вместо `| undefined` ✅ Решено
+
+Изменено на `[ENavigation.MODAL]: { screen?: string } | undefined` — соответствует convention React Navigation.
+
+### TS-11 — `PROFILE` и `ROADMAP` в `THomeStackParamList` типизированы как `undefined` ✅ Решено
+
+Исправлено: `PROFILE: { userId?: string } | undefined`, `ROADMAP: { id?: string } | undefined` — соответствует `routes.ts`.
 
 ---
 
@@ -94,10 +110,9 @@ Index signature удалён — динамический доступ `colors[k
 ### FSD-04 — `SequencesBuilderUI_old.tsx` не удалён
 Устаревший файл в `src/features/SequencesBuilder/`. Запутывает.
 
-### FSD-05 — `SettingsScreen` как таб без вложенного стека
-В `BottomTabsNavigator` Settings — прямой компонент, не Stack navigator. Это нормально пока нет sub-экранов,
-но `navigation.navigate("Profile")` внутри Settings вызовет ошибку т.к. "Profile" живёт в HomeStack.
-Нужно либо добавить SettingsStackNavigator, либо использовать cross-stack навигацию.
+### FSD-05 — `SettingsScreen` как таб без вложенного стека ✅ Решено
+
+Создан `SettingsStackNavigator` с `ENavigation.SETTINGS = "Settings"`. `TSettingsStackParamList` и `TSettingsStackScreenProps` добавлены в `navigation.ts`. `BottomTabsNavigator` теперь монтирует стек, а не экран напрямую — паттерн единообразен со всеми остальными табами.
 
 ---
 
@@ -128,6 +143,25 @@ description="Медленный темп, больше повторений"  //
 
 ### I18N-06 — `settingsScreen` namespace в JSON пустой или не используется
 `public/locales/ru/settingsScreen.json` существует, но `SettingsScreen` использует `.i18n.ts` объект, не `useTranslation("settingsScreen")`.
+
+---
+
+## Тема
+
+### THEME-03 — `ThemeInitializer` перезаписывает пользовательский выбор темы
+
+`ThemeInitializer` dispatches `changeTheme(deviceScheme)` на каждое изменение `useColorScheme`.
+Если пользователь выбрал `"dark"` в настройках → перезапускает приложение на устройстве с `"light"` → Redux mode перезаписывается в `"light"`. Пользовательский выбор теряется.
+Причина избыточности: `useResolvedMode()` внутри `useThemeTokens` уже читает `useColorScheme()` live.
+Нужно: либо удалить `ThemeInitializer`, либо диспатчить только если `mode === "system" | "normal" | null`.
+
+### THEME-04 — `mapTokensToMD3` — маппинг цветов закомментирован
+
+Все кастомные цвета в `mapTokensToMD3.ts` закомментированы → Paper использует дефолтные MD3 цвета вместо палитры приложения. Нужно настроить и раскомментировать маппинг `primary`, `background`, `surface`, `onSurface`.
+
+### THEME-05 — `adaptNavigationTheme()` в `useNavigationTheme` не был мемоизирован ✅ Решено
+
+Перенесён на уровень модуля (вне хука) — вычисляется один раз, так как принимает константные аргументы.
 
 ---
 
@@ -173,10 +207,9 @@ tabBarStyle: { backgroundColor: "red" },
 ```
 На HOME Tab — мусор от отладки.
 
-### STYLE-05 — Импорт `BlurMask` в `BottomTabsNavigator.tsx` не используется
-```tsx
-import { BlurMask } from "@shopify/react-native-skia";  // нигде не используется
-```
+### STYLE-05 — Импорт `BlurMask` в `BottomTabsNavigator.tsx` не используется ✅ Решено
+
+Удалены мёртвые импорты `BlurMask` (`@shopify/react-native-skia`), `BounceInView` (`shared/animations`) и `View` (`react-native`) из `BottomTabsNavigator.tsx`.
 
 ---
 
@@ -221,52 +254,58 @@ interface IGameProps<TData> {
 
 ## Что делать дальше (Roadmap)
 
-### Срочно (блокирует правильную работу)
-1. Исправить THEME-01 + THEME-02 — диспатч темы в Redux, правильные значения
-2. Исправить NAV-01 — `focused` у Settings иконки
-3. Исправить GAME-01 — стабильные ключи в HangelBoard
-4. Удалить `SequencesBuilderUI_old.tsx`
-5. Удалить неиспользуемые импорты (`BlurMask`)
+### Срочно
+
+- Удалить `SequencesBuilderUI_old.tsx` (FSD-04)
 
 ### Качество кода
-6. Типизировать `PaperBottomTabs` и `AnimatedIcon` (TS-01, TS-02)
-7. Удалить `entities/theme/types/stateSchema.ts` — лишний файл (TS-07)
-8. Убрать `Counter` и `PostsTestApi` из стора и IStateSchema (FSD-03)
-9. Перенести `settings-components.tsx` в `screens/SettingsScreen/ui/` (FSD-02)
-10. Решить судьбу `modules/games/` — перенести в `features/` или оставить изолированным (FSD-01)
 
-### i18n
-11. Выбрать один подход: `useTranslation` + JSON для всех экранов
-12. Перевести `SequencesBuilderUI.tsx` (I18N-02) и `HangelBoard.tsx` (I18N-03)
-13. Добавить все namespaces в `ns: [...]` в `i18n.ts` (I18N-04)
-14. Убрать `.i18n.ts` файлы или конвертировать в JSON
+- Убрать `Counter` и `PostsTestApi` из стора и IStateSchema (FSD-03)
+- Перенести `settings-components.tsx` в `screens/SettingsScreen/ui/` (FSD-02)
+- Решить судьбу `modules/games/` — перенести в `features/` или оставить изолированным (FSD-01)
+- Убрать inline-тип в `NavigationProvider` (`pendingLink` selector) — использовать `IStateSchema` (TS-03)
+
+### Локализация
+
+- Перевести `SequencesBuilderUI.tsx` (I18N-02) и `HangelBoard.tsx` (I18N-03)
+- Добавить все namespaces в `ns: [...]` в `i18n.ts` (I18N-04)
+- Убрать оставшиеся `.i18n.ts` файлы или конвертировать в JSON
 
 ### Игры
-15. Добавить пропсы в `SequencesBuilder` для передачи данных упражнения (GAME-02)
-16. Подключить тему в `SequencesBuilderUI` и `HangelBoard` (STYLE-01, STYLE-02)
-17. Описать общий `IGameProps` интерфейс (GAME-05)
-18. Интегрировать HangelBoard с конкретными символами хангыль (GAME-04)
+
+- Добавить пропсы в `SequencesBuilder` для передачи данных упражнения (GAME-02)
+- Подключить тему в `SequencesBuilderUI` и `HangelBoard` (STYLE-01, STYLE-02)
+- Описать общий `IGameProps` интерфейс (GAME-05)
+- Интегрировать HangelBoard с конкретными символами хангыль (GAME-04)
 
 ### Навигация
-19. Решить проблему `navigation.navigate("Profile")` из SettingsScreen (FSD-05)
-20. Объединить или чётко разграничить два `ENavigation` enum (NAV-02)
-21. Дополнить `ROUTE_PATHS` маршрутами Practice/Study для deep-linking
 
-### Auth
-22. Убрать дублирование состояния user (AUTH-02) — либо только Context, либо только Redux
-23. Добавить try/catch в `signUpWithEmail` (AUTH-04)
-24. Убрать `console.log` из production-кода (AUTH-03)
+- ~~Дополнить `ROUTE_PATHS` маршрутами Practice/Study для deep-linking~~ ✅ Done — `routes.ts` покрывает все стеки, единственный источник путей
+- ~~Добавить nested screen config в `linking.ts` для `Profile`, `Roadmap`, `Hangel` и т.д.~~ ✅ Done — `linking.ts` импортирует `ROUTE_PATHS`, full nested config для Home/Study/Practice/Settings/Test
+- Добавить `useHomeNavigation()`, `useStudyNavigation()` по аналогии с `usePracticeNavigation()` (опционально)
 
-### Стили
-25. Договориться: стили в том же файле или в `*.styles.ts` — и привести к единому стандарту
-26. Убрать debug-мусор из `tabBarBadgeStyle`/`tabBarStyle` (STYLE-04)
+### Система темы
+
+- Исправить `ThemeInitializer` — не перезаписывать Redux при явном выборе `light`/`dark` (THEME-03)
+- Раскомментировать и настроить маппинг цветов в `mapTokensToMD3.ts` (THEME-04)
+
+### Аутентификация
+
+- Убрать дублирование состояния user (AUTH-02) — либо только Context, либо только Redux
+- Добавить try/catch в `signUpWithEmail` (AUTH-04)
+- Убрать `console.log` из production-кода (AUTH-03)
+
+### Оформление
+
+- Убрать debug-мусор из `tabBarBadgeStyle`/`tabBarStyle` (STYLE-04)
 
 ### Инфраструктура
-27. **INFRA-01** — Добавить `"type": "module"` в `package.json` для полного ESM в scripts/.
-    Что нужно изменить перед этим:
-    - `metro.config.js` → переименовать в `metro.config.cjs` (использует `module.exports`)
-    - `babel.config.js` → переименовать в `babel.config.cjs`
-    - `jest.config.js` → переименовать в `jest.config.cjs` (если есть)
-    - `.eslintrc.js` → переименовать в `.eslintrc.cjs`
-    - Проверить совместимость `@react-native-community/cli` с ESM-конфигами (может потребовать пинить версию)
-    - После добавления `"type": "module"` скрипты в `scripts/*.mjs` получают ESM автоматически, расширение `.mjs` больше не обязательно
+
+1. **INFRA-01** — Добавить `"type": "module"` в `package.json` для полного ESM в scripts/.
+   Что нужно изменить перед этим:
+   - `metro.config.js` → переименовать в `metro.config.cjs` (использует `module.exports`)
+   - `babel.config.js` → переименовать в `babel.config.cjs`
+   - `jest.config.js` → переименовать в `jest.config.cjs` (если есть)
+   - `.eslintrc.js` → переименовать в `.eslintrc.cjs`
+   - Проверить совместимость `@react-native-community/cli` с ESM-конфигами (может потребовать пинить версию)
+   - После добавления `"type": "module"` скрипты в `scripts/*.mjs` получают ESM автоматически, расширение `.mjs` больше не обязательно

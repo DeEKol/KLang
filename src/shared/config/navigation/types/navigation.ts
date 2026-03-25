@@ -25,6 +25,8 @@ export enum ENavigation {
   STUDY = "Study",
   LEVEL = "Level",
   LESSON = "Lesson",
+  // * Settings
+  SETTINGS = "Settings",
   // * Test
   TEST = "Test",
   UI_SCREEN = "UiScreen",
@@ -41,8 +43,8 @@ export type TAuthStackParamList = {
 export type THomeStackParamList = {
   [ENavigation.HOME]: undefined;
   // * subscreens
-  [ENavigation.PROFILE]: undefined;
-  [ENavigation.ROADMAP]: undefined;
+  [ENavigation.PROFILE]: { userId?: string } | undefined;
+  [ENavigation.ROADMAP]: { id?: string } | undefined;
 };
 
 export type TPracticeStackParamList = {
@@ -60,6 +62,10 @@ export type TStudyStackParamList = {
   [ENavigation.LESSON]: undefined;
 };
 
+export type TSettingsStackParamList = {
+  [ENavigation.SETTINGS]: undefined;
+};
+
 export type TTestStackParamList = {
   [ENavigation.TEST]: undefined;
   // * subscreens
@@ -69,7 +75,7 @@ export type TTestStackParamList = {
 export type TRootStackParamList = {
   [ENavigation.AUTH]: undefined;
   [ENavigation.MAIN]: undefined;
-  [ENavigation.MODAL]?: { screen?: string } | undefined;
+  [ENavigation.MODAL]: { screen?: string } | undefined;
   [ENavigation.NOT_FOUND]: undefined;
 };
 
@@ -78,6 +84,7 @@ export type TAllStackParamList = TRootStackParamList &
   THomeStackParamList &
   TPracticeStackParamList &
   TStudyStackParamList &
+  TSettingsStackParamList &
   TTestStackParamList;
 
 // * Screen Props
@@ -95,6 +102,9 @@ export type TPracticeStackScreenProps<RouteName extends keyof TPracticeStackPara
 
 export type TStudyStackScreenProps<RouteName extends keyof TStudyStackParamList> =
   NativeStackScreenProps<TStudyStackParamList, RouteName>;
+
+export type TSettingsStackScreenProps<RouteName extends keyof TSettingsStackParamList> =
+  NativeStackScreenProps<TSettingsStackParamList, RouteName>;
 
 export type TTestStackScreenProps<RouteName extends keyof TTestStackParamList> =
   NativeStackScreenProps<TTestStackParamList, RouteName>;

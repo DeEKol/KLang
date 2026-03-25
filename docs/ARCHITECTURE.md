@@ -42,19 +42,21 @@ NavigationContainer
         ├── HomeTab    → HomeStackNavigator    → Home / Profile / Roadmap
         ├── StudyTab   → StudyStackNavigator   → Study / Level / Lesson
         ├── PracticeTab→ PracticeStackNavigator→ Practice / Hangel / WordMatcher / SequencesBuilder
-        ├── SettingsTab→ SettingsScreen        (прямой экран, без вложенного стека)
+        ├── SettingsTab→ SettingsStackNavigator → Settings
         └── TestTab    → TestStackNavigator    → Test / UiScreen
 ```
 
-### Два enum'а маршрутов
+### Типизация маршрутов
 
-| Файл | Enum | Назначение |
+| Файл | Содержимое | Назначение |
 |---|---|---|
-| `shared/config/navigation/types/navigation.ts` | `ENavigation` | **Полный** список всех экранов + ParamList'ы |
-| `shared/config/navigation/routes.ts` | `ENavigation` (частичный) + `ROUTE_PATHS` | Deep-linking пути. Перекрывает только Auth + Home |
+| `shared/config/navigation/types/navigation.ts` | `ENavigation`, `TXxxStackParamList`, `TXxxStackScreenProps` | Единственный источник всех экранов + типов |
+| `shared/config/navigation/types/tab-navigation.ts` | `ETabNavigation`, `TBottomTabsParamList` | Tab-навигация |
+| `shared/config/navigation/routes.ts` | `ROUTE_PATHS` | Единственный источник path-сегментов — используется и в `linking.ts`, и в `makeUrl()` |
+| `shared/config/navigation/linking.ts` | `linking` | React Navigation deep-link конфиг — импортирует `ROUTE_PATHS`, полный nested config для всех стеков |
 
-Tab-навигация определена отдельно:
-`shared/config/navigation/types/tab-navigation.ts` → `ETabNavigation`, `TBottomTabsParamList`
+Пути в `routes.ts` и `linking.ts` синхронизированы: Auth stack не имеет path-префикса,
+поэтому `LOGIN = "login/:next?"` (не `auth/login/...`).
 
 ### Auth guard
 
@@ -111,9 +113,9 @@ const { colors, spacing, typography } = useThemeTokens();
 ### Провайдеры и слои
 
 ```
-FirebaseAdapter (shared/services/firebase)  — IAuthRepository
+FirebaseAdapter (shared/services/firebase)  — IAuthRepository (+ TAuthUser, TCredential, TAuthProvider)
   ↓ implements
-SessionService (shared/auth/SessionService) — синхронизирует Firebase token с API
+SessionService (shared/services/session)    — синхронизирует Firebase token с API (single-flight)
 AuthProvider   (app/providers/AuthProvider) — React Context + Redux dispatch
 AuthContext    (shared/auth/AuthContext)     — useAuthContext() хук
 features/auth (index.ts)                    — обёртка для компонентов (публичный API)

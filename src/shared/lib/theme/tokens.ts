@@ -32,5 +32,5 @@ export function createTheme(mode: TThemeMode): IThemeTokens {
     },
     typography: baseTypography,
     spacing: baseSpacing,
-  } as IThemeTokens;
+  };
 }

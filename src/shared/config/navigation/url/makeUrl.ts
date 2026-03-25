@@ -46,7 +46,7 @@ export function makeUrl(route: keyof TAllStackParamList, params?: Record<string,
       : "";
 
   // return url with your scheme; change prefix if needed
-  return `myapp://${path}${qs}`;
+  return `klang://${path}${qs}`;
 }
 
 /**

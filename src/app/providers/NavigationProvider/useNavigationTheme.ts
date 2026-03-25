@@ -4,15 +4,15 @@ import { DarkTheme as RNDark, DefaultTheme as RNDefault } from "@react-navigatio
 import deepmerge from "deepmerge";
 import { mapTokensToMD3, useThemeTokens } from "shared/lib/theme";
 
-export function useNavigationTheme() {
-  // adapt nav base themes to MD3 shape
-  const adapted = adaptNavigationTheme({
-    reactNavigationLight: RNDefault,
-    reactNavigationDark: RNDark,
-  });
-  const AdaptedNavLight = adapted.LightTheme ?? RNDefault;
-  const AdaptedNavDark = adapted.DarkTheme ?? RNDark;
+// computed once — inputs are module-level constants
+const adapted = adaptNavigationTheme({
+  reactNavigationLight: RNDefault,
+  reactNavigationDark: RNDark,
+});
+const AdaptedNavLight = adapted.LightTheme ?? RNDefault;
+const AdaptedNavDark = adapted.DarkTheme ?? RNDark;
 
+export function useNavigationTheme() {
   // ? Theme: get tokens and build navTheme from md3 colors
   const tokens = useThemeTokens();
   const md3 = useMemo(() => mapTokensToMD3(tokens), [tokens]);

@@ -7,9 +7,14 @@ export interface IThemeColors {
   surface: string;
   text: string;
   primary: string;
-  accent?: string;
-  error?: string;
-  border?: string;
+  accent: string;
+  error: string;
+  border: string;
+  disabled: string;
+  placeholder: string;
+  notification: string;
+  onSurface: string;
+  backdrop: string;
 }
 
 export interface IThemeTypography {
