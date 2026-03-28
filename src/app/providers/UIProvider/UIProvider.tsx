@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
+import { useThemeTokens } from "entities/theme";
 import { mapTokensToMD3 } from "shared/lib/theme/mapTokensToMD3";
-import { useThemeTokens } from "shared/lib/theme/useThemeTokens";
 
 type TUIProviderProps = { children?: React.ReactNode };
 

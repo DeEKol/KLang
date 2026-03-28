@@ -1,5 +1,5 @@
 import React from "react";
-import type { ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
 import { TouchableOpacity } from "react-native";
 
 /**
@@ -9,7 +9,7 @@ export const Touchable = (props: {
   onPress: () => void;
   disabled?: boolean;
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }) => {
   // ? Props
   const { onPress, children, style, disabled } = props;

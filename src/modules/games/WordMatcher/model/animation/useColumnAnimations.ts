@@ -1,38 +1,28 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { Animated } from "react-native";
+import { useCallback, useEffect } from "react";
+import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 export const useColumnsAnimation = (isComplete: boolean) => {
-  const anim = useRef(new Animated.Value(0)).current;
-  const defaultConfig = { friction: 8, tension: 50, useNativeDriver: true };
+  const progress = useSharedValue(0);
 
   useEffect(() => {
     if (isComplete) {
-      Animated.spring(anim, {
-        toValue: 1,
-        ...defaultConfig,
-      }).start();
+      progress.value = withSpring(1, { damping: 8, stiffness: 50 });
     }
-  }, [isComplete]); // anim dependencies?
+  }, [isComplete, progress]);
 
   const resetAnimation = useCallback(() => {
-    Animated.spring(anim, { toValue: 0, ...defaultConfig }).start();
-  }, [anim]);
+    progress.value = withSpring(0, { damping: 8, stiffness: 50 });
+  }, [progress]);
 
-  const leftStyle = useMemo(
-    () => ({
-      flex: 1,
-      transform: [{ translateX: anim.interpolate({ inputRange: [0, 1], outputRange: [0, -200] }) }],
-    }),
-    [anim],
-  );
+  const leftStyle = useAnimatedStyle(() => ({
+    flex: 1,
+    transform: [{ translateX: progress.value * -200 }],
+  }));
 
-  const rightStyle = useMemo(
-    () => ({
-      flex: 1,
-      transform: [{ translateX: anim.interpolate({ inputRange: [0, 1], outputRange: [0, 200] }) }],
-    }),
-    [anim],
-  );
+  const rightStyle = useAnimatedStyle(() => ({
+    flex: 1,
+    transform: [{ translateX: progress.value * 200 }],
+  }));
 
   return { leftStyle, rightStyle, resetAnimation };
 };

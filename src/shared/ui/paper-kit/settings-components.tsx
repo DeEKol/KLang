@@ -1,13 +1,8 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { List, RadioButton, Switch } from "react-native-paper";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withSpring,
-  withTiming,
-} from "react-native-reanimated";
+import { RadioButton, Switch } from "react-native-paper";
+import Animated from "react-native-reanimated";
+import { usePressAnimation } from "shared/lib/animations";
 import { useThemeTokens } from "shared/lib/theme";
 
 import { Text, Touchable } from "./index";
@@ -27,14 +22,10 @@ export const SettingSwitch: React.FC<AnimatedSwitchProps> = ({
   description,
 }) => {
   const { colors } = useThemeTokens();
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const { animStyle: animatedStyle, trigger } = usePressAnimation();
 
   const handlePress = () => {
-    scale.value = withSequence(withTiming(0.95, { duration: 50 }), withSpring(1, { damping: 10 }));
+    trigger();
     onValueChange(!value);
   };
 
@@ -99,10 +90,8 @@ export const SettingRadio: React.FC<SettingRadioProps> = ({
             onPress={() => onValueChange(option.value)}
             style={[
               styles.radioOption,
-              index !== options.length - 1 && {
-                borderBottomWidth: 1,
-                borderBottomColor: colors.disabled,
-              },
+              index !== options.length - 1 && styles.radioDivider,
+              index !== options.length - 1 && { borderBottomColor: colors.disabled },
             ]}>
             <View style={styles.radioContent}>
               <View>
@@ -114,7 +103,7 @@ export const SettingRadio: React.FC<SettingRadioProps> = ({
                 {option.description && (
                   <Text
                     variant="caption"
-                    style={{ color: colors.placeholder, marginTop: 2 }}>
+                    style={[styles.settingDescription, { color: colors.placeholder }]}>
                     {option.description}
                   </Text>
                 )}
@@ -151,14 +140,10 @@ export const SettingAction: React.FC<SettingActionProps> = ({
   showChevron = true,
 }) => {
   const { colors } = useThemeTokens();
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const { animStyle: animatedStyle, trigger } = usePressAnimation(0.98);
 
   const handlePress = () => {
-    scale.value = withSequence(withTiming(0.98, { duration: 50 }), withSpring(1, { damping: 15 }));
+    trigger();
     onPress();
   };
 
@@ -257,6 +242,9 @@ const styles = StyleSheet.create({
   },
   radioOption: {
     paddingVertical: 12,
+  },
+  radioDivider: {
+    borderBottomWidth: 1,
   },
   radioContent: {
     flexDirection: "row",

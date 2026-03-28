@@ -1,0 +1,16 @@
+export type AnimationType =
+  | "fadeIn"
+  | "fadeInUp"
+  | "fadeInDown"
+  | "fadeInLeft"
+  | "fadeInRight"
+  | "slideInUp"
+  | "slideInDown"
+  | "slideInLeft"
+  | "slideInRight"
+  | "zoomIn"
+  | "zoomOut"
+  | "bounceIn"
+  | "lightSpeedIn"
+  | "stretchIn"
+  | "pinwheelIn";

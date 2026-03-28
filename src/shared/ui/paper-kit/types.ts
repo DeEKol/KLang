@@ -1,4 +1,4 @@
-import type { TextStyle, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import type { MD3Elevation } from "react-native-paper";
 
 export interface UIButtonProps {
@@ -26,7 +26,7 @@ export interface UITextInputProps {
 export interface UITextProps {
   variant?: "headline" | "title" | "body" | "caption";
   children: React.ReactNode;
-  style?: TextStyle;
+  style?: StyleProp<TextStyle>;
   color?: string;
 }
 

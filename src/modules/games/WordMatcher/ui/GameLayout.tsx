@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
-import { Animated, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
+import Animated from "react-native-reanimated";
 import { LottieImage } from "shared/lottie";
 
 import { useColumnsAnimation } from "../model/animation/useColumnAnimations";

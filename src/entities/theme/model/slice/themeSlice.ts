@@ -1,11 +1,10 @@
-// src/shared/lib/theme/model/slice/themeSlice.ts
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
 import type { IThemeSchema, TThemeMode } from "../../types/themeSchema";
 
 const initialState: IThemeSchema = {
-  mode: "light", // дефолт, реальное начальное значение установим в компоненте-инициализаторе
+  mode: "system", // по умолчанию следовать ОС
 };
 
 export const themeSlice = createSlice({

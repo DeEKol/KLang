@@ -28,9 +28,9 @@ export const ButtonUI = (props: TButtonUIProps) => {
     ...anyProps
   } = props;
 
-  const { mode } = useThemeTokens();
+  const { colors } = useThemeTokens();
 
-  const styles = ButtonUIStyles(themeUI, mode);
+  const styles = ButtonUIStyles(themeUI, colors);
 
   return (
     <View style={[styles.viewStyle, outerViewStyle]}>

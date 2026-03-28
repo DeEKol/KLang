@@ -78,6 +78,29 @@ Index signature удалён — динамический доступ `colors[k
 
 Исправлено: `PROFILE: { userId?: string } | undefined`, `ROADMAP: { id?: string } | undefined` — соответствует `routes.ts`.
 
+### TS-12 — `UITextProps.style` и `Touchable.style` принимали плоский объект вместо `StyleProp` ✅ Решено
+
+`style?: TextStyle` в `UITextProps` и `style?: ViewStyle` в `Touchable` не позволяли передавать массивы стилей — паттерн `[styles.foo, { color: colors.text }]` давал TS-ошибку.
+Исправлено: `StyleProp<TextStyle>` и `StyleProp<ViewStyle>` соответственно. Устранило ~13 ошибок в `settings-components.tsx` и `SettingsScreen.tsx`.
+
+---
+
+## Анимации
+
+### ANIM-01 — Два API анимаций: `react-native` Animated и `react-native-reanimated` ✅ Решено
+
+По всему проекту смешивались старый `Animated` API (`.Value`, `.spring`, `.interpolate`) и современный `react-native-reanimated` (`useSharedValue`, `useAnimatedStyle`, `withSpring`).
+
+Миграция:
+
+- `AnimatedIcon.tsx` — перенесён на `useSharedValue` + `useAnimatedStyle`; `interpolate` заменён прямой математикой
+- `WordMatcher/model/animation/` — все 4 хука (`useScaleAnimation`, `useOpacityAnimation`, `useFadeScale`, `useColumnsAnimation`) переписаны на Reanimated; `friction/tension` → `damping/stiffness`
+- `WordMatcher/ui/Word.tsx` — статичные стили цветных оверлеев вынесены в `StyleSheet`, анимированные стили применяются массивом
+- `WordMatcher/ui/Winning.tsx` — удалён мёртвый код (`spinAnim`, `spin`, `Animated.timing` вне useEffect)
+- `settings-components.tsx` — дублированная логика press-анимации заменена хуком `usePressAnimation` из `shared/lib/animations`
+
+Добавлен хук `usePressAnimation(scaleDown = 0.95)` в `shared/lib/animations/hooks.ts` — одноразовая press-анимация (в отличие от `usePulseAnimation`, которая зациклена).
+
 ---
 
 ## FSD / Архитектура
@@ -171,8 +194,10 @@ description="Медленный темп, больше повторений"  //
 Все цвета вписаны hex-литералами (`#071026`, `#e6eef8`, `#071226` и т.д.), нет использования `useThemeTokens`.
 Компонент не реагирует на смену темы.
 
-### STYLE-02 — `HangelBoard.tsx` — hardcoded цвета
-`backgroundColor: "#fff"`, `color: "black"`, `borderColor: "#ddd"` — нет темы.
+### STYLE-02 — `HangelBoard.tsx` — hardcoded цвета ✅ Решено
+
+`backgroundColor: "#fff"`, `color: "black"`, `borderColor: "#ddd"` заменены на токены темы.
+`HangelBoard` вызывает `useThemeTokens()`. `GridOverlay` и `AnimatedStroke` получили пропсы `lineColorHex`/`strokeColor` — цвет сетки и штриха пробрасывается из компонента-родителя.
 
 ### STYLE-03 — Стили вместе с компонентом (непоследовательно)
 **Решено**: гибридный подход.
@@ -200,12 +225,9 @@ const styles = useMemo(() => createStyles(colors), [colors]);
 **Контроль неиспользуемых стилей в `*.styles.ts`**: `npm run check-styles`
 (скрипт `scripts/check-unused-styles.js`, планируется в CI/CD).
 
-### STYLE-04 — Неиспользуемые options в `BottomTabsNavigator`
-```tsx
-tabBarBadgeStyle: { backgroundColor: "red" },
-tabBarStyle: { backgroundColor: "red" },
-```
-На HOME Tab — мусор от отладки.
+### STYLE-04 — Debug-стили в `BottomTabsNavigator` ✅ Решено
+
+`tabBarBadgeStyle: { backgroundColor: "red" }` и `tabBarStyle: { backgroundColor: "red" }` на HOME Tab убраны в рамках NAV-01. Подтверждено: в текущей кодовой базе отсутствуют.
 
 ### STYLE-05 — Импорт `BlurMask` в `BottomTabsNavigator.tsx` не используется ✅ Решено
 
@@ -274,7 +296,7 @@ interface IGameProps<TData> {
 ### Игры
 
 - Добавить пропсы в `SequencesBuilder` для передачи данных упражнения (GAME-02)
-- Подключить тему в `SequencesBuilderUI` и `HangelBoard` (STYLE-01, STYLE-02)
+- Подключить тему в `SequencesBuilderUI` (STYLE-01) — ~~`HangelBoard` сделан~~ ✅
 - Описать общий `IGameProps` интерфейс (GAME-05)
 - Интегрировать HangelBoard с конкретными символами хангыль (GAME-04)
 
@@ -294,10 +316,6 @@ interface IGameProps<TData> {
 - Убрать дублирование состояния user (AUTH-02) — либо только Context, либо только Redux
 - Добавить try/catch в `signUpWithEmail` (AUTH-04)
 - Убрать `console.log` из production-кода (AUTH-03)
-
-### Оформление
-
-- Убрать debug-мусор из `tabBarBadgeStyle`/`tabBarStyle` (STYLE-04)
 
 ### Инфраструктура
 

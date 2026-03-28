@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
 import type { AnimatedStyle, StyleProps } from "react-native-reanimated";
 import Animated, {
   useAnimatedStyle,
@@ -8,7 +7,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { animationEventEmitter } from "../AnimationEventEmitter";
+import { animationEventEmitter } from "./AnimationEventEmitter";
 
 type AnimationType = "fade" | "scale" | "slide";
 
@@ -18,7 +17,15 @@ interface EventDrivenAnimationProps {
   style?: AnimatedStyle<StyleProps>;
 }
 
-const EventDrivenAnimation = ({ animationType, children, style }: EventDrivenAnimationProps) => {
+/**
+ * Wrapper that plays an animation in response to `animationEventEmitter` events.
+ * Use `animationEventEmitter.emit("start")` to trigger and `"reset"` to reverse.
+ */
+export const EventDrivenAnimation: React.FC<EventDrivenAnimationProps> = ({
+  animationType,
+  children,
+  style,
+}) => {
   const progress = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -44,34 +51,3 @@ const EventDrivenAnimation = ({ animationType, children, style }: EventDrivenAni
 
   return <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>;
 };
-
-export const AnimationExample = ({ children }: React.PropsWithChildren) => {
-  setTimeout(() => {
-    animationEventEmitter.emit("start");
-  }, 3000);
-
-  return (
-    <View style={styles.container}>
-      <EventDrivenAnimation
-        animationType="slide"
-        style={styles.animatedBox}>
-        {children}
-      </EventDrivenAnimation>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  animatedBox: {
-    width: 100,
-    height: 100,
-    backgroundColor: "tomato",
-    margin: 10,
-  },
-});

@@ -1,8 +1,7 @@
 import type { TextStyle, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import { exhaustiveCheck } from "shared/helpers";
-import { Colors, EPalette } from "shared/lib/theme";
-import type { TThemeMode } from "shared/lib/theme/types";
+import type { IThemeColors } from "shared/lib/theme";
 
 import { EButtonUITheme } from "./types";
 
@@ -13,14 +12,14 @@ type TButtonUIStyle = {
   globalTitleStyle: TextStyle;
 };
 
-const uiTheme = (themeUI: EButtonUITheme): ViewStyle | undefined => {
+const uiTheme = (themeUI: EButtonUITheme, colors: IThemeColors): ViewStyle | undefined => {
   return (function (themeParam: EButtonUITheme): ViewStyle | undefined {
     switch (themeParam) {
       case EButtonUITheme.BACKGROUND:
         return {
           borderWidth: 2,
           borderStyle: "solid",
-          borderColor: EPalette.ACCENT,
+          borderColor: colors.accent,
           borderRadius: 8,
         };
       case EButtonUITheme.CLEAR:
@@ -30,7 +29,7 @@ const uiTheme = (themeUI: EButtonUITheme): ViewStyle | undefined => {
         };
       case EButtonUITheme.DEFAULT:
         return {
-          backgroundColor: EPalette.PRIMARY,
+          backgroundColor: colors.primary,
           borderRadius: 8,
         };
       default:
@@ -39,7 +38,7 @@ const uiTheme = (themeUI: EButtonUITheme): ViewStyle | undefined => {
   })(themeUI);
 };
 
-export default (themeUI: EButtonUITheme, themeGlobal: TThemeMode) => {
+export default (themeUI: EButtonUITheme, colors: IThemeColors) => {
   return StyleSheet.create<TButtonUIStyle>({
     viewStyle: {
       margin: "auto",
@@ -51,7 +50,7 @@ export default (themeUI: EButtonUITheme, themeGlobal: TThemeMode) => {
       borderRadius: 8,
     },
     uiStyle: {
-      ...uiTheme(themeUI),
+      ...uiTheme(themeUI, colors),
     },
     globalBtnStyle: {
       flexDirection: "row",
@@ -64,7 +63,7 @@ export default (themeUI: EButtonUITheme, themeGlobal: TThemeMode) => {
       paddingLeft: 20,
     },
     globalTitleStyle: {
-      color: Colors[themeGlobal ?? "light"]?.text,
+      color: colors.text,
       fontSize: 24,
       lineHeight: 24,
     },

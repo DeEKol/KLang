@@ -4,147 +4,91 @@
 
 ```
 shared/lib/theme/                    ← Чистая логика (no Redux)
-  types.ts                           IThemeColors, IThemeTokens, TThemeMode, ...
+  types.ts                           IThemeColors, IThemeTokens, TThemeMode
   colors/
-    Palette.ts                       EPalette (light), EDarkPalette (dark)
-    Colors.ts                        { light: {...}, dark: {...}, normal: {...} }
+    Palette.ts                       EPalette (light, Korean), EDarkPalette (dark)
+    Colors.ts                        { light, dark, system } — light/dark ключи
   tokens.ts                          createTheme(mode) → IThemeTokens
-  mapTokensToMD3.ts                  IThemeTokens → react-native-paper MD3 theme
-  useThemeTokens.ts                  hook: Redux mode → resolved IThemeTokens
+  mapTokensToMD3.ts                  IThemeTokens → react-native-paper MD3 theme (active)
+  useThemeTokens.ts                  ⚠️ shim → re-exports из entities/theme (THEME-L2 migration)
   utils.ts                           useResolvedMode(), normalizeSetting()
 
-entities/theme/                      ← Redux state
+entities/theme/                      ← Redux state + хук
   model/slice/themeSlice.ts          { mode: TThemeMode }, changeTheme action
   model/selectors/                   getTheme, getThemeMode
+  model/hooks/useThemeTokens.ts      ✅ хук перенесён сюда (FSD fix)
   types/themeSchema.ts               IThemeSchema, re-exports from shared/lib/theme/types
 
 app/providers/UIProvider/
   UIProvider.tsx                     PaperProvider с mapTokensToMD3(tokens)
-  ThemeInitializer.ts                sync useColorScheme() → Redux changeTheme
+  ThemeInitializer.ts                migration: null/"normal" → "system" (one-shot)
 
 shared/ui/
-  atoms/ButtonUI/ButtonUI.styles.ts  createStyles(themeUI, themeGlobal)
-  molecules/FlipCardUI/FlipCardUI.styles.ts
+  atoms/ButtonUI/ButtonUI.styles.ts  createStyles(themeUI, colors: IThemeColors) ✅
+  molecules/FlipCardUI/FlipCardUI.styles.ts  createStyles(colors: IThemeColors) ✅
+  atoms/RoadMapButtonUI/             createStyles(colors: IThemeColors) ✅
   paper-kit/                         обёртки над RN Paper (Text, Button, Card, ...)
 
 screens/UIScreen/UIScreen.styles.ts  пример экранных стилей
 ```
 
 **Поток данных:**
-```
+
+```text
 useColorScheme() (system)
-  → ThemeInitializer → dispatch(changeTheme(scheme))
-  → Redux state.theme.mode
-  → getThemeMode selector
-  → useThemeTokens()
+  → useResolvedMode() (inside useThemeTokens)
+  → Redux state.theme.mode (getThemeMode)
+  → useThemeTokens() [entities/theme]
       → useResolvedMode(mode) → "light" | "dark"
       → createTheme(resolved) → IThemeTokens
   → UIProvider → mapTokensToMD3(tokens) → PaperProvider theme
-  → useThemeTokens() → в компонентах для *.styles.ts
+  → useThemeTokens() → colors: IThemeColors → в компонентах для *.styles.ts
 ```
 
 ---
 
 ## Problems
 
-### 🔴 THEME-01 — `mapTokensToMD3` полностью закомментирован — кастомная тема не применяется
+### ✅ THEME-01 — `mapTokensToMD3` раскомментирован, MD3 поля исправлены
 
-```ts
-// mapTokensToMD3.ts
-const colors = {
-  ...base.colors,
-  // TODO: set up theme
-  // primary: tokens.colors.primary,
-  // background: tokens.colors.background,
-  // surface: tokens.colors.surface,
-  // onSurface: tokens.colors.text,
-};
-```
-
-`UIProvider` передаёт эту "тему" в `PaperProvider`, но она идентична дефолтному MD3. **Все компоненты react-native-paper (Button, Card, Text, TextInput, BottomNavigation) используют дефолтные цвета Material Design**, не цвета приложения. Весь `EPalette` проигнорирован.
+Исправлены имена полей по Paper docs: `secondary` (не `accent`), `outline` (не `border`), `onBackground` (не `text`).
+Добавлены: `onPrimary`, `primaryContainer`, `surfaceVariant`.
 
 ---
 
-### 🔴 THEME-02 — `ThemeInitializer` перетирает сохранённую пользовательскую тему
+### ✅ THEME-02 — `ThemeInitializer` исправлен
 
-```ts
-// ThemeInitializer.ts
-const scheme = useColorScheme() ?? "light";
-useEffect(() => {
-  dispatch(themeActions.changeTheme(scheme)); // ← всегда диспатчит системную схему
-}, [scheme, dispatch]);
-```
-
-Сценарий:
-1. Пользователь выбирает `"dark"` вручную в настройках → Redux Persist сохраняет `mode: "dark"`
-2. Приложение перезапускается → Redux Persist восстанавливает `mode: "dark"`
-3. `ThemeInitializer` монтируется → `useEffect` → `changeTheme("light")` (системная тема) → **пользовательская настройка сброшена**
-
-Нужно учитывать, что `"system"` — это специальный режим "следовать ОС", а `"dark"` / `"light"` — ручной выбор.
+`ThemeInitializer` теперь запускается один раз при монтировании и только мигрирует старые значения (`null`, `"normal"`) в `"system"`. Системная тема подписывается реактивно через `useColorScheme()` внутри `useThemeTokens()`.
 
 ---
 
-### 🔴 THEME-03 — FSD нарушение: `shared` импортирует из `entities`
+### ✅ THEME-03 — FSD нарушение частично исправлено
 
-```ts
-// shared/lib/theme/useThemeTokens.ts
-import { getThemeMode, type TThemeMode } from "entities/theme"; // ← entities выше shared
-```
+`useThemeTokens` перенесён в `entities/theme/model/hooks/useThemeTokens.ts`. App-слой (`UIProvider`, `NavigationProvider`, `SettingsScreen`) импортирует из `entities/theme`.
 
-`shared` не может импортировать из `entities` по правилам FSD. Типы уже перенесли в `shared/lib/theme/types.ts`, но `getThemeMode` (Redux selector) остался. Это архитектурная проблема — хук, читающий Redux, не может жить в `shared`.
-
-**Решение:** перенести `useThemeTokens` в `entities/theme` (или в `features/theme`), оставив в `shared/lib/theme` только чистые функции (`createTheme`, `Colors`, `mapTokensToMD3`, типы).
+`shared/lib/theme/useThemeTokens.ts` оставлен как shim для `shared/ui` компонентов, которые ещё вызывают хук напрямую. Полное исправление — после перехода `shared/ui` на получение `colors` через пропсы.
 
 ---
 
-### 🟡 THEME-04 — `IThemeColors` не соответствует фактическому выводу `createTheme`
+### ✅ THEME-04 — `IThemeColors` синхронизирован с `createTheme`
 
-`types.ts` объявляет:
-```ts
-interface IThemeColors {
-  background, surface, text, primary, accent?, error?, border?
-}
-```
-
-Но `createTheme()` возвращает расширенный набор: `disabled`, `placeholder`, `notification`, `onSurface`, `backdrop` — они не в интерфейсе, поэтому код делает `} as IThemeTokens` — небезопасный каст.
+Интерфейс расширен: добавлены `onPrimary`, `primaryContainer`, `surfaceVariant`. Небезопасный `as IThemeTokens` каст убран.
 
 ---
 
-### 🟡 THEME-05 — `"normal"` режим: несогласованное поведение
+### ✅ THEME-05 — Убран режим `"normal"`
 
-`TThemeMode = ColorSchemeName | "normal"` — значение `"normal"` обрабатывается по-разному:
-
-| Место | Поведение |
-|---|---|
-| `createTheme("normal")` | Использует `Colors["normal"]` = light палитра |
-| `normalizeSetting("normal")` | Конвертирует в `"system"` → следует ОС |
-| `Colors` объект | Имеет ключ `"normal"` (дублирует `"light"`) |
-
-Итого: если пользователь выбрал `"normal"`, `createTheme` даёт ему light, а `useResolvedMode` даёт системную. Значение `"normal"` нужно либо удалить, либо чётко определить его семантику.
+`TThemeMode = "light" | "dark" | "system"`. Все упоминания `"normal"` удалены из `Colors`, `normalizeSetting`, `themeSlice`. `ThemeInitializer` мигрирует старые `null`/`"normal"` значения.
 
 ---
 
-### 🟡 THEME-06 — Хардкод цветов в `*.styles.ts` обходит токен-систему
+### ✅ THEME-06 — Стилевые функции переведены на `colors: IThemeColors`
 
-Компоненты используют `EPalette` напрямую вместо токенов из `useThemeTokens()`:
-
-```ts
-// ButtonUI.styles.ts
-borderColor: EPalette.ACCENT,          // ← всегда light, dark mode не работает
-backgroundColor: EPalette.PRIMARY,     // ← всегда #0047AB
-color: Colors[themeGlobal ?? "light"]?.text  // ← ручной lookup
-```
-
-```ts
-// FlipCardUI.styles.ts
-color: EPalette.PRIMARY,  // ← хардкод
-```
-
-Стилевые функции принимают `themeGlobal: TThemeMode` параметром, но должны принимать `colors: IThemeColors` — уже готовые токены, без повторной логики разрешения режима.
+`ButtonUI.styles.ts`, `FlipCardUI.styles.ts`, `RoadMapButtonUI.tsx` — все принимают `colors: IThemeColors`. Прямые импорты `EPalette` и ручные `Colors[theme]` lookup убраны.
 
 ---
 
-### 🟡 THEME-07 — `SplashScreen` имеет полностью хардкод цвета
+### ✅ THEME-07 — `SplashScreen` подключён к теме
 
 ```ts
 // SplashScreen.tsx
@@ -157,34 +101,23 @@ color: "#0047AB"                    // ← хардкод
 
 ---
 
-### 🟡 THEME-08 — `EDarkPalette` слишком упрощён для реального тёмного режима
+### ✅ THEME-08 — `EDarkPalette` обновлён
 
-```ts
-// Palette.ts
-PRIMARY: "#FFFFFF",     // белый primary — не работает на белом фоне
-BACKGROUND: "#000000",  // чистый чёрный
-SURFACE: "#000000",     // не различается от background
-```
-
-Материальный тёмный режим использует `#1C1B1F` (background), `#2B2930` (surface), и цветной (не белый) primary. Текущая палитра даст неконтрастный UI в dark mode.
+Корейская тёмная палитра: `PRIMARY: "#ADC8FF"`, `BACKGROUND: "#1C1B1A"`, `SURFACE: "#2A2927"` — контрастная, тёплая, соответствует MD3 dark.
 
 ---
 
-### 🟢 THEME-09 — Анимации разбросаны, нет единого слоя
+### ✅ THEME-09 — Единое место для анимаций
 
-- `shared/animations/Animated` — `BounceInView` (импортируется, но не используется в `BottomTabsNavigator`)
-- `AnimatedIcon.tsx` — Animated API прямо в компоненте
-- `SplashScreen.tsx` — Reanimated прямо в компоненте
-- Нет единой точки входа / соглашения для анимаций
+`shared/lib/animations/index.ts` — единая точка входа: `AnimatedView`, `FadeInView`, `SlideInRightView`, `BounceInView`, `usePulseAnimation`, `useShakeAnimation`, `usePressAnimation`.
+
+Все анимации в проекте переведены на `react-native-reanimated`. `AnimatedIcon`, все хуки `WordMatcher/model/animation/`, `settings-components.tsx` — больше не используют старый `react-native` Animated API. `usePressAnimation` добавлен для одноразового press-feedback (отличие от `usePulseAnimation` — не зациклен).
 
 ---
 
-### 🟢 THEME-10 — `console.log("progress!!")` в `SplashScreen`
+### ✅ THEME-10 — `console.log("progress!!")` в `SplashScreen`
 
-```ts
-// SplashScreen.tsx:166
-console.log("progress!!", progress);
-```
+Удалён.
 
 ---
 
@@ -359,24 +292,26 @@ export function useThemeTokens() {
 
 ### 🔴 Large
 
-| ID | Task |
-|----|------|
-| THEME-L1 | Разработать финальную цветовую палитру (корейская тематика): обновить `EPalette`/`EDarkPalette`; расширить `IThemeColors`; обновить `createTheme`; раскомментировать `mapTokensToMD3` — тема Paper начнёт работать |
-| THEME-L2 | Перенести `useThemeTokens` из `shared/lib/theme` в `entities/theme`; обновить все импорты (FSD fix) |
+| ID | Status | Task |
+| ---- | -------- | ------ |
+| THEME-L1 | ✅ done | Корейская палитра: обновить `EPalette`/`EDarkPalette`; расширить `IThemeColors`; обновить `createTheme`; `mapTokensToMD3` активен |
+| THEME-L2 | ✅ done (partial) | `useThemeTokens` перенесён в `entities/theme`; app/screens импортируют оттуда; `shared/ui` использует shim до перехода на props |
 
 ### 🟡 Medium
 
-| ID | Task |
-|----|------|
-| THEME-M1 | Исправить `ThemeInitializer`: синхронизировать системную тему только при `savedMode === "system"` |
-| THEME-M2 | Рефакторинг `*.styles.ts`: сигнатуры `(themeUI, themeGlobal)` → `(colors: IThemeColors)`; убрать прямые импорты `EPalette` из стилей |
-| THEME-M3 | Убрать `"normal"` из `TThemeMode`; заменить на `"system"`; обновить `Colors`, `Palette`, `normalizeSetting` |
-| THEME-M4 | Подключить цвета темы к `SplashScreen` (Skia Canvas через пропсы, StyleSheet через токены) |
+| ID | Status | Task |
+| ---- | -------- | ------ |
+| THEME-M1 | ✅ done | `ThemeInitializer` исправлен: migration-only, не перетирает пользовательскую тему |
+| THEME-M2 | ✅ done | `ButtonUI.styles.ts`, `FlipCardUI.styles.ts`, `RoadMapButtonUI` → `(colors: IThemeColors)` |
+| THEME-M3 | ✅ done | `"normal"` удалён; `TThemeMode` = `"light"` or `"dark"` or `"system"` |
+| THEME-M4 | ✅ done | Подключить цвета темы к `SplashScreen` (Skia Canvas через пропсы, StyleSheet через токены) |
 
 ### 🟢 Small
 
-| ID | Task |
-|----|------|
-| THEME-S1 | Синхронизировать `IThemeColors` интерфейс с фактическим выводом `createTheme`; убрать `as IThemeTokens` cast |
-| THEME-S2 | Удалить `console.log("progress!!")` из `SplashScreen` |
-| THEME-S3 | Определить единое место для анимаций: `shared/lib/animations/` с реэкспортом часто используемых анимаций |
+| ID | Status | Task |
+| ---- | -------- | ------ |
+| THEME-S1 | ✅ done | `IThemeColors` синхронизирован с `createTheme`; небезопасный каст убран |
+| THEME-S2 | ✅ done | Удалён `console.log("progress!!")` из `SplashScreen` |
+| THEME-S3 | ✅ done | Единое место для анимаций: `shared/lib/animations/`; все компоненты мигрированы на `react-native-reanimated` |
+| THEME-S4 | ✅ done | `HangelBoard` подключён к теме: `useThemeTokens()`, цвета пробрасываются в `GridOverlay`/`AnimatedStroke` |
+| THEME-S5 | ✅ done | `UITextProps.style` и `Touchable.style` — `TextStyle`/`ViewStyle` → `StyleProp<TextStyle>`/`StyleProp<ViewStyle>` |

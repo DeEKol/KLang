@@ -1,29 +1,26 @@
 import type { TThemeMode } from "shared/lib/theme/types";
 
-import type { EPaletteValue } from "./Palette";
 import { EDarkPalette, EPalette } from "./Palette";
 
-type TTheme = NonNullable<TThemeMode>;
+// "system" resolves at render time via useResolvedMode — always "light" | "dark" at runtime.
+// "system" key exists here only for TypeScript compatibility with style functions that accept TThemeMode.
+type TTheme = TThemeMode;
 
-/**
- * Здесь перечислены поля, которые ты реально используешь в коде.
- * Добавь/удали поля по потребности, но держи `text`/`btnText` — они уже используются.
- */
 interface ColorsType {
-  // старые поля, чтобы совместимость была сохранена:
-  text: EPaletteValue;
-  btnText: EPaletteValue;
-
-  // расширенные поля (полный набор из твоего примера)
-  primary: EPaletteValue;
-  accent: EPaletteValue;
-  background: EPaletteValue;
-  surface: EPaletteValue;
-  disabled: EPaletteValue;
-  placeholder: EPaletteValue;
-  backdrop: EPaletteValue;
-  notification: EPaletteValue;
-  onSurface: EPaletteValue;
+  text: string;
+  btnText: string;
+  primary: string;
+  onPrimary: string;
+  primaryContainer: string;
+  accent: string;
+  background: string;
+  surface: string;
+  surfaceVariant: string;
+  onSurface: string;
+  disabled: string;
+  placeholder: string;
+  backdrop: string;
+  notification: string;
 }
 
 export type TColors = {
@@ -31,43 +28,54 @@ export type TColors = {
 };
 
 export const Colors: TColors = {
+  light: {
+    text: EPalette.TEXT,
+    btnText: EPalette.ON_PRIMARY,
+    primary: EPalette.PRIMARY,
+    onPrimary: EPalette.ON_PRIMARY,
+    primaryContainer: EPalette.PRIMARY_CONTAINER,
+    accent: EPalette.ACCENT,
+    background: EPalette.BACKGROUND,
+    surface: EPalette.SURFACE,
+    surfaceVariant: EPalette.SURFACE_VARIANT,
+    onSurface: EPalette.ON_SURFACE,
+    disabled: EPalette.DISABLED,
+    placeholder: EPalette.PLACEHOLDER,
+    backdrop: EPalette.BACKDROP,
+    notification: EPalette.NOTIFICATION,
+  },
   dark: {
     text: EDarkPalette.TEXT,
-    btnText: EDarkPalette.PRIMARY,
+    btnText: EDarkPalette.ON_PRIMARY,
     primary: EDarkPalette.PRIMARY,
+    onPrimary: EDarkPalette.ON_PRIMARY,
+    primaryContainer: EDarkPalette.PRIMARY_CONTAINER,
     accent: EDarkPalette.ACCENT,
     background: EDarkPalette.BACKGROUND,
     surface: EDarkPalette.SURFACE,
+    surfaceVariant: EDarkPalette.SURFACE_VARIANT,
+    onSurface: EDarkPalette.ON_SURFACE,
     disabled: EDarkPalette.DISABLED,
     placeholder: EDarkPalette.PLACEHOLDER,
     backdrop: EDarkPalette.BACKDROP,
     notification: EDarkPalette.NOTIFICATION,
-    onSurface: EDarkPalette.ONSURFACE,
   },
-  light: {
+  // "system" is a light-palette fallback — never accessed at runtime (always resolved to "light" | "dark").
+  // Kept for TypeScript compatibility until THEME-M2 refactors all style functions to accept IThemeColors.
+  system: {
     text: EPalette.TEXT,
-    btnText: EPalette.PRIMARY,
+    btnText: EPalette.ON_PRIMARY,
     primary: EPalette.PRIMARY,
+    onPrimary: EPalette.ON_PRIMARY,
+    primaryContainer: EPalette.PRIMARY_CONTAINER,
     accent: EPalette.ACCENT,
     background: EPalette.BACKGROUND,
     surface: EPalette.SURFACE,
+    surfaceVariant: EPalette.SURFACE_VARIANT,
+    onSurface: EPalette.ON_SURFACE,
     disabled: EPalette.DISABLED,
     placeholder: EPalette.PLACEHOLDER,
     backdrop: EPalette.BACKDROP,
     notification: EPalette.NOTIFICATION,
-    onSurface: EPalette.ONSURFACE,
-  },
-  normal: {
-    text: EPalette.TEXT,
-    btnText: EPalette.PRIMARY,
-    primary: EPalette.PRIMARY,
-    accent: EPalette.ACCENT,
-    background: EPalette.BACKGROUND,
-    surface: EPalette.SURFACE,
-    disabled: EPalette.DISABLED,
-    placeholder: EPalette.PLACEHOLDER,
-    backdrop: EPalette.BACKDROP,
-    notification: EPalette.NOTIFICATION,
-    onSurface: EPalette.ONSURFACE,
   },
 };

@@ -4,6 +4,7 @@ import { useSharedValue, withTiming } from "react-native-reanimated";
 import Slider from "@react-native-community/slider";
 import type { SkPath } from "@shopify/react-native-skia";
 import { Canvas, Group, Path as SkiaPath, Skia, useCanvasRef } from "@shopify/react-native-skia";
+import { useThemeTokens } from "shared/lib/theme";
 
 interface Stroke {
   id: number;
@@ -31,7 +32,11 @@ const createSmoothedPath = (points: Array<{ x: number; y: number }>) => {
   return path;
 };
 
-const AnimatedStroke = ({ path, width }: Pick<Stroke, "path" | "width">) => {
+const AnimatedStroke = ({
+  path,
+  width,
+  strokeColor,
+}: Pick<Stroke, "path" | "width"> & { strokeColor: string }) => {
   const opacity = useSharedValue(1);
 
   useEffect(() => {
@@ -44,15 +49,22 @@ const AnimatedStroke = ({ path, width }: Pick<Stroke, "path" | "width">) => {
         path={path}
         style="stroke"
         strokeWidth={width}
-        color="black"
+        color={strokeColor}
       />
     </Group>
   );
 };
 
-const GridOverlay = ({ width = 400, height = 400 }: { width?: number; height?: number }) => {
-  // Основные параметры сетки
-  const lineColor = Skia.Color("#d3d3d3"); // Серый цвет линий
+const GridOverlay = ({
+  width = 400,
+  height = 400,
+  lineColorHex,
+}: {
+  width?: number;
+  height?: number;
+  lineColorHex: string;
+}) => {
+  const lineColor = Skia.Color(lineColorHex);
   const lineWidth = 1.5;
   const padding = 20;
 
@@ -104,6 +116,7 @@ const GridOverlay = ({ width = 400, height = 400 }: { width?: number; height?: n
 };
 
 export const HangelBoard = () => {
+  const { colors } = useThemeTokens();
   const strokeIdRef = useRef(0);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [undone, setUndone] = useState<Stroke[]>([]);
@@ -178,7 +191,7 @@ export const HangelBoard = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.controls}>
         <Button
           title="Undo"
@@ -196,7 +209,7 @@ export const HangelBoard = () => {
           disabled={!strokes.length && !undone.length}
         />
       </View>
-      <Text style={styles.label}>{`Stroke Width: ${strokeWidth}`}</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{`Stroke Width: ${strokeWidth}`}</Text>
       <Slider
         style={styles.slider}
         minimumValue={1}
@@ -210,13 +223,17 @@ export const HangelBoard = () => {
         {...panResponder.panHandlers}>
         <Canvas
           ref={canvasRef}
-          style={styles.canvas}>
-          <GridOverlay />
+          style={[
+            styles.canvas,
+            { borderColor: colors.border, backgroundColor: colors.background },
+          ]}>
+          <GridOverlay lineColorHex={colors.disabled} />
           {strokes.map((s) => (
             <AnimatedStroke
               key={s.id}
               path={s.path}
               width={s.width}
+              strokeColor={colors.text}
             />
           ))}
           {currentPath && (
@@ -224,7 +241,7 @@ export const HangelBoard = () => {
               path={currentPath}
               style="stroke"
               strokeWidth={strokeWidth}
-              color="black"
+              color={colors.text}
             />
           )}
         </Canvas>
@@ -234,7 +251,7 @@ export const HangelBoard = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 16 },
+  container: { flex: 1, padding: 16 },
   controls: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -245,10 +262,8 @@ const styles = StyleSheet.create({
   canvas: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#ddd",
     borderRadius: 8,
-    backgroundColor: "#fff",
   },
-  label: { fontWeight: "bold", color: "#333", fontSize: 16, marginBottom: 4 },
+  label: { fontWeight: "bold", fontSize: 16, marginBottom: 4 },
   slider: { width: "100%", height: 40 },
 });

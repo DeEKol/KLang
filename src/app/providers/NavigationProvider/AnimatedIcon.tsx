@@ -1,5 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import { Animated, Easing } from "react-native";
+import React, { useEffect } from "react";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import MaterialDesignIcons, {
   type MaterialDesignIconsIconName,
 } from "@react-native-vector-icons/material-design-icons";
@@ -12,30 +17,18 @@ interface Props {
 }
 
 export default function AnimatedIcon({ name, focused, color, size = 24 }: Props) {
-  const val = useRef(new Animated.Value(focused ? 1 : 0)).current;
+  const progress = useSharedValue(focused ? 1 : 0);
 
   useEffect(() => {
-    Animated.timing(val, {
-      toValue: focused ? 1 : 0,
+    progress.value = withTiming(focused ? 1 : 0, {
       duration: 200,
       easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }).start();
-  }, [focused, val]);
+    });
+  }, [focused, progress]);
 
-  const scale = val.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.25],
-  });
-
-  const translateY = val.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -2],
-  });
-
-  const animatedStyle = {
-    transform: [{ scale }, { translateY }],
-  };
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 + progress.value * 0.25 }, { translateY: progress.value * -2 }],
+  }));
 
   return (
     <Animated.View style={animatedStyle}>

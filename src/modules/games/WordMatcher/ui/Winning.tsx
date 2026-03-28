@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import Svg, { G, Path } from "react-native-svg";
 
 interface ICelebrationIconProps {
@@ -20,27 +20,9 @@ const CelebrationIcon = ({ size = 100, color = "#FFD700" }: ICelebrationIconProp
 );
 
 const Winning = ({ isMatchComplete }: { isMatchComplete: boolean }) => {
-  const spinAnim = useRef(new Animated.Value(0)).current;
-
-  Animated.timing(spinAnim, {
-    toValue: 1,
-    duration: 1000,
-    useNativeDriver: true,
-  }).start(() => {
-    spinAnim.setValue(0);
-  });
-
-  const spin = spinAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
-  });
-
   return (
     isMatchComplete && (
       <View style={styles.completeContainer}>
-        {/* <Animated.View style={{ transform: [{ rotate: spin }] }}>
-        <CelebrationIcon size={120} />
-      </Animated.View> */}
         <Text style={styles.completeText}>{"All Matched! 🎉"}</Text>
       </View>
     )

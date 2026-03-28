@@ -2,29 +2,35 @@ import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
 import type { IThemeTokens } from "shared/lib/theme/types";
 
 /**
- * Map our ThemeTokens -> MD3-like theme for react-native-paper.
- * We only overwrite colors that matter.
+ * Map our ThemeTokens → MD3 theme for react-native-paper.
+ *
+ * MD3 field names (from Paper docs):
+ *   primary, onPrimary, primaryContainer, secondary, tertiary,
+ *   background, surface, surfaceVariant, onSurface, onBackground,
+ *   error, outline, backdrop, etc.
  */
 export function mapTokensToMD3(tokens: IThemeTokens) {
   const isDark = tokens.mode === "dark";
   const base = isDark ? MD3DarkTheme : MD3LightTheme;
-
-  const colors = {
-    ...base.colors,
-    // TODO: set up theme
-    // primary: tokens.colors.primary,
-    // background: tokens.colors.background,
-    // surface: tokens.colors.surface,
-    // onSurface: tokens.colors.text,
-    // text: tokens.colors.text,
-    // accent: tokens.colors.accent, // ! tertiary ??
-    // error: tokens.colors.error ?? base.colors?.error,
-  };
+  const c = tokens.colors;
 
   return {
     ...base,
-    colors,
-    // optionally attach custom tokens so components can read them from theme.custom if wanted
-    // custom: { spacing: tokens.spacing, typography: tokens.typography },
+    dark: isDark,
+    colors: {
+      ...base.colors,
+      primary: c.primary,
+      onPrimary: c.onPrimary,
+      primaryContainer: c.primaryContainer,
+      secondary: c.accent, // MD3: "secondary" not "accent"
+      background: c.background,
+      surface: c.surface,
+      surfaceVariant: c.surfaceVariant,
+      onSurface: c.onSurface,
+      onBackground: c.text, // MD3: "onBackground" not "text"
+      error: c.error,
+      outline: c.border, // MD3: "outline" not "border"
+      backdrop: c.backdrop,
+    },
   };
 }

@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { Animated, FlatList, Platform, StyleSheet, View } from "react-native";
+import React, { useCallback, useMemo } from "react";
+import { FlatList, Platform, StyleSheet, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
+import Animated from "react-native-reanimated";
 
 import { useFadeScale } from "../model/animation/useFadeScale";
 

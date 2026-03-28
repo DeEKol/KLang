@@ -5,7 +5,8 @@ import type { TextStyle } from "react-native";
 import { Pressable, StyleSheet, Text } from "react-native";
 import type { FlexStyle, ViewStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 // ? Layer Imports
-import { Colors, EPalette, useThemeTokens } from "shared/lib/theme";
+import type { IThemeColors } from "shared/lib/theme";
+import { useThemeTokens } from "shared/lib/theme";
 
 // ? Types
 type TRoadMapButtonUiProps = {
@@ -23,11 +24,11 @@ export const RoadMapButtonUi = (props: TRoadMapButtonUiProps) => {
   } = props;
 
   // ? Hooks
-  const { mode: theme } = useThemeTokens();
+  const { colors } = useThemeTokens();
   const { t } = useTranslation();
 
   // ? Styles
-  const styles = createStyles(theme);
+  const styles = createStyles(colors);
 
   // ? Render
   return (
@@ -48,20 +49,10 @@ type TRoadMapButtonUiStyle = {
 };
 
 // ? Styles
-const createStyles = (theme: TThemeMode) => {
+const createStyles = (colors: IThemeColors) => {
   const styles = StyleSheet.create<TRoadMapButtonUiStyle>({
-    // container: {
-    //   backgroundColor: "red",
-    //   width: 100,
-    //   height: 100,
-    //   borderRadius: 50,
-    //
-    //   display: "flex",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    // },
     uiStyle: {
-      backgroundColor: EPalette.PRIMARY,
+      backgroundColor: colors.primary,
       width: 100,
       height: 100,
       borderRadius: 50,
@@ -70,11 +61,11 @@ const createStyles = (theme: TThemeMode) => {
       justifyContent: "center",
       alignItems: "center",
 
-      color: Colors[theme ?? "light"]?.text,
+      color: colors.text,
       padding: 5,
     },
     buttonPressed: {
-      backgroundColor: EPalette.ACCENT,
+      backgroundColor: colors.accent,
     },
   });
   return styles;

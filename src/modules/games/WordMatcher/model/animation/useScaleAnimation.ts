@@ -1,14 +1,14 @@
-import { useEffect, useRef } from "react";
-import { Animated } from "react-native";
+import { useEffect } from "react";
+import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 export const useScaleAnimation = (active: boolean) => {
-  const anim = useRef(new Animated.Value(active ? 1.1 : 1)).current;
+  const scale = useSharedValue(active ? 1.1 : 1);
+
   useEffect(() => {
-    Animated.spring(anim, {
-      toValue: active ? 1.1 : 1,
-      friction: 3,
-      useNativeDriver: true,
-    }).start();
-  }, [active]);
-  return anim;
+    scale.value = withSpring(active ? 1.1 : 1, { damping: 10 });
+  }, [active, scale]);
+
+  return useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
 };

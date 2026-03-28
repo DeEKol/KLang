@@ -3,14 +3,14 @@ import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import { Canvas, Circle, Group, Skia, SweepGradient, vec } from "@shopify/react-native-skia";
+import { Canvas, Circle, Group, SweepGradient, vec } from "@shopify/react-native-skia";
+import { useThemeTokens } from "entities/theme";
 import { Text } from "shared/ui/paper-kit";
 
 const { width, height } = Dimensions.get("window");
@@ -26,6 +26,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   isLoading = false,
   progress = 0,
 }) => {
+  const { colors } = useThemeTokens();
+  const { t } = useTranslation("splashScreen");
+
   const logoScale = useSharedValue(0);
   const logoOpacity = useSharedValue(0);
   const textOpacity = useSharedValue(0);
@@ -33,9 +36,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   const progressOpacity = useSharedValue(0);
   const rotation = useSharedValue(0);
 
-  const { t } = useTranslation("splashScreen");
-
-  // Анимация появления логотипа
   useEffect(() => {
     logoScale.value = withSequence(
       withTiming(0, { duration: 0 }),
@@ -51,7 +51,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
     logoOpacity.value = withDelay(200, withTiming(1, { duration: 600 }));
 
-    // Анимация текста
     textOpacity.value = withDelay(800, withTiming(1, { duration: 500 }));
     textTranslateY.value = withDelay(
       800,
@@ -61,26 +60,20 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       }),
     );
 
-    // Анимация прогресса (если загрузка)
     if (isLoading) {
       progressOpacity.value = withDelay(1200, withTiming(1, { duration: 300 }));
+      rotation.value = withTiming(360, {
+        duration: 1500,
+        easing: Easing.linear,
+      });
     }
 
-    // Завершение анимации
     const timer = setTimeout(
       () => {
         onAnimationComplete();
       },
       isLoading ? 3000 : 2500,
     );
-
-    // Анимация вращения (только при загрузке)
-    if (isLoading) {
-      rotation.value = withTiming(360, {
-        duration: 1500,
-        easing: Easing.linear,
-      });
-    }
 
     return () => clearTimeout(timer);
   }, []);
@@ -99,7 +92,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     opacity: progressOpacity.value,
   }));
 
-  // Анимированный круговой логотип с Skia
   const AnimatedLogo = () => {
     const center = vec(width / 2, height / 2 - 80);
     const radius = 60;
@@ -109,24 +101,26 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       transform: [{ rotate: `${rotation.value}deg` }],
     }));
 
+    // Hex alpha suffixes: 30% = "4D", 10% = "1A"
+    const ringColor = colors.accent + "4D";
+    const innerFillColor = colors.primary + "1A";
+    const gradientColors = [colors.accent, colors.primary, colors.accent];
+
     return (
       <Animated.View style={[styles.logoContainer, animatedRotation]}>
         <Canvas style={styles.canvas}>
           <Group>
-            {/* Внешнее кольцо */}
             <Circle
               cx={center.x}
               cy={center.y}
               r={radius}
               style="stroke"
               strokeWidth={strokeWidth}
-              color="rgba(255, 107, 107, 0.3)"
+              color={ringColor}
             />
-
-            {/* Вращающийся градиент */}
             <SweepGradient
               c={vec(center.x, center.y)}
-              colors={["#FF6B6B", "#0047AB", "#FF6B6B"]}
+              colors={gradientColors}
             />
             <Circle
               cx={center.x}
@@ -137,18 +131,16 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             />
           </Group>
 
-          {/* Внутренний круг */}
           <Circle
             cx={center.x}
             cy={center.y}
             r={radius - 15}
-            color="rgba(0, 71, 171, 0.1)"
+            color={innerFillColor}
           />
         </Canvas>
 
-        {/* Корейский символ в центре */}
-        <View style={styles.koreanSymbol}>
-          <Text style={styles.koreanText}>{"한"}</Text>
+        <View style={[styles.koreanSymbol, { backgroundColor: colors.surface + "E6" }]}>
+          <Text style={{ ...styles.koreanText, color: colors.primary }}>{"한"}</Text>
         </View>
       </Animated.View>
     );
@@ -159,12 +151,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     width: progressWidth.value,
   }));
 
-  // Компонент прогресс-бара
   const LoadingProgress = () => {
     useEffect(() => {
       if (isLoading) {
-        console.log("progress!!", progress);
-
         progressWidth.value = withTiming(progress * 200, {
           duration: 500,
           easing: Easing.out(Easing.cubic),
@@ -174,8 +163,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
     return (
       <Animated.View style={[styles.progressContainer, progressStyle]}>
-        <View style={styles.progressBackground}>
-          <Animated.View style={[styles.progressFill, progressBarStyle]} />
+        <View style={[styles.progressBackground, { backgroundColor: colors.surfaceVariant }]}>
+          <Animated.View
+            style={[styles.progressFill, progressBarStyle, { backgroundColor: colors.primary }]}
+          />
         </View>
         <Text
           variant="caption"
@@ -187,26 +178,24 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   };
 
   return (
-    <View style={styles.container}>
-      {/* Анимированный фон */}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.background}>
-        <View style={[styles.circle, styles.circle1]} />
-        <View style={[styles.circle, styles.circle2]} />
-        <View style={[styles.circle, styles.circle3]} />
+        <View style={[styles.circle, styles.circle1, { backgroundColor: colors.accent }]} />
+        <View style={[styles.circle, styles.circle2, { backgroundColor: colors.primary }]} />
+        <View
+          style={[styles.circle, styles.circle3, { backgroundColor: colors.primaryContainer }]}
+        />
       </View>
 
-      {/* Основной контент */}
       <View style={styles.content}>
-        {/* Логотип с анимацией */}
         <Animated.View style={logoStyle}>
           <AnimatedLogo />
         </Animated.View>
 
-        {/* Текст приложения */}
         <Animated.View style={[styles.textContainer, textStyle]}>
           <Text
             variant="headline"
-            style={styles.appName}>
+            style={{ ...styles.appName, color: colors.text }}>
             {t("appName")}
           </Text>
           <Text
@@ -216,10 +205,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           </Text>
         </Animated.View>
 
-        {/* Прогресс загрузки */}
         {isLoading && <LoadingProgress />}
 
-        {/* Декоративные элементы */}
         <View style={styles.decorations}>
           <Text style={styles.decorationText}>{"✈️"}</Text>
           <Text style={styles.decorationText}>{"📚"}</Text>
@@ -227,7 +214,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
         </View>
       </View>
 
-      {/* Версия приложения */}
       <Text
         variant="caption"
         style={styles.version}>
@@ -240,7 +226,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
   },
   background: {
     ...StyleSheet.absoluteFillObject,
@@ -253,21 +238,18 @@ const styles = StyleSheet.create({
   circle1: {
     width: 300,
     height: 300,
-    backgroundColor: "#FF6B6B",
     top: -150,
     right: -100,
   },
   circle2: {
     width: 200,
     height: 200,
-    backgroundColor: "#0047AB",
     bottom: -50,
     left: -50,
   },
   circle3: {
     width: 150,
     height: 150,
-    backgroundColor: "#4CAF50",
     top: "40%",
     right: "20%",
   },
@@ -294,7 +276,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
@@ -306,7 +287,6 @@ const styles = StyleSheet.create({
   koreanText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#0047AB",
   },
   textContainer: {
     alignItems: "center",
@@ -317,7 +297,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 8,
-    color: "#1A1A1A",
   },
   appSubtitle: {
     textAlign: "center",
@@ -331,14 +310,12 @@ const styles = StyleSheet.create({
   progressBackground: {
     width: 200,
     height: 4,
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
     borderRadius: 2,
     overflow: "hidden",
     marginBottom: 8,
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#0047AB",
     borderRadius: 2,
   },
   progressText: {

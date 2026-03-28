@@ -1,23 +1,15 @@
-import { useEffect, useMemo, useRef } from "react";
-import { Animated } from "react-native";
+import { useEffect } from "react";
+import { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
 
 export const useFadeScale = (visible: boolean) => {
-  const anim = useRef(new Animated.Value(visible ? 1 : 0)).current;
+  const progress = useSharedValue(visible ? 1 : 0);
 
   useEffect(() => {
-    Animated.spring(anim, {
-      toValue: visible ? 1 : 0,
-      useNativeDriver: true,
-    }).start();
-  }, [visible]);
+    progress.value = withSpring(visible ? 1 : 0);
+  }, [visible, progress]);
 
-  const style = useMemo(
-    () => ({
-      opacity: anim,
-      transform: [{ scale: anim }],
-    }),
-    [anim],
-  );
-
-  return style;
+  return useAnimatedStyle(() => ({
+    opacity: progress.value,
+    transform: [{ scale: progress.value }],
+  }));
 };

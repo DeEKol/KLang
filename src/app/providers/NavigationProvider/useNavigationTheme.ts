@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { adaptNavigationTheme } from "react-native-paper";
 import { DarkTheme as RNDark, DefaultTheme as RNDefault } from "@react-navigation/native";
 import deepmerge from "deepmerge";
-import { mapTokensToMD3, useThemeTokens } from "shared/lib/theme";
+import { useThemeTokens } from "entities/theme";
+import { mapTokensToMD3 } from "shared/lib/theme";
 
 // computed once — inputs are module-level constants
 const adapted = adaptNavigationTheme({

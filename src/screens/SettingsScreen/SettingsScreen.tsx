@@ -5,9 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { getAuthUser } from "entities/auth";
 import type { TThemeMode } from "entities/theme";
-import { getThemeMode, themeActions } from "entities/theme";
+import { getThemeMode, themeActions, useThemeTokens } from "entities/theme";
 import { useAuth } from "features/auth";
-import { useThemeTokens } from "shared/lib/theme";
 import {
   AnimatedView,
   FadeInView,
@@ -60,8 +59,7 @@ export const SettingsScreen: React.FC = () => {
   const handleSettingChange = (key: string, value: unknown) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
     if (key === "theme") {
-      const mode: TThemeMode = value === "system" ? null : (value as TThemeMode);
-      dispatch(themeActions.changeTheme(mode));
+      dispatch(themeActions.changeTheme(value as TThemeMode));
     }
   };
 

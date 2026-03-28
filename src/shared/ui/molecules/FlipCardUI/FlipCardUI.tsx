@@ -8,7 +8,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useThemeTokens } from "shared/lib/theme";
-import { EButtonUITheme } from "shared/ui/atoms";
 
 // ? Slice Imports
 import FlipCardUIStyles from "./FlipCardUI.styles";
@@ -24,7 +23,7 @@ export const FlipCardUI = (props: TFlipCardUIProps) => {
 
   // ? Hooks
   const rotation = useSharedValue(0);
-  const { mode: themeGlobal } = useThemeTokens();
+  const { colors } = useThemeTokens();
   const [flipped, setFlipped] = useState(false);
 
   const frontAnimatedStyle = useAnimatedStyle(() => {
@@ -58,7 +57,7 @@ export const FlipCardUI = (props: TFlipCardUIProps) => {
     rotation.value = withTiming(flipped ? 0 : 180, { duration: 500 });
   };
 
-  const styles = FlipCardUIStyles(EButtonUITheme.DEFAULT, themeGlobal);
+  const styles = FlipCardUIStyles(colors);
 
   // ? Render
   return (

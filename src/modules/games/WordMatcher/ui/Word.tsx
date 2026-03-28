@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { Animated, StyleSheet, Text, TouchableOpacity } from "react-native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import Animated from "react-native-reanimated";
 import { SpeakButton } from "shared/tts";
 
 import { useOpacityAnimation } from "../model/animation/useOpacityAnimation";
@@ -26,36 +27,19 @@ const WordButton: React.FC<WordButtonProps> = ({
   isError,
   celebrate,
 }) => {
-  const scaleAnim = useScaleAnimation(isSelected);
-  const errorOpacity = useOpacityAnimation(isError);
-  const successOpacity = useOpacityAnimation(celebrate && isSelected);
-
-  const errorStyle = useMemo(
-    () => ({
-      borderRadius: 12,
-      backgroundColor: "#FF4444A4",
-      opacity: errorOpacity,
-    }),
-    [errorOpacity],
-  );
-  const successStyle = useMemo(
-    () => ({
-      borderRadius: 12,
-      backgroundColor: "#33E76FA4",
-      opacity: successOpacity,
-    }),
-    [successOpacity],
-  );
+  const scaleStyle = useScaleAnimation(isSelected);
+  const errorAnimStyle = useOpacityAnimation(isError);
+  const successAnimStyle = useOpacityAnimation(celebrate && isSelected);
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+    <Animated.View style={scaleStyle}>
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={onPress}
         style={[styles.button, isSelected && !isError && !celebrate && styles.activeButton]}>
         {/* сначала красный, затем зелёный верхним слоем */}
-        <Animated.View style={[StyleSheet.absoluteFill, errorStyle]} />
-        <Animated.View style={[StyleSheet.absoluteFill, successStyle]} />
+        <Animated.View style={[StyleSheet.absoluteFill, styles.errorOverlay, errorAnimStyle]} />
+        <Animated.View style={[StyleSheet.absoluteFill, styles.successOverlay, successAnimStyle]} />
 
         <Text style={[styles.buttonText, isSelected && styles.activeButtonText]}>{word}</Text>
         <SpeakButton
@@ -94,6 +78,14 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0,0,0,0.2)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
+  },
+  errorOverlay: {
+    borderRadius: 12,
+    backgroundColor: "#FF4444A4",
+  },
+  successOverlay: {
+    borderRadius: 12,
+    backgroundColor: "#33E76FA4",
   },
 });
 
