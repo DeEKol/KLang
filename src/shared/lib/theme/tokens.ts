@@ -34,6 +34,7 @@ export function createTheme(mode: TThemeMode): IThemeTokens {
       placeholder: c.placeholder,
       backdrop: c.backdrop,
       notification: c.notification,
+      shadow: c.shadow,
     },
     typography: baseTypography,
     spacing: baseSpacing,

@@ -21,6 +21,7 @@ interface ColorsType {
   placeholder: string;
   backdrop: string;
   notification: string;
+  shadow: string;
 }
 
 export type TColors = {
@@ -43,6 +44,7 @@ export const Colors: TColors = {
     placeholder: EPalette.PLACEHOLDER,
     backdrop: EPalette.BACKDROP,
     notification: EPalette.NOTIFICATION,
+    shadow: "#000",
   },
   dark: {
     text: EDarkPalette.TEXT,
@@ -59,6 +61,7 @@ export const Colors: TColors = {
     placeholder: EDarkPalette.PLACEHOLDER,
     backdrop: EDarkPalette.BACKDROP,
     notification: EDarkPalette.NOTIFICATION,
+    shadow: "#000",
   },
   // "system" is a light-palette fallback — never accessed at runtime (always resolved to "light" | "dark").
   // Kept for TypeScript compatibility until THEME-M2 refactors all style functions to accept IThemeColors.
@@ -77,5 +80,6 @@ export const Colors: TColors = {
     placeholder: EPalette.PLACEHOLDER,
     backdrop: EPalette.BACKDROP,
     notification: EPalette.NOTIFICATION,
+    shadow: "#000",
   },
 };

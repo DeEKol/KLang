@@ -21,6 +21,7 @@ export interface IThemeColors {
   placeholder: string;
   backdrop: string;
   notification: string;
+  shadow: string;
 }
 
 export interface IThemeTypography {
