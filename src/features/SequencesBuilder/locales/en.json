@@ -1,0 +1,9 @@
+{
+  "title": "Korean practice — fill in the missing words",
+  "score": "Correct: {{correct}}/{{total}}",
+  "reset": "Reset",
+  "optionsTitle": "Options",
+  "allOptionsUsed": "All options used",
+  "victoryTitle": "🎉 Excellent! 🎉",
+  "victorySub": "You filled all the blanks correctly"
+}

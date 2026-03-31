@@ -1,109 +1,120 @@
-import React, { forwardRef, useEffect } from "react";
-import { StyleSheet, Text } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, type View } from "react-native";
 import Animated, {
-  interpolateColor,
+  Easing,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-  withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { useThemeTokens } from "entities/theme";
 
-type BlankProps = {
-  id: number;
-  filled?: { word: string; correct: boolean };
-  innerRef?: (r: any) => void;
+export type TBlankHint = "success" | "fail" | null;
+
+type TBlankProps = {
+  filled?: { word: string; correct: boolean } | undefined;
+  innerRef?: (r: View | null) => void;
   onLayout?: () => void;
+  hint?: TBlankHint;
 };
 
-export const Blank = ({ id, filled, innerRef, onLayout }: BlankProps) => {
-  // progress for color highlight (0 -> 1)
-  const colorProgress = useSharedValue(0);
-  // 0 = none, 1 = correct, 2 = incorrect
-  const colorMode = useSharedValue(0);
-  // word appearance progress
-  const wordProgress = useSharedValue(0);
+export const Blank: React.FC<TBlankProps> = ({ filled, innerRef, onLayout, hint }) => {
+  const { colors } = useThemeTokens();
+  const bgProgress = useSharedValue(0);
+  const iconProgress = useSharedValue(0);
+  const iconScale = useSharedValue(0.2);
 
   useEffect(() => {
-    if (filled) {
-      // set color mode (1 or 2)
-      colorMode.value = filled.correct ? 1 : 2;
-      // animate highlight in and then fade out after a bit
-      colorProgress.value = withSequence(
-        withTiming(1, { duration: 280 }),
-        withDelay(700, withTiming(0, { duration: 400 })),
+    if (hint === "success") {
+      bgProgress.value = withTiming(1, { duration: 160 });
+      iconProgress.value = withDelay(
+        80,
+        withTiming(1, { duration: 240, easing: Easing.out(Easing.ease) }),
       );
-      // show word
-      wordProgress.value = withSequence(withTiming(1, { duration: 300 }));
-    } else {
-      // hide word & reset
-      wordProgress.value = withTiming(0, { duration: 200 });
-      colorProgress.value = withTiming(0, { duration: 200 });
-      colorMode.value = 0;
+      iconScale.value = withTiming(1, { duration: 300, easing: Easing.out(Easing.back(2)) });
+      const t = setTimeout(() => {
+        bgProgress.value = withTiming(0, { duration: 340 });
+        iconProgress.value = withTiming(0, { duration: 200 });
+        iconScale.value = withTiming(0.2, { duration: 200 });
+      }, 900);
+      return () => clearTimeout(t);
+    } else if (hint === "fail") {
+      bgProgress.value = withTiming(1, { duration: 120 });
+      iconProgress.value = withTiming(1, { duration: 160 });
+      iconScale.value = withTiming(1, { duration: 220 });
+      const t = setTimeout(() => {
+        bgProgress.value = withTiming(0, { duration: 300 });
+        iconProgress.value = withTiming(0, { duration: 200 });
+        iconScale.value = withTiming(0.2, { duration: 200 });
+      }, 700);
+      return () => clearTimeout(t);
     }
-  }, [filled, colorMode, colorProgress, wordProgress]);
+    bgProgress.value = withTiming(0, { duration: 200 });
+    iconProgress.value = withTiming(0, { duration: 200 });
+    iconScale.value = withTiming(0.2, { duration: 200 });
+  }, [hint, bgProgress, iconProgress, iconScale]);
 
-  const animatedOuter = useAnimatedStyle(() => {
-    const bg =
-      colorMode.value === 1
-        ? interpolateColor(colorProgress.value, [0, 1], ["transparent", "#C8E6C9"])
-        : colorMode.value === 2
-          ? interpolateColor(colorProgress.value, [0, 1], ["transparent", "#FFCDD2"])
-          : "transparent";
-    return {
-      backgroundColor: bg,
-      borderRadius: 6,
-      paddingHorizontal: 8,
-      paddingVertical: 6,
-      minWidth: 60,
-      alignItems: "center",
-      justifyContent: "center",
-    };
+  const animatedBg = useAnimatedStyle(() => {
+    if (filled?.correct) {
+      const alpha = bgProgress.value;
+      return { backgroundColor: `rgba(46,125,50, ${0.12 * alpha})` };
+    }
+    if (hint === "fail") {
+      const alpha = bgProgress.value;
+      return { backgroundColor: `rgba(211,47,47, ${0.12 * alpha})` };
+    }
+    return { backgroundColor: "transparent" };
   });
 
-  const animatedWord = useAnimatedStyle(() => ({
-    opacity: wordProgress.value,
-    transform: [{ translateY: (1 - wordProgress.value) * -8 }],
+  const iconStyle = useAnimatedStyle(() => ({
+    opacity: iconProgress.value,
+    transform: [{ scale: iconScale.value }],
+    position: "absolute",
+    right: -8,
+    top: -8,
   }));
 
-  // forwarded ref wrapper so parent can measure
-  const Inner = forwardRef<any, any>((props, ref) => (
-    <Animated.View
-      ref={(r) => {
-        // pass both animated ref and raw ref up
-        if (innerRef) innerRef(r);
-        // also attach forwarded ref
-        if (typeof ref === "function") ref(r);
-        else if (ref && typeof ref === "object") (ref as any).current = r;
-      }}
-      onLayout={onLayout}
-      style={[styles.blankContainer, props.style]}>
-      {props.children}
-    </Animated.View>
-  ));
-
-  Inner.displayName = "InnerComponent";
-
   return (
-    <Inner style={animatedOuter}>
-      <Animated.View style={animatedWord}>
-        <Text style={styles.blankText}>{filled?.word || "______"}</Text>
+    <Animated.View
+      ref={(r) => innerRef && innerRef(r as unknown as View | null)}
+      onLayout={onLayout}
+      style={[styles.blankContainer, { borderColor: colors.border }, animatedBg]}>
+      <Text
+        style={[
+          styles.blankText,
+          filled ? [styles.blankWord, { color: colors.text }] : { color: colors.placeholder },
+        ]}>
+        {filled?.word ?? "____"}
+      </Text>
+      <Animated.View
+        style={iconStyle}
+        pointerEvents="none">
+        <Text style={styles.iconText}>
+          {filled?.correct || hint === "success" ? "✅" : hint === "fail" ? "❌" : ""}
+        </Text>
       </Animated.View>
-    </Inner>
+    </Animated.View>
   );
 };
 
-/* ---------- styles ---------- */
 const styles = StyleSheet.create({
   blankContainer: {
-    borderRadius: 4,
-    marginHorizontal: 2,
-    minWidth: 60,
+    minWidth: 70,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    marginHorizontal: 4,
+    borderRadius: 8,
+    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
   },
   blankText: {
-    textAlign: "center",
+    fontSize: 17,
+  },
+  blankWord: {
+    fontWeight: "700",
+  },
+  iconText: {
     fontSize: 18,
   },
 });
