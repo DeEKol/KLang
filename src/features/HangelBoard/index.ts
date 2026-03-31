@@ -1,1 +1,0 @@
-export { HangelBoard } from "./HangelBoard";

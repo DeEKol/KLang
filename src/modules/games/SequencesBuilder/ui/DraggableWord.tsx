@@ -10,7 +10,7 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { useThemeTokens } from "entities/theme";
 
-import { type TBlankPos } from "../types/sequencesBuilderSchema";
+import { type TBlankPos } from "../entities/types";
 
 import createStyles from "./DraggableWord.styles";
 
@@ -75,6 +75,7 @@ export const DraggableWord: React.FC<TDraggableWordProps> = ({
         for (let i = 0; i < blanks.length; i++) {
           const id = blanks[i].id;
           const p = blankPositions[id];
+
           if (!p) continue;
           if (absX >= p.x && absX <= p.x + p.width && absY >= p.y && absY <= p.y + p.height) {
             targetId = id;

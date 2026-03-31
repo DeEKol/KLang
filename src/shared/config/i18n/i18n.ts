@@ -29,7 +29,7 @@ void i18n
         roadmapScreen: require("../../../../public/locales/en/roadmapScreen.json"),
         profileScreen: require("../../../../public/locales/en/profileScreen.json"),
         authScreen: require("../../../../public/locales/en/authScreen.json"),
-        sequencesBuilder: require("../../../features/SequencesBuilder/locales/en.json"),
+        sequencesBuilder: require("../../../modules/games/SequencesBuilder/locales/en.json"),
       },
       ru: {
         translation: require("../../../../public/locales/ru/translation.json"),
@@ -45,7 +45,7 @@ void i18n
         roadmapScreen: require("../../../../public/locales/ru/roadmapScreen.json"),
         profileScreen: require("../../../../public/locales/ru/profileScreen.json"),
         authScreen: require("../../../../public/locales/ru/authScreen.json"),
-        sequencesBuilder: require("../../../features/SequencesBuilder/locales/ru.json"),
+        sequencesBuilder: require("../../../modules/games/SequencesBuilder/locales/ru.json"),
       },
     },
 

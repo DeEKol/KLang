@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-import { type TBlankPos } from "../types/sequencesBuilderSchema";
+import { type TBlankPos } from "../entities/types";
 
 import { DraggableWord } from "./DraggableWord";
 
