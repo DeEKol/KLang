@@ -1,8 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useThemeTokens } from "entities/theme";
 
+import { useGameTimer } from "../../_shared/hooks/useGameTimer";
+import type { IGameResult } from "../../_shared/types";
 import { useSequencesBuilder } from "../model/useSequencesBuilder";
 
 import { Blank } from "./Blank";
@@ -13,7 +15,8 @@ import { VictoryOverlay } from "./VictoryOverlay";
 export const SequencesBuilderUI: React.FC<{
   playSuccessSound?: () => void;
   playFailSound?: () => void;
-}> = ({ playSuccessSound, playFailSound }) => {
+  onComplete?: (result: IGameResult) => void;
+}> = ({ playSuccessSound, playFailSound, onComplete }) => {
   const { colors } = useThemeTokens();
   const { t } = useTranslation("sequencesBuilder");
   const styles = useMemo(() => createStyles(colors), [colors]);
@@ -28,11 +31,21 @@ export const SequencesBuilderUI: React.FC<{
     victoryVisible,
     setVictoryVisible,
     correctCount,
+    mistakeCount,
     getSetBlankRef,
     measureBlank,
     handleDrop,
     resetAll,
   } = useSequencesBuilder({ playSuccessSound, playFailSound });
+
+  const { elapsedMs, pause } = useGameTimer();
+
+  useEffect(() => {
+    if (victoryVisible) {
+      pause();
+      onComplete?.({ score: 1, timeMs: elapsedMs, mistakes: mistakeCount });
+    }
+  }, [victoryVisible]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

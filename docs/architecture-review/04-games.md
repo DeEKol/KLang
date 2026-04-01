@@ -5,59 +5,62 @@
 ```
 src/
 ├── modules/games/                    ← вне FSD (осознанное решение)
-│   └── WordMatcher/
+│   ├── _shared/                      ← общие абстракции ✅
+│   │   ├── types.ts                  IGameProps<TConfig>, IGameResult
+│   │   └── hooks/
+│   │       └── useGameTimer.ts       таймер (elapsedMs, pause, resume, reset)
+│   │
+│   ├── WordMatcher/
+│   │   ├── index.ts
+│   │   ├── entities/types.ts
+│   │   ├── model/
+│   │   │   ├── logic/useWordMatcher.ts    логика + mistakeCount
+│   │   │   └── animation/
+│   │   └── ui/
+│   │       └── GameLayout.tsx        onComplete?: (result: IGameResult) => void
+│   │
+│   ├── HangelBoard/                  ← перенесено из features/ ✅
+│   │   ├── index.ts
+│   │   ├── model/useHangelBoard.ts   логика (strokes, undo/redo)
+│   │   └── ui/HangelBoard.tsx        onExit?: () => void
+│   │
+│   └── SequencesBuilder/             ← перенесено из features/ ✅
 │       ├── index.ts
-│       ├── entities/types.ts         IWordMatcherSchema, TWordsPair
-│       ├── model/
-│       │   ├── logic/useWordMatcher.ts    вся игровая логика
-│       │   └── animation/
-│       │       ├── useOpacityAnimation.ts
-│       │       ├── useColumnAnimations.ts
-│       │       ├── useFadeScale.ts
-│       │       └── useScaleAnimation.ts
+│       ├── entities/types.ts
+│       ├── locales/en.json, ru.json
+│       ├── model/useSequencesBuilder.ts  логика + mistakeCount
 │       └── ui/
-│           ├── GameLayout.tsx        точка входа
-│           ├── Word.tsx
-│           ├── Column.tsx
-│           ├── Dialog.tsx
-│           └── Winning.tsx
-│
-├── features/                         ← должны быть перенесены в modules/games/
-│   ├── HangelBoard/
-│   │   └── HangelBoard.tsx           Skia Canvas — рисование ханыля
-│   └── SequencesBuilder/
-│       ├── SequencesBuilderUI.tsx    drag-and-drop сборка предложений
-│       ├── SequencesBuilderUI_old.tsx ← мёртвый код
-│       └── ui/
-│           ├── SentenceParts.tsx
+│           ├── SequencesBuilderUI.tsx    onComplete?: (result: IGameResult) => void
 │           ├── Blank.tsx
-│           └── DraggableWordUI.tsx
+│           ├── DraggableWord.tsx
+│           ├── OptionsRow.tsx
+│           └── VictoryOverlay.tsx
 │
 └── screens/PracticeScreen/
     ├── PracticeScreen.tsx            список игр (FlatList с навигацией)
     ├── models/practicesModel.ts      конфигурация навигации на игры
     └── subscreens/
-        ├── WordMatcherScreen.tsx     обёртка + хардкод данных
-        ├── HangelScreen.tsx          обёртка
-        └── SequencesBuilderScreen.tsx обёртка
+        ├── WordMatcherScreen.tsx     передаёт onComplete (TODO: Redux)
+        ├── HangelScreen.tsx          передаёт onExit → navigation.goBack()
+        └── SequencesBuilderScreen.tsx передаёт onComplete (TODO: Redux)
 ```
 
-**Интерфейсы игр (похожи, но не унифицированы):**
+**Общий контракт игр (`_shared/types.ts`):**
 ```ts
-// WordMatcher
-interface IWordMatcherSchema {
-  type: string;
-  words: TWordsPair[];
-  setValue: (value: string) => void;
+interface IGameResult {
+  score: number;    // 0..1 (доля правильных ответов)
+  timeMs: number;   // время прохождения в мс
+  mistakes: number;
 }
 
-// SequencesBuilder
-interface ISequencesBuilderSchema {
-  type: string;
-  words: string[];
-  setValue: (value: string) => void;
+interface IGameProps<TConfig = unknown> {
+  config: TConfig;
+  onComplete: (result: IGameResult) => void;
+  onExit?: () => void;
 }
 ```
+
+> **Примечание**: `IGameProps` определён в `_shared/types.ts`, но игры ещё не используют его как базовый тип — `onComplete`/`onExit` добавлены напрямую в пропсы каждой игры. Полное выравнивание под `IGameProps<TConfig>` — следующий шаг (GAME-M4 полная).
 
 **Технологии:**
 - **WordMatcher**: Animated API, LinearGradient, Lottie, TTS
@@ -68,20 +71,9 @@ interface ISequencesBuilderSchema {
 
 ## Problems
 
-### 🟡 GAME-01 — HangelBoard и SequencesBuilder находятся в `features/`
+### ✅ GAME-01 — HangelBoard и SequencesBuilder находятся в `features/`
 
-Оба компонента — это полноценные мини-игры со своей логикой, анимациями и sub-компонентами. Они не являются "feature slices" в понимании FSD. Решение (уже принятое): перенести в `modules/games/`.
-
-После переноса структура будет:
-```
-modules/games/
-├── WordMatcher/
-├── HangelBoard/
-└── SequencesBuilder/
-    ├── entities/
-    ├── model/
-    └── ui/
-```
+**Решено**: оба перенесены в `modules/games/`, логика вынесена в хуки (`useHangelBoard`, `useSequencesBuilder`). Старые `features/HangelBoard/` и `features/SequencesBuilder/` удалены. Consumers обновлены.
 
 ---
 
@@ -128,25 +120,9 @@ backgroundColor: '#FF5252'    // красный ошибка
 
 ---
 
-### 🟡 GAME-04 — Нет общего интерфейса для всех игр
+### ✅ GAME-04 — Нет общего интерфейса для всех игр
 
-Каждая игра определяет свои props независимо. Базовый контракт игры (ввод данных → callback на результат) нигде не зафиксирован. Это мешает `PracticeScreen` работать с играми единообразно.
-
-```ts
-// Нет единого интерфейса — каждая игра "сама по себе"
-// Предлагаемый общий контракт:
-interface IGameProps<TConfig = unknown> {
-  config: TConfig;                         // данные для игры
-  onComplete: (result: IGameResult) => void; // результат
-  onExit?: () => void;                     // выход из игры
-}
-
-interface IGameResult {
-  score: number;        // 0..1 или кол-во очков
-  timeMs: number;       // время прохождения
-  mistakes: number;
-}
-```
+**Решено**: создан `modules/games/_shared/types.ts` (`IGameResult`, `IGameProps`) и `_shared/hooks/useGameTimer.ts`. Все три игры принимают `onComplete?: (result: IGameResult) => void`; `HangelBoard` принимает `onExit?: () => void`. Screen-обёртки передают колбэки (сейчас `console.log` + TODO для Redux — GAME-S4).
 
 ---
 
@@ -286,16 +262,16 @@ Redux / API
 
 | ID | Task |
 |----|------|
-| GAME-M1 | Перенести `HangelBoard` из `features/` в `modules/games/HangelBoard/`; вынести логику (strokes, undo) в `useHangelBoard.ts` |
-| GAME-M2 | Перенести `SequencesBuilder` из `features/` в `modules/games/SequencesBuilder/`; вынести логику в `useSequencesBuilder.ts` |
+| ~~GAME-M1~~ | ✅ Перенести `HangelBoard` из `features/` в `modules/games/HangelBoard/`; вынести логику в `useHangelBoard.ts` |
+| ~~GAME-M2~~ | ✅ Перенести `SequencesBuilder` из `features/` в `modules/games/SequencesBuilder/`; вынести логику в `useSequencesBuilder.ts` |
 | GAME-M3 | Применить тему (token colors) во всех играх: убрать хардкод цветов, передавать `colors: IThemeColors` через props или `useThemeTokens` |
-| GAME-M4 | Создать общий интерфейс `IGameProps` / `IGameResult` в `modules/games/_shared/types.ts` |
+| ~~GAME-M4~~ | ✅ Создать `_shared/types.ts` (`IGameProps`, `IGameResult`) и `_shared/hooks/useGameTimer.ts`; подключить `onComplete`/`onExit` во все игры |
 
 ### 🟢 Small
 
 | ID | Task |
 |----|------|
-| GAME-S1 | Удалить `SequencesBuilderUI_old.tsx` |
+| ~~GAME-S1~~ | ✅ Удалить `SequencesBuilderUI_old.tsx` |
 | GAME-S2 | Добавить i18n ключи в `practicesModel.ts` (убрать хардкод строк) |
 | GAME-S3 | Доделать или удалить `Winning.tsx` — сейчас пустой компонент |
-| GAME-S4 | Подготовить `WordMatcherScreen` и `SequencesBuilderScreen` к приёму данных из Redux (заглушки с TODO вместо хардкода) |
+| GAME-S4 | Подключить результаты игр к Redux / navigate to results (сейчас `console.log` в Screen-обёртках) |

@@ -1,10 +1,13 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React, { useCallback } from "react";
 
+import type { IGameResult } from "../../../modules/games/_shared/types";
 import { GameLayout } from "../../../modules/games/WordMatcher/ui/GameLayout";
 
 export const WordMatcherScreen = () => {
-  const { t } = useTranslation("practiceScreen");
+  const handleComplete = useCallback((result: IGameResult) => {
+    // TODO(GAME-S4): dispatch result to Redux / navigate to results screen
+    console.log("[WordMatcher] complete", result);
+  }, []);
 
   return (
     <GameLayout
@@ -21,6 +24,7 @@ export const WordMatcherScreen = () => {
         // Shark: "상어",
         // Wolf: "늑대",
       }}
+      onComplete={handleComplete}
     />
   );
 };

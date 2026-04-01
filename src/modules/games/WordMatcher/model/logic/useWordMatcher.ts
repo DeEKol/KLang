@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 
 import type { IWordMap } from "../../ui/GameLayout";
 
@@ -12,6 +12,7 @@ export interface UseWordMatcherReturn {
   reset: () => void;
   isComplete: boolean;
   isLocked: boolean;
+  mistakeCount: number;
 }
 
 export const useWordMatcher = (wordsMap: IWordMap): UseWordMatcherReturn => {
@@ -26,6 +27,7 @@ export const useWordMatcher = (wordsMap: IWordMap): UseWordMatcherReturn => {
   });
   const [errorPair, setErrorPair] = React.useState<[string, string] | null>(null);
   const [celebrate, setCelebrate] = React.useState<boolean>(false);
+  const [mistakeCount, setMistakeCount] = React.useState(0);
 
   // Matching logic
   useEffect(() => {
@@ -43,6 +45,7 @@ export const useWordMatcher = (wordsMap: IWordMap): UseWordMatcherReturn => {
       return () => clearTimeout(t);
     }
 
+    setMistakeCount((n) => n + 1);
     setErrorPair([left, right]);
     const t = setTimeout(() => {
       setErrorPair(null);
@@ -58,6 +61,7 @@ export const useWordMatcher = (wordsMap: IWordMap): UseWordMatcherReturn => {
     setSelectedPair({ left: "", right: "" });
     setErrorPair(null);
     setCelebrate(false);
+    setMistakeCount(0);
   }, [nativeWords, learningWords]);
 
   // Flags
@@ -74,5 +78,6 @@ export const useWordMatcher = (wordsMap: IWordMap): UseWordMatcherReturn => {
     reset,
     isComplete,
     isLocked,
+    mistakeCount,
   };
 };

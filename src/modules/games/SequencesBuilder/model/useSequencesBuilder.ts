@@ -28,6 +28,7 @@ export function useSequencesBuilder({ playSuccessSound, playFailSound }: TProps 
   const [blankPositions, setBlankPositions] = useState<{ [key: number]: TBlankPos }>({});
   const [hints, setHints] = useState<{ [key: number]: "success" | "fail" | null }>({});
   const [victoryVisible, setVictoryVisible] = useState(false);
+  const [mistakeCount, setMistakeCount] = useState(0);
 
   const blankRefs = useRef<{ [key: number]: View }>({});
   const blankSetters = useRef(new Map<number, (r: View | null) => void>());
@@ -138,6 +139,7 @@ export function useSequencesBuilder({ playSuccessSound, playFailSound }: TProps 
         setOptions((prev) => prev.filter((p) => p !== word));
         showHint(blankId, "success");
       } else {
+        setMistakeCount((n) => n + 1);
         showHint(blankId, "fail");
       }
     },
@@ -160,6 +162,7 @@ export function useSequencesBuilder({ playSuccessSound, playFailSound }: TProps 
     setOptions(mockData.options.slice());
     setHints({});
     setVictoryVisible(false);
+    setMistakeCount(0);
     setTimeout(() => measureAll(), 80);
   }, [measureAll]);
 
@@ -173,6 +176,7 @@ export function useSequencesBuilder({ playSuccessSound, playFailSound }: TProps 
     victoryVisible,
     setVictoryVisible,
     correctCount,
+    mistakeCount,
     getSetBlankRef,
     measureBlank,
     handleDrop,

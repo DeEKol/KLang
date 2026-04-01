@@ -85,7 +85,7 @@ const GridOverlay = ({
   );
 };
 
-export const HangelBoard = () => {
+export const HangelBoard = ({ onExit }: { onExit?: () => void }) => {
   const { colors } = useThemeTokens();
   const {
     canvasRef,
@@ -118,6 +118,12 @@ export const HangelBoard = () => {
           onPress={handleReset}
           disabled={!strokes.length && !undone.length}
         />
+        {onExit && (
+          <Button
+            title="Exit"
+            onPress={onExit}
+          />
+        )}
       </View>
       <Text style={[styles.label, { color: colors.text }]}>{`Stroke Width: ${strokeWidth}`}</Text>
       <Slider

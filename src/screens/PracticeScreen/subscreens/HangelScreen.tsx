@@ -1,10 +1,11 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React, { useCallback } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import { HangelBoard } from "../../../modules/games/HangelBoard";
 
 export const HangelScreen = () => {
-  const { t } = useTranslation("practiceScreen");
+  const navigation = useNavigation();
+  const handleExit = useCallback(() => navigation.goBack(), [navigation]);
 
-  return <HangelBoard />;
+  return <HangelBoard onExit={handleExit} />;
 };

@@ -1,9 +1,11 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Animated from "react-native-reanimated";
 import { LottieImage } from "shared/lottie";
 
+import { useGameTimer } from "../../_shared/hooks/useGameTimer";
+import type { IGameResult } from "../../_shared/types";
 import { useColumnsAnimation } from "../model/animation/useColumnAnimations";
 import { useWordMatcher } from "../model/logic/useWordMatcher";
 import { Column, Dialog, Winning } from "../ui";
@@ -17,12 +19,13 @@ export interface IWordMap {
 
 export interface IGameLayoutProps {
   wordsMap: IWordMap;
+  onComplete?: (result: IGameResult) => void;
 }
 
 // -----------------------------------
 // Component
 // -----------------------------------
-export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap }) => {
+export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete }) => {
   const {
     filteredNative,
     filteredLearning,
@@ -33,9 +36,18 @@ export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap }) => {
     reset,
     isComplete,
     isLocked,
+    mistakeCount,
   } = useWordMatcher(wordsMap);
 
+  const { elapsedMs, pause } = useGameTimer();
   const { leftStyle, rightStyle, resetAnimation } = useColumnsAnimation(isComplete);
+
+  useEffect(() => {
+    if (isComplete) {
+      pause();
+      onComplete?.({ score: 1, timeMs: elapsedMs, mistakes: mistakeCount });
+    }
+  }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const select = useCallback(
     (side: "left" | "right", value: string) => {

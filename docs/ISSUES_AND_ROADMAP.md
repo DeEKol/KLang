@@ -284,17 +284,9 @@ const styles = useMemo(() => createStyles(colors), [colors]);
 
 Нет связи с конкретным символом/уроком. Работает как свободный холст.
 
-### GAME-05 — Нет единого интерфейса для игры
+### GAME-05 — Нет единого интерфейса для игры ✅ Решено
 
-У каждой игры своя структура данных. Для масштабирования нужен общий контракт:
-
-```ts
-interface IGameProps<TData> {
-  data: TData;
-  onComplete: (score: number) => void;
-  onNext?: () => void;
-}
-```
+Создан `modules/games/_shared/types.ts` с `IGameResult` и `IGameProps<TConfig>`, хук `useGameTimer.ts`. Все три игры подключены: `WordMatcher` и `SequencesBuilder` принимают `onComplete`, `HangelBoard` — `onExit`. Screen-обёртки передают колбэки.
 
 ---
 
@@ -341,7 +333,8 @@ interface IGameProps<TData> {
 
 - Добавить пропсы в `SequencesBuilder` для передачи данных упражнения (GAME-02)
 - ~~Подключить тему в `SequencesBuilderUI` (STYLE-01)~~ ✅
-- Описать общий `IGameProps` интерфейс (GAME-05)
+- ~~Описать общий `IGameProps` интерфейс (GAME-05)~~ ✅
+- Подключить результаты игр к Redux / экрану результатов (GAME-S4)
 - Интегрировать HangelBoard с конкретными символами хангыль (GAME-04)
 
 ### Навигация
