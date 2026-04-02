@@ -22,6 +22,7 @@ export const ROUTE_PATHS = {
   [ENavigation.HANGEL]: "hangel",
   [ENavigation.WORD_MATCHER]: "word-matcher",
   [ENavigation.SEQUENCES_BUILDER]: "sequences",
+  [ENavigation.GAME_RESULT]: "game-result",
   // Settings stack
   [ENavigation.SETTINGS]: "settings",
   // Test stack

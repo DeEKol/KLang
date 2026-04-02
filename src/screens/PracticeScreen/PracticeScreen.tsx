@@ -20,7 +20,7 @@ export const PracticeScreen = (props: TPracticeStackScreenProps<ENavigation.PRAC
     <Button
       key={item.key}
       onPress={() => navigation.navigate(item.navigate)}>
-      {t(item.title)}
+      {t(item.titleKey)}
     </Button>
   );
 

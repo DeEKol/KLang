@@ -21,6 +21,7 @@ export enum ENavigation {
   HANGEL = "Hangel",
   WORD_MATCHER = "WordMatcher",
   SEQUENCES_BUILDER = "SequencesBuilder",
+  GAME_RESULT = "GameResult",
   // * Study
   STUDY = "Study",
   LEVEL = "Level",
@@ -53,6 +54,7 @@ export type TPracticeStackParamList = {
   [ENavigation.HANGEL]: undefined;
   [ENavigation.WORD_MATCHER]: undefined;
   [ENavigation.SEQUENCES_BUILDER]: undefined;
+  [ENavigation.GAME_RESULT]: undefined;
 };
 
 export type TStudyStackParamList = {

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "entities/auth";
 import { counterReducer } from "entities/Counter";
+import { gameResultReducer } from "entities/gameResult";
 import { postsReducer } from "entities/PostsTestApi";
 import { themeReducer } from "entities/theme";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist";
@@ -20,6 +21,7 @@ const rootReducers = combineReducers({
   theme: themePersistedReducer,
   posts: postsReducer,
   auth: authReducer,
+  gameResult: gameResultReducer,
 });
 
 export function createReduxStore(initialState?: IStateSchema) {

@@ -129,25 +129,15 @@ interface IGameProps<TConfig = unknown> {
 
 ---
 
-### 🟢 GAME-07 — `Winning.tsx` — закомментированный код
+### ✅ GAME-07 — `Winning.tsx` — закомментированный код
 
-```tsx
-// Winning.tsx
-// <AnimatedIcon ... />  ← всё закомментировано
-```
-
-Только текст "All Matched! 🎉" без анимации. Либо доделать, либо убрать компонент и показывать состояние в `Dialog.tsx`.
+**Решено**: `CelebrationIcon` (SVG-кубок) был определён но не использовался. Добавлен в JSX компонента `Winning` над текстом "All Matched! 🎉".
 
 ---
 
-### 🟢 GAME-08 — `practicesModel.ts` — title без i18n
+### ✅ GAME-08 — `practicesModel.ts` — title без i18n
 
-```ts
-// practicesModel.ts
-{ key: "hangel", title: "Hangel Board", ... }
-```
-
-Строки не обёрнуты в `t('...')`, хотя проект использует i18n.
+**Решено**: поле `title` переименовано в `titleKey`; значения заменены на i18n-ключи (`hangelBoard`, `wordMatcher`, `sequencesBuilder`). Переводы добавлены в `public/locales/en/practiceScreen.json` и `ru/practiceScreen.json`. `PracticeScreen.tsx` вызывает `t(item.titleKey)`.
 
 ---
 
@@ -264,5 +254,5 @@ Redux / API
 |----|------|
 | ~~GAME-S1~~ | ✅ Удалить `SequencesBuilderUI_old.tsx` |
 | GAME-S2 | Добавить i18n ключи в `practicesModel.ts` (убрать хардкод строк) |
-| GAME-S3 | Доделать или удалить `Winning.tsx` — сейчас пустой компонент |
-| GAME-S4 | Подключить результаты игр к Redux / navigate to results (сейчас `console.log` в Screen-обёртках) |
+| ~~GAME-S3~~ | ✅ Доделать или удалить `Winning.tsx` — `CelebrationIcon` подключён в JSX |
+| ~~GAME-S4~~ | ✅ Подключить результаты игр к Redux / navigate to results — создан `entities/gameResult` (slice + selector), экран `GameResultScreen`, роут `ENavigation.GAME_RESULT` |

@@ -30,7 +30,7 @@ export default function createStyles(colors: IThemeColors) {
       fontWeight: "700",
       textAlign: "center",
       color: colors.text,
-      textShadowColor: "rgba(0,0,0,0.1)",
+      textShadowColor: colors.shadow,
       textShadowOffset: { width: 1, height: 1 },
       textShadowRadius: 2,
       marginTop: 16,

@@ -2,7 +2,7 @@ import { ENavigation, type TPracticeStackParamList } from "shared/config/navigat
 // ? Types
 export type TPracticesModel = {
   key: string;
-  title: string;
+  titleKey: string;
   navigate: keyof TPracticeStackParamList;
 };
 
@@ -10,17 +10,17 @@ export type TPracticesModel = {
 export const practicesModel: TPracticesModel[] = [
   {
     key: "hangel_board",
-    title: "Hangman Board",
+    titleKey: "hangelBoard",
     navigate: ENavigation.HANGEL,
   },
   {
     key: "word_matcher",
-    title: "Word Matcher",
+    titleKey: "wordMatcher",
     navigate: ENavigation.WORD_MATCHER,
   },
   {
     key: "sequences_builder",
-    title: "Sequences Builder",
+    titleKey: "sequencesBuilder",
     navigate: ENavigation.SEQUENCES_BUILDER,
   },
 ];

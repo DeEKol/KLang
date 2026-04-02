@@ -3,6 +3,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // ? Layer Imports
 import {
+  GameResultScreen,
   HangelScreen,
   PracticeScreen,
   SequencesBuilderScreen,
@@ -39,6 +40,10 @@ export const PracticeStackNavigator = () => {
       <Stack.Screen
         name={ENavigation.WORD_MATCHER}
         component={WordMatcherScreen}
+      />
+      <Stack.Screen
+        name={ENavigation.GAME_RESULT}
+        component={GameResultScreen}
       />
     </Stack.Navigator>
   );

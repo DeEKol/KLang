@@ -38,6 +38,7 @@ export const linking: LinkingOptions<TRootStackParamList> = {
               [ENavigation.HANGEL]: ROUTE_PATHS[ENavigation.HANGEL],
               [ENavigation.WORD_MATCHER]: ROUTE_PATHS[ENavigation.WORD_MATCHER],
               [ENavigation.SEQUENCES_BUILDER]: ROUTE_PATHS[ENavigation.SEQUENCES_BUILDER],
+              [ENavigation.GAME_RESULT]: ROUTE_PATHS[ENavigation.GAME_RESULT],
             },
           },
           [ETabNavigation.SETTINGS]: {

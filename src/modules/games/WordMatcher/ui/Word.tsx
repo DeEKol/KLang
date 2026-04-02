@@ -58,7 +58,14 @@ const WordButton: React.FC<WordButtonProps> = ({
         <Animated.View style={[StyleSheet.absoluteFill, styles.errorOverlay, errorAnimStyle]} />
         <Animated.View style={[StyleSheet.absoluteFill, styles.successOverlay, successAnimStyle]} />
 
-        <Text style={[styles.buttonText, wordStyles.buttonText, isSelected && [styles.activeButtonText, wordStyles.activeButtonText]]}>{word}</Text>
+        <Text
+          style={[
+            styles.buttonText,
+            wordStyles.buttonText,
+            isSelected && [styles.activeButtonText, wordStyles.activeButtonText],
+          ]}>
+          {word}
+        </Text>
         <SpeakButton
           text={word}
           lang="en-US"

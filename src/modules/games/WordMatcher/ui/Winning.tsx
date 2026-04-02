@@ -26,6 +26,7 @@ const Winning = ({ isMatchComplete }: { isMatchComplete: boolean }) => {
   return (
     isMatchComplete && (
       <View style={styles.completeContainer}>
+        {/* <CelebrationIcon /> */}
         <Text style={[styles.completeText, { color: colors.accent }]}>{"All Matched! 🎉"}</Text>
       </View>
     )
