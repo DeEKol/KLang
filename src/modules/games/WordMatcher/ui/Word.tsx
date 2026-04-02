@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import Animated from "react-native-reanimated";
+import { useThemeTokens } from "entities/theme";
 import { SpeakButton } from "shared/tts";
 
 import { useOpacityAnimation } from "../model/animation/useOpacityAnimation";
@@ -27,6 +28,18 @@ const WordButton: React.FC<WordButtonProps> = ({
   isError,
   celebrate,
 }) => {
+  const { colors } = useThemeTokens();
+  const wordStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        button: { backgroundColor: colors.surface },
+        activeButton: { backgroundColor: colors.primary },
+        buttonText: { color: colors.text },
+        activeButtonText: { color: colors.onPrimary },
+      }),
+    [colors],
+  );
+
   const scaleStyle = useScaleAnimation(isSelected);
   const errorAnimStyle = useOpacityAnimation(isError);
   const successAnimStyle = useOpacityAnimation(celebrate && isSelected);
@@ -36,12 +49,16 @@ const WordButton: React.FC<WordButtonProps> = ({
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={onPress}
-        style={[styles.button, isSelected && !isError && !celebrate && styles.activeButton]}>
+        style={[
+          styles.button,
+          wordStyles.button,
+          isSelected && !isError && !celebrate && [styles.activeButton, wordStyles.activeButton],
+        ]}>
         {/* сначала красный, затем зелёный верхним слоем */}
         <Animated.View style={[StyleSheet.absoluteFill, styles.errorOverlay, errorAnimStyle]} />
         <Animated.View style={[StyleSheet.absoluteFill, styles.successOverlay, successAnimStyle]} />
 
-        <Text style={[styles.buttonText, isSelected && styles.activeButtonText]}>{word}</Text>
+        <Text style={[styles.buttonText, wordStyles.buttonText, isSelected && [styles.activeButtonText, wordStyles.activeButtonText]]}>{word}</Text>
         <SpeakButton
           text={word}
           lang="en-US"
@@ -54,6 +71,7 @@ const WordButton: React.FC<WordButtonProps> = ({
 // -----------------------------------
 // Styles
 // -----------------------------------
+// error/success overlays are semantic indicators — universal red/green, not theme tokens
 const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
@@ -63,18 +81,13 @@ const styles = StyleSheet.create({
     padding: 12,
     marginVertical: 6,
     marginHorizontal: 12,
-    backgroundColor: "#fff",
   },
-  activeButton: {
-    backgroundColor: "#4dc9e6",
-  },
+  activeButton: {},
   buttonText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#495057",
   },
   activeButtonText: {
-    color: "white",
     textShadowColor: "rgba(0,0,0,0.2)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,

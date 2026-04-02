@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
+import { useThemeTokens } from "entities/theme";
 
 interface IDialogProps {
   celebrate: boolean;
@@ -7,10 +8,14 @@ interface IDialogProps {
 }
 
 const Dialog = ({ celebrate, isMatchComplete }: IDialogProps): JSX.Element => {
+  const { colors } = useThemeTokens();
+
   return isMatchComplete ? (
     <></>
   ) : (
-    <Text style={styles.status}>{celebrate ? "Great Job! 💫" : "Find the matching pairs..."}</Text>
+    <Text style={[styles.status, { color: colors.text }]}>
+      {celebrate ? "Great Job! 💫" : "Find the matching pairs..."}
+    </Text>
   );
 };
 
@@ -19,7 +24,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     paddingVertical: 16,
-    color: "#2c3e50",
     fontWeight: "600",
   },
 });

@@ -101,22 +101,13 @@ interface IGameProps<TConfig = unknown> {
 
 ---
 
-### 🟡 GAME-03 — Хардкодированные цвета в играх, тема не применяется
+### ✅ GAME-03 — Хардкодированные цвета в играх, тема не применяется
 
-**SequencesBuilderUI.tsx** — жёстко зашитые цвета тёмной темы:
-```ts
-// Примеры из SequencesBuilderUI
-backgroundColor: '#1a1a2e'   // тёмный фон
-color: '#ffffff'              // белый текст
-borderColor: '#4CAF50'        // зелёный успех
-backgroundColor: '#FF5252'    // красный ошибка
-```
+**Решено**: все три игры получают цвета через `useThemeTokens()`.
 
-**WordMatcher/ui/Column.tsx** — LinearGradient с хардкод цветами.
-
-**HangelBoard.tsx** — Canvas Skia использует захардкоженные цвета для направляющих линий и обводки.
-
-Игры не получают цвета из токен-системы → в light mode выглядят неправильно, dark mode не переключается.
+- **HangelBoard** — `colors.background`, `colors.text`, `colors.border`, `colors.disabled` (для grid-линий Canvas Skia).
+- **SequencesBuilder** — `createStyles(colors)` в `SequencesBuilderUI.styles.ts`; `Blank` и `DraggableWord` используют `useThemeTokens()`. `VictoryOverlay` — intentional branding (комментарий в файле).
+- **WordMatcher** — добавлен `GameLayout.styles.ts` (`createStyles(colors)`); `Column`, `Word`, `Dialog`, `Winning` переведены на `useThemeTokens()`. LinearGradient заменён на `View` с `colors.background`/`colors.surface`. Оверлеи ошибки/успеха (`#FF4444A4`, `#33E76FA4`) — семантические константы, не цвета темы.
 
 ---
 
@@ -264,7 +255,7 @@ Redux / API
 |----|------|
 | ~~GAME-M1~~ | ✅ Перенести `HangelBoard` из `features/` в `modules/games/HangelBoard/`; вынести логику в `useHangelBoard.ts` |
 | ~~GAME-M2~~ | ✅ Перенести `SequencesBuilder` из `features/` в `modules/games/SequencesBuilder/`; вынести логику в `useSequencesBuilder.ts` |
-| GAME-M3 | Применить тему (token colors) во всех играх: убрать хардкод цветов, передавать `colors: IThemeColors` через props или `useThemeTokens` |
+| ~~GAME-M3~~ | ✅ Применить тему (token colors) во всех играх: убрать хардкод цветов, передавать `colors: IThemeColors` через props или `useThemeTokens` |
 | ~~GAME-M4~~ | ✅ Создать `_shared/types.ts` (`IGameProps`, `IGameResult`) и `_shared/hooks/useGameTimer.ts`; подключить `onComplete`/`onExit` во все игры |
 
 ### 🟢 Small

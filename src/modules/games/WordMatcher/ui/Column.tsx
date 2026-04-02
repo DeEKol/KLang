@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { FlatList, Platform, StyleSheet, View } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
 import Animated from "react-native-reanimated";
+import { useThemeTokens } from "entities/theme";
 
 import { useFadeScale } from "../model/animation/useFadeScale";
 
@@ -32,7 +32,22 @@ const Column: React.FC<ColumnProps> = ({
   celebrate,
   isMatchComplete,
 }) => {
+  const { colors } = useThemeTokens();
   const animStyle = useFadeScale(!isMatchComplete);
+
+  const columnStyles = useMemo(
+    () =>
+      StyleSheet.create({
+        columnBg: {
+          backgroundColor: colors.surface,
+          ...Platform.select({
+            ios: { shadowColor: colors.shadow },
+            android: {},
+          }),
+        },
+      }),
+    [colors],
+  );
 
   const renderItem = useCallback(
     ({ item }: { item: string }) => (
@@ -47,22 +62,16 @@ const Column: React.FC<ColumnProps> = ({
     [celebrate, setValue, value, errorPair, side],
   );
 
-  const gradientColors = useMemo(() => ["#f8f9fa", "#e9ecef"], []);
-
   return (
     <Animated.View style={[styles.column, animStyle]}>
-      <LinearGradient
-        colors={gradientColors}
-        style={[styles.column, styles.columnShadow]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}>
+      <View style={[styles.column, styles.columnShadow, columnStyles.columnBg]}>
         <FlatList
           data={words}
           keyExtractor={(item) => item}
           renderItem={renderItem}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
-      </LinearGradient>
+      </View>
     </Animated.View>
   );
 };
@@ -80,7 +89,6 @@ const styles = StyleSheet.create({
   columnShadow: {
     ...Platform.select({
       ios: {
-        shadowColor: "#000",
         shadowOffset: { width: 2, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 6,

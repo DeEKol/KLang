@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from "react";
-import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import Animated from "react-native-reanimated";
+import { useThemeTokens } from "entities/theme";
 import { LottieImage } from "shared/lottie";
 
 import { useGameTimer } from "../../_shared/hooks/useGameTimer";
@@ -9,6 +9,8 @@ import type { IGameResult } from "../../_shared/types";
 import { useColumnsAnimation } from "../model/animation/useColumnAnimations";
 import { useWordMatcher } from "../model/logic/useWordMatcher";
 import { Column, Dialog, Winning } from "../ui";
+
+import createStyles from "./GameLayout.styles";
 
 // -----------------------------------
 // Types
@@ -26,6 +28,9 @@ export interface IGameLayoutProps {
 // Component
 // -----------------------------------
 export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete }) => {
+  const { colors } = useThemeTokens();
+  const styles = useMemo(() => createStyles(colors), [colors]);
+
   const {
     filteredNative,
     filteredLearning,
@@ -59,11 +64,7 @@ export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete })
   );
 
   return (
-    <LinearGradient
-      colors={["#c2e9fb", "#a1c4fd"]}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}>
+    <View style={styles.container}>
       <Text style={styles.title}>{"Word Matcher"}</Text>
       <View
         style={styles.columnsContainer}
@@ -115,52 +116,6 @@ export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete })
         disabled={isLocked}>
         <Text>{"Reset"}</Text>
       </TouchableOpacity>
-    </LinearGradient>
+    </View>
   );
 };
-
-// -----------------------------------
-// Styles
-// -----------------------------------
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    padding: 12,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-      },
-      android: { elevation: 8 },
-    }),
-  },
-  columnsContainer: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
-    flex: 1,
-    marginVertical: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-    textAlign: "center",
-    color: "#2c3e50",
-    textShadowColor: "rgba(0,0,0,0.1)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-    marginTop: 16,
-  },
-  resetButton: {
-    position: "absolute",
-    padding: 12,
-    borderRadius: 16,
-    backgroundColor: "#fff",
-    bottom: 16,
-    right: 16,
-    zIndex: 1004,
-  },
-});

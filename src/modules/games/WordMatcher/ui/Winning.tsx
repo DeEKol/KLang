@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { G, Path } from "react-native-svg";
+import { useThemeTokens } from "entities/theme";
 
 interface ICelebrationIconProps {
   size?: number;
@@ -20,10 +21,12 @@ const CelebrationIcon = ({ size = 100, color = "#FFD700" }: ICelebrationIconProp
 );
 
 const Winning = ({ isMatchComplete }: { isMatchComplete: boolean }) => {
+  const { colors } = useThemeTokens();
+
   return (
     isMatchComplete && (
       <View style={styles.completeContainer}>
-        <Text style={styles.completeText}>{"All Matched! 🎉"}</Text>
+        <Text style={[styles.completeText, { color: colors.accent }]}>{"All Matched! 🎉"}</Text>
       </View>
     )
   );
@@ -38,7 +41,6 @@ const styles = StyleSheet.create({
   completeText: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#2ecc71",
     marginTop: 16,
   },
 });
