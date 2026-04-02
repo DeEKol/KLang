@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "app/providers/StoreProvider";
 import { gameResultActions, getLastGameName, getLastGameResult } from "entities/gameResult";
@@ -11,6 +12,7 @@ import createStyles from "./GameResultScreen.styles";
 export const GameResultScreen = () => {
   const { colors } = useThemeTokens();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const { t } = useTranslation("gameResultScreen");
 
   const dispatch = useAppDispatch();
   const navigation = usePracticeNavigation();
@@ -33,19 +35,19 @@ export const GameResultScreen = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         {gameName && <Text style={styles.gameName}>{gameName}</Text>}
-        <Text style={styles.title}>{"Результат"}</Text>
+        <Text style={styles.title}>{t("title")}</Text>
         <View style={styles.statsRow}>
           <View style={styles.stat}>
             <Text style={styles.statValue}>{`${scorePercent}%`}</Text>
-            <Text style={styles.statLabel}>{"Счёт"}</Text>
+            <Text style={styles.statLabel}>{t("score")}</Text>
           </View>
           <View style={styles.stat}>
             <Text style={styles.statValue}>{`${seconds}с`}</Text>
-            <Text style={styles.statLabel}>{"Время"}</Text>
+            <Text style={styles.statLabel}>{t("time")}</Text>
           </View>
           <View style={styles.stat}>
             <Text style={styles.statValue}>{String(result.mistakes)}</Text>
-            <Text style={styles.statLabel}>{"Ошибок"}</Text>
+            <Text style={styles.statLabel}>{t("mistakes")}</Text>
           </View>
         </View>
       </View>
@@ -53,7 +55,7 @@ export const GameResultScreen = () => {
         <Button
           style={styles.continueButton}
           onPress={handleContinue}>
-          {"Продолжить"}
+          {t("continue")}
         </Button>
       </View>
     </View>

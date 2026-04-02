@@ -5,6 +5,7 @@ import { counterReducer } from "entities/Counter";
 import { gameResultReducer } from "entities/gameResult";
 import { postsReducer } from "entities/PostsTestApi";
 import { themeReducer } from "entities/theme";
+import { vocabularyReducer } from "entities/vocabulary";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist";
 
 import type { IStateSchema } from "../types/stateSchema";
@@ -22,6 +23,7 @@ const rootReducers = combineReducers({
   posts: postsReducer,
   auth: authReducer,
   gameResult: gameResultReducer,
+  vocabulary: vocabularyReducer,
 });
 
 export function createReduxStore(initialState?: IStateSchema) {

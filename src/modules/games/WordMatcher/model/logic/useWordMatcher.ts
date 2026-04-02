@@ -6,13 +6,14 @@ export interface UseWordMatcherReturn {
   filteredNative: string[];
   filteredLearning: string[];
   selectedPair: { left: string; right: string };
-  setSelectedPair: (pair: { left: string; right: string }) => void;
+  setSelectedPair: React.Dispatch<React.SetStateAction<{ left: string; right: string }>>;
   errorPair: [string, string] | null;
   celebrate: boolean;
   reset: () => void;
   isComplete: boolean;
   isLocked: boolean;
   mistakeCount: number;
+  totalCount: number;
 }
 
 export const useWordMatcher = (wordsMap: IWordMap): UseWordMatcherReturn => {
@@ -79,5 +80,6 @@ export const useWordMatcher = (wordsMap: IWordMap): UseWordMatcherReturn => {
     isComplete,
     isLocked,
     mistakeCount,
+    totalCount: nativeWords.length,
   };
 };

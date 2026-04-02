@@ -7,6 +7,8 @@ import { SpeakButton } from "shared/tts";
 import { useOpacityAnimation } from "../model/animation/useOpacityAnimation";
 import { useScaleAnimation } from "../model/animation/useScaleAnimation";
 
+/* eslint-disable react-native/no-color-literals */
+
 // -----------------------------------
 // Types
 // -----------------------------------
@@ -30,13 +32,12 @@ const WordButton: React.FC<WordButtonProps> = ({
 }) => {
   const { colors } = useThemeTokens();
   const wordStyles = useMemo(
-    () =>
-      StyleSheet.create({
-        button: { backgroundColor: colors.surface },
-        activeButton: { backgroundColor: colors.primary },
-        buttonText: { color: colors.text },
-        activeButtonText: { color: colors.onPrimary },
-      }),
+    () => ({
+      button: { backgroundColor: colors.surface },
+      activeButton: { backgroundColor: colors.primary },
+      buttonText: { color: colors.text },
+      activeButtonText: { color: colors.onPrimary },
+    }),
     [colors],
   );
 

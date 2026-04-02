@@ -28,7 +28,17 @@ export const Markdown = (props: TMarkdownProps) => {
     <View>
       {parsedElements.map((element: ReactNode, index) => {
         if (React.isValidElement(element)) {
-          return <View key={generateUniqueKey(element.props.children, index)}>{element}</View>;
+          return (
+            <View
+              key={generateUniqueKey(
+                String(
+                  (element as React.ReactElement<{ children?: ReactNode }>).props.children ?? "",
+                ),
+                index,
+              )}>
+              {element}
+            </View>
+          );
         }
       })}
     </View>

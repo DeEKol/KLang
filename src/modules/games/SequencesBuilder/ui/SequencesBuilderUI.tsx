@@ -16,6 +16,7 @@ export const SequencesBuilderUI: React.FC<{
   playSuccessSound?: () => void;
   playFailSound?: () => void;
   onComplete?: (result: IGameResult) => void;
+  onExit?: () => void;
 }> = ({ playSuccessSound, playFailSound, onComplete }) => {
   const { colors } = useThemeTokens();
   const { t } = useTranslation("sequencesBuilder");

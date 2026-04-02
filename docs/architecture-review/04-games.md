@@ -38,11 +38,12 @@ src/
 │
 └── screens/PracticeScreen/
     ├── PracticeScreen.tsx            список игр (FlatList с навигацией)
-    ├── models/practicesModel.ts      конфигурация навигации на игры
+    ├── models/practicesModel.ts      конфигурация (titleKey — i18n ключи)
     └── subscreens/
-        ├── WordMatcherScreen.tsx     передаёт onComplete (TODO: Redux)
+        ├── WordMatcherScreen.tsx     dispatch(setLastResult) → navigate(GAME_RESULT)
         ├── HangelScreen.tsx          передаёт onExit → navigation.goBack()
-        └── SequencesBuilderScreen.tsx передаёт onComplete (TODO: Redux)
+        ├── SequencesBuilderScreen.tsx dispatch(setLastResult) → navigate(GAME_RESULT)
+        └── GameResultScreen.tsx      результат + "Продолжить" → goBack()
 ```
 
 **Общий контракт игр (`_shared/types.ts`):**
@@ -113,7 +114,7 @@ interface IGameProps<TConfig = unknown> {
 
 ### ✅ GAME-04 — Нет общего интерфейса для всех игр
 
-**Решено**: создан `modules/games/_shared/types.ts` (`IGameResult`, `IGameProps`) и `_shared/hooks/useGameTimer.ts`. Все три игры принимают `onComplete?: (result: IGameResult) => void`; `HangelBoard` принимает `onExit?: () => void`. Screen-обёртки передают колбэки (сейчас `console.log` + TODO для Redux — GAME-S4).
+**Решено**: создан `modules/games/_shared/types.ts` (`IGameResult`, `IGameProps`) и `_shared/hooks/useGameTimer.ts`. Все три игры принимают `onComplete?: (result: IGameResult) => void`; `HangelBoard` принимает `onExit?: () => void`. Screen-обёртки диспатчат результат в Redux (`entities/gameResult`) и навигируют на `GAME_RESULT`.
 
 ---
 
@@ -248,11 +249,17 @@ Redux / API
 | ~~GAME-M3~~ | ✅ Применить тему (token colors) во всех играх: убрать хардкод цветов, передавать `colors: IThemeColors` через props или `useThemeTokens` |
 | ~~GAME-M4~~ | ✅ Создать `_shared/types.ts` (`IGameProps`, `IGameResult`) и `_shared/hooks/useGameTimer.ts`; подключить `onComplete`/`onExit` во все игры |
 
+### 🔴 Large
+
+| ID       | Task                                                                                                    |
+|----------|---------------------------------------------------------------------------------------------------------|
+| GAME-L1  | История результатов — расширить `entities/gameResult` под несколько записей, отдельный экран статистики |
+
 ### 🟢 Small
 
 | ID | Task |
 |----|------|
 | ~~GAME-S1~~ | ✅ Удалить `SequencesBuilderUI_old.tsx` |
-| GAME-S2 | Добавить i18n ключи в `practicesModel.ts` (убрать хардкод строк) |
+| ~~GAME-S2~~ | ✅ Добавить i18n ключи в `practicesModel.ts` (`title` → `titleKey`, переводы в `practiceScreen.json`) |
 | ~~GAME-S3~~ | ✅ Доделать или удалить `Winning.tsx` — `CelebrationIcon` подключён в JSX |
 | ~~GAME-S4~~ | ✅ Подключить результаты игр к Redux / navigate to results — создан `entities/gameResult` (slice + selector), экран `GameResultScreen`, роут `ENavigation.GAME_RESULT` |

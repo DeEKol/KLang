@@ -81,6 +81,7 @@ module.exports = {
     "react-native/no-single-element-style-arrays": "error",
     "react-hooks/rules-of-hooks": "off",
     "react-hooks/exhaustive-deps": "off",
+    "react/prop-types": "off",
     "react/no-array-index-key": "error",
     "react/react-in-jsx-scope": "error",
     "react/self-closing-comp": ["error", { component: true }],

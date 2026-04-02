@@ -26,7 +26,7 @@ export const LoginScreen: React.FC = () => {
     try {
       await loginWithEmail(email, password);
     } catch (e) {
-      console.warn("Login failed:", e);
+      console.error("Login failed:", e);
       Alert.alert(t("login.loginError"), String(e) ?? t("login.unknownError"));
     } finally {
       setIsLoading(false);
@@ -37,17 +37,16 @@ export const LoginScreen: React.FC = () => {
     try {
       await loginAnonymously();
     } catch (e) {
-      console.warn("Login failed:", e);
+      console.error("Login failed:", e);
       Alert.alert(t("login.loginError"), String(e) ?? t("login.unknownError"));
     }
   };
 
   const onGooglePress = async () => {
     try {
-      const user = await loginWithGoogle();
-      console.log("Google login success:", user);
+      await loginWithGoogle();
     } catch (e) {
-      console.warn("Google login failed:", e);
+      console.error("Google login failed:", e);
       Alert.alert(t("login.googleError"), String(e));
     }
   };

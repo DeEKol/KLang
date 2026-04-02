@@ -11,6 +11,7 @@ module.exports = {
           app: "./src/app",
           entities: "./src/entities",
           features: "./src/features",
+          modules: "./src/modules",
           screens: "./src/screens",
           shared: "./src/shared",
           widgets: "./src/widgets",

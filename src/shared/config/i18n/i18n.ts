@@ -30,6 +30,8 @@ void i18n
         profileScreen: require("../../../../public/locales/en/profileScreen.json"),
         authScreen: require("../../../../public/locales/en/authScreen.json"),
         sequencesBuilder: require("../../../modules/games/SequencesBuilder/locales/en.json"),
+        wordMatcher: require("../../../modules/games/WordMatcher/locales/en.json"),
+        gameResultScreen: require("../../../../public/locales/en/gameResultScreen.json"),
       },
       ru: {
         translation: require("../../../../public/locales/ru/translation.json"),
@@ -46,6 +48,8 @@ void i18n
         profileScreen: require("../../../../public/locales/ru/profileScreen.json"),
         authScreen: require("../../../../public/locales/ru/authScreen.json"),
         sequencesBuilder: require("../../../modules/games/SequencesBuilder/locales/ru.json"),
+        wordMatcher: require("../../../modules/games/WordMatcher/locales/ru.json"),
+        gameResultScreen: require("../../../../public/locales/ru/gameResultScreen.json"),
       },
     },
 

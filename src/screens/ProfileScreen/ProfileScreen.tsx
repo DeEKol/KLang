@@ -130,7 +130,7 @@ export const ProfileScreen: React.FC = () => {
           mode="outlined"
           style={styles.editButton}
           onPress={() => {}}>
-          {t("actions").editProfile}
+          {t("actions.editProfile")}
         </Button>
       </AnimatedSurface>
 
@@ -336,7 +336,7 @@ export const ProfileScreen: React.FC = () => {
           mode="outlined"
           style={styles.logoutButton}
           onPress={handleLogout}>
-          {t("actions").logout}
+          {t("actions.logout")}
         </Button>
       </Animated.View>
     </ScrollView>

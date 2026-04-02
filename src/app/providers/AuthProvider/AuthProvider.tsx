@@ -11,13 +11,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const unsubscribe = firebaseAdapter.onAuthStateChanged(async (u) => {
       if (u) {
-        console.log(u);
-
         try {
           await sessionService.syncForUser(u);
           dispatch(loginSuccess(u));
         } catch (e) {
-          console.warn("[Auth] Session exchange failed: ", e);
+          console.error("[Auth] Session exchange failed: ", e);
           dispatch(initializeAuth());
         }
       } else {

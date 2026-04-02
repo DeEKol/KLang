@@ -13,6 +13,8 @@ import { Canvas, Circle, Group, SweepGradient, vec } from "@shopify/react-native
 import { useThemeTokens } from "entities/theme";
 import { Text } from "shared/ui/paper-kit";
 
+/* eslint-disable react-native/no-color-literals */
+
 const { width, height } = Dimensions.get("window");
 
 interface SplashScreenProps {

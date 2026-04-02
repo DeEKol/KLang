@@ -36,16 +36,15 @@ const Column: React.FC<ColumnProps> = ({
   const animStyle = useFadeScale(!isMatchComplete);
 
   const columnStyles = useMemo(
-    () =>
-      StyleSheet.create({
-        columnBg: {
-          backgroundColor: colors.surface,
-          ...Platform.select({
-            ios: { shadowColor: colors.shadow },
-            android: {},
-          }),
-        },
-      }),
+    () => ({
+      columnBg: {
+        backgroundColor: colors.surface,
+        ...Platform.select({
+          ios: { shadowColor: colors.shadow },
+          android: {},
+        }),
+      },
+    }),
     [colors],
   );
 

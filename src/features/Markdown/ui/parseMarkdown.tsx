@@ -172,7 +172,7 @@ export const createMdStyles = () => {
     boldTextStyle: { fontWeight: "bold" },
     italicTextStyle: { fontStyle: "italic" },
     listsStyle: { marginLeft: 10 },
-    highlightStyle: { backgroundColor: EPalette.YELLOW },
+    highlightStyle: { backgroundColor: EPalette.PRIMARY_CONTAINER },
   });
   return styles;
 };

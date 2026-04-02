@@ -7,7 +7,7 @@ interface IDialogProps {
   isMatchComplete: boolean;
 }
 
-const Dialog = ({ celebrate, isMatchComplete }: IDialogProps): JSX.Element => {
+const Dialog = ({ celebrate, isMatchComplete }: IDialogProps): React.ReactElement => {
   const { colors } = useThemeTokens();
 
   return isMatchComplete ? (

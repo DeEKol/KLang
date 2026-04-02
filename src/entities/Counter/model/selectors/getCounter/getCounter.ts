@@ -1,3 +1,7 @@
-import type { IStateSchema } from "entities";
+import type { ICounterSchema } from "../../../types/counterSchema";
 
-export const getCounter = (state: IStateSchema) => state.counter;
+type TStateWithCounter = {
+  counter: ICounterSchema;
+};
+
+export const getCounter = (state: TStateWithCounter) => state.counter;

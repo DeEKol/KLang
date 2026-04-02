@@ -9,6 +9,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+/* eslint-disable react-native/no-color-literals */
+
 type TVictoryOverlayProps = {
   visible: boolean;
   onClose: () => void;
@@ -55,6 +57,7 @@ export const VictoryOverlay: React.FC<TVictoryOverlayProps> = ({ visible, onClos
 };
 
 // Victory colours are intentional branding — not theme tokens
+
 const styles = StyleSheet.create({
   victoryOverlay: {
     position: "absolute",

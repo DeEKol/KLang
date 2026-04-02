@@ -6,6 +6,6 @@ export function useRenderCounter(name = "comp") {
   counter.current++;
 
   useEffect(() => {
-    console.log(`[render] ${name}`, counter.current);
+    console.log(`[render] ${name}`, counter.current); // eslint-disable-line no-console
   });
 }

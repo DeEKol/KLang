@@ -5,10 +5,8 @@ import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { CommonActions } from "@react-navigation/native";
 
 type BarProps = React.ComponentProps<typeof BottomNavigation.Bar>;
-type BarRoute = BarProps["navigationState"]["routes"][number] & {
-  name: string;
-  params?: Record<string, unknown>;
-};
+type BaseRoute = BarProps["navigationState"]["routes"][number];
+type BarRoute = BaseRoute & { name: string; params?: Record<string, unknown> };
 
 interface Props extends BottomTabBarProps {
   TabBarComponent?: ComponentType<BarProps>;
@@ -23,7 +21,8 @@ export default function PaperBottomTabs({
 }: Props) {
   // memoize, чтобы не пересоздавать функции на каждый рендер
   const onTabPress = React.useCallback(
-    ({ route, preventDefault }: { route: BarRoute; preventDefault: () => void }) => {
+    ({ route, preventDefault }: { route: BaseRoute; preventDefault: () => void }) => {
+      const { name, params } = route as BarRoute;
       const event = navigation.emit({
         type: "tabPress",
         target: route.key,
@@ -35,7 +34,7 @@ export default function PaperBottomTabs({
         preventDefault?.();
       } else {
         navigation.dispatch({
-          ...CommonActions.navigate(route.name, route.params),
+          ...CommonActions.navigate(name, params),
           target: state.key,
         });
       }
@@ -50,7 +49,7 @@ export default function PaperBottomTabs({
       color,
       size = 24,
     }: {
-      route: BarRoute;
+      route: BaseRoute;
       focused: boolean;
       color: string;
       size?: number;
@@ -67,14 +66,15 @@ export default function PaperBottomTabs({
   );
 
   const getLabelText = React.useCallback(
-    ({ route }: { route: BarRoute }) => {
+    ({ route }: { route: BaseRoute }) => {
       const { options } = descriptors[route.key];
+      const { name } = route as BarRoute;
       const label =
         typeof options.tabBarLabel === "string"
           ? options.tabBarLabel
           : typeof options.title === "string"
             ? options.title
-            : route.name;
+            : name;
       return label;
     },
     [descriptors],

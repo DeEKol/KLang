@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Linking, ScrollView, StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
 import { getAuthUser } from "entities/auth";
 import type { TThemeMode } from "entities/theme";
 import { getThemeMode, themeActions, useThemeTokens } from "entities/theme";
 import { useAuth } from "features/auth";
+import { ENavigation, navigate } from "shared/config/navigation";
 import {
   AnimatedView,
   FadeInView,
@@ -25,7 +25,6 @@ import {
 export const SettingsScreen: React.FC = () => {
   const { t } = useTranslation("settingsScreen");
   const dispatch = useDispatch();
-  const navigation = useNavigation();
   const { colors } = useThemeTokens();
   const themeName = useSelector(getThemeMode);
   const { logout } = useAuth();
@@ -318,7 +317,7 @@ export const SettingsScreen: React.FC = () => {
           <SettingAction
             label={t("profile")}
             value={user?.displayName || "Анна Ким"}
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() => navigate(ENavigation.PROFILE)}
             icon="👤"
           />
         </SlideInRightView>
@@ -451,7 +450,7 @@ export const SettingsScreen: React.FC = () => {
         <Text
           variant="caption"
           style={[styles.footerText, { color: colors.placeholder }]}>
-          🇰🇷 С любовью к корейскому языку
+          {t("footer")}
         </Text>
       </AnimatedView>
     </ScrollView>

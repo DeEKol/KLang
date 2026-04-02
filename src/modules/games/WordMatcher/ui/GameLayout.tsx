@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useThemeTokens } from "entities/theme";
 import { LottieImage } from "shared/lottie";
 
 import { useGameTimer } from "../../_shared/hooks/useGameTimer";
-import type { IGameResult } from "../../_shared/types";
+import type { IGameProps, IGameResult } from "../../_shared/types";
 import { useColumnsAnimation } from "../model/animation/useColumnAnimations";
 import { useWordMatcher } from "../model/logic/useWordMatcher";
 import { Column, Dialog, Winning } from "../ui";
@@ -19,17 +20,15 @@ export interface IWordMap {
   [nativeWord: string]: string;
 }
 
-export interface IGameLayoutProps {
-  wordsMap: IWordMap;
-  onComplete?: (result: IGameResult) => void;
-}
+export type IGameLayoutProps = IGameProps<IWordMap>;
 
 // -----------------------------------
 // Component
 // -----------------------------------
-export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete }) => {
+export const GameLayout: React.FC<IGameLayoutProps> = ({ config, onComplete }) => {
   const { colors } = useThemeTokens();
   const styles = useMemo(() => createStyles(colors), [colors]);
+  const { t } = useTranslation("wordMatcher");
 
   const {
     filteredNative,
@@ -42,7 +41,8 @@ export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete })
     isComplete,
     isLocked,
     mistakeCount,
-  } = useWordMatcher(wordsMap);
+    totalCount,
+  } = useWordMatcher(config);
 
   const { elapsedMs, pause } = useGameTimer();
   const { leftStyle, rightStyle, resetAnimation } = useColumnsAnimation(isComplete);
@@ -50,7 +50,11 @@ export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete })
   useEffect(() => {
     if (isComplete) {
       pause();
-      onComplete?.({ score: 1, timeMs: elapsedMs, mistakes: mistakeCount });
+      onComplete?.({
+        score: totalCount / (totalCount + mistakeCount),
+        timeMs: elapsedMs,
+        mistakes: mistakeCount,
+      });
     }
   }, [isComplete]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -65,7 +69,7 @@ export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete })
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{"Word Matcher"}</Text>
+      <Text style={styles.title}>{t("title")}</Text>
       <View
         style={styles.columnsContainer}
         pointerEvents={isLocked ? "none" : "auto"}>
@@ -114,7 +118,7 @@ export const GameLayout: React.FC<IGameLayoutProps> = ({ wordsMap, onComplete })
         }}
         style={styles.resetButton}
         disabled={isLocked}>
-        <Text>{"Reset"}</Text>
+        <Text>{t("reset")}</Text>
       </TouchableOpacity>
     </View>
   );
