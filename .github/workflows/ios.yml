@@ -12,9 +12,6 @@ jobs:
     timeout-minutes: 60
     env:
       NODE_VERSION: "22"
-      IOS_SDK: "iphonesimulator"
-      SIMULATOR_NAME: "iPhone 16"
-      SIMULATOR_OS: "18.4"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,24 +67,17 @@ jobs:
         run: |
           set -euo pipefail
 
-          WORKSPACE="ios/KLang.xcworkspace"
-          SCHEME="KLang"
-          DEST="platform=iOS Simulator,OS=${SIMULATOR_OS},name=${SIMULATOR_NAME},arch=arm64"
-
-          echo "Building workspace: $WORKSPACE scheme: $SCHEME dest: $DEST"
-
           DERIVED_DATA="${HOME}/Library/Developer/Xcode/DerivedData/${GITHUB_RUN_ID}"
           mkdir -p "${DERIVED_DATA}"
 
-          set -o pipefail
-          xcodebuild -workspace "$WORKSPACE" \
-            -scheme "$SCHEME" \
-            -sdk "${IOS_SDK}" \
+          xcodebuild \
+            -workspace ios/KLang.xcworkspace \
+            -scheme KLang \
+            -sdk iphonesimulator \
             -configuration Debug \
-            -destination "${DEST}" \
             -derivedDataPath "${DERIVED_DATA}" \
+            ONLY_ACTIVE_ARCH=NO \
             clean build \
-            -parallelizeTargets -quiet -UseModernBuildSystem=YES \
             2>&1 | xcpretty
           exit ${PIPESTATUS[0]}
 
