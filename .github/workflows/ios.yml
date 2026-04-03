@@ -60,14 +60,15 @@ jobs:
         run: |
           set -e
           gem install cocoapods -v 1.16.0 || gem install cocoapods
-          gem install xcpretty -v 0.3.0 || true
+          gem install xcpretty -v 0.3.0
           cd ios
           pod install --repo-update
           cd ..
 
       - name: Build iOS for simulator
+        shell: bash
         run: |
-          set -o pipefail
+          set -euo pipefail
 
           WORKSPACE="ios/KLang.xcworkspace"
           SCHEME="KLang"
@@ -75,9 +76,10 @@ jobs:
 
           echo "Building workspace: $WORKSPACE scheme: $SCHEME dest: $DEST"
 
-          export DERIVED_DATA="${HOME}/Library/Developer/Xcode/DerivedData/${GITHUB_RUN_ID}"
+          DERIVED_DATA="${HOME}/Library/Developer/Xcode/DerivedData/${GITHUB_RUN_ID}"
           mkdir -p "${DERIVED_DATA}"
 
+          set -o pipefail
           xcodebuild -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
             -sdk "${IOS_SDK}" \
@@ -85,6 +87,7 @@ jobs:
             -destination "${DEST}" \
             -derivedDataPath "${DERIVED_DATA}" \
             clean build \
-            -parallelizeTargets -quiet -UseModernBuildSystem=YES | xcpretty
+            -parallelizeTargets -quiet -UseModernBuildSystem=YES \
+            2>&1 | xcpretty
           exit ${PIPESTATUS[0]}
 
