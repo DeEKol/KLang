@@ -14,7 +14,7 @@ jobs:
       NODE_VERSION: "22"
       IOS_SDK: "iphonesimulator"
       SIMULATOR_NAME: "iPhone 16"
-      SIMULATOR_OS: "18.5"
+      SIMULATOR_OS: "18.4"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,9 +24,6 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
-
-      - name: Upgrade npm
-        run: npm install -g npm@latest
 
       - name: Cache node_modules
         uses: actions/cache@v4
@@ -41,20 +38,13 @@ jobs:
       - name: Install JS dependencies
         run: npm ci
 
+      - name: Write Firebase config
+        run: echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST_BASE64 }}" | base64 --decode > ios/GoogleService-Info.plist
+
       - name: Setup Ruby (for CocoaPods)
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.1"
-
-      - name: Install CocoaPods
-        run: |
-          set -e
-          gem install cocoapods -v 1.16.0 || gem install cocoapods
-          gem install xcpretty -v 0.3.0 || true
-          gem install xcpretty-travis-formatter || true
-          cd ios
-          pod install --repo-update
-          cd ..
 
       - name: Cache CocoaPods & Pods
         uses: actions/cache@v4
@@ -62,16 +52,20 @@ jobs:
           path: |
             ios/Pods
             ~/.cocoapods
-            ios/Podfile.lock
           key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
 
+      - name: Install CocoaPods
+        run: |
+          set -e
+          gem install cocoapods -v 1.16.0 || gem install cocoapods
+          gem install xcpretty -v 0.3.0 || true
+          cd ios
+          pod install --repo-update
+          cd ..
+
       - name: Build iOS for simulator
-        env:
-          IOS_SDK: 'iphonesimulator'
-          SIMULATOR_NAME: 'iPhone 16'
-          SIMULATOR_OS: '18.5'
         run: |
           set -o pipefail
 
@@ -91,7 +85,6 @@ jobs:
             -destination "${DEST}" \
             -derivedDataPath "${DERIVED_DATA}" \
             clean build \
-            -parallelizeTargets -quiet -UseModernBuildSystem=YES | xcpretty || true
-
-          tail -n 200 "${DERIVED_DATA}/Logs/Build/*" || true
+            -parallelizeTargets -quiet -UseModernBuildSystem=YES | xcpretty
+          exit ${PIPESTATUS[0]}
 
